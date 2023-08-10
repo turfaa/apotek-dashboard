@@ -37,6 +37,45 @@ export async function getDailySalesStatistics(): Promise<SalesStatisticsResponse
     }
 }
 
+export interface ProcurementRecommendationsResponse {
+    recommendations: Procurement[]
+    computedAt: Date
+}
+
+interface UnderlyingProcurementRecommendationsResponse {
+    recommendations: Procurement[]
+    computedAt: string
+}
+
+export interface Procurement {
+    drug: Drug
+    stock: string
+    fromSupplier: string
+    procurement: string
+    alternatives?: string[]
+}
+
+export interface Drug {
+    vmedisCode: string
+    name: string
+    manufacturer: string
+    supplier: string
+    minimumStock: string
+}
+
+export async function getProcurementRecommendations(): Promise<ProcurementRecommendationsResponse> {
+    const underlying: UnderlyingProcurementRecommendationsResponse = await fetchAPI<UnderlyingProcurementRecommendationsResponse>(
+        'GET',
+        '/procurement/recommendations',
+        null,
+    )
+
+    return {
+        ...underlying,
+        computedAt: new Date(underlying.computedAt),
+    }
+}
+
 export async function fetchAPI<T>(method: string, url: string, body: any = null, options: object = {}): Promise<T> {
     const res: Response = await fetch(`${baseUrl}${url}`, {
         method: method,
