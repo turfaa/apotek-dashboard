@@ -3,8 +3,8 @@
 import MetricGrid, {Datum} from "@/app/metric-grid"
 import {SalesStatistics} from "@/lib/api"
 import {useDailySalesStatistics} from "@/lib/api-hook"
-import {Callout} from "@tremor/react";
-import {ExclamationTriangleIcon} from "@heroicons/react/24/solid";
+import {Callout} from "@tremor/react"
+import {ExclamationTriangleIcon} from "@heroicons/react/24/solid"
 
 const rupiah = new Intl.NumberFormat("id-ID", {style: "currency", currency: "IDR"})
 

@@ -1,8 +1,8 @@
 import {Card} from "@tremor/react"
-import {Line} from "react-chartjs-2";
-import {Chart, registerables} from "chart.js";
-import ChartDataLabels from 'chartjs-plugin-datalabels';
-import 'chartjs-adapter-moment';
+import {Line} from "react-chartjs-2"
+import {Chart, registerables} from "chart.js"
+import ChartDataLabels from 'chartjs-plugin-datalabels'
+import 'chartjs-adapter-moment'
 
 export interface MetricChartProps {
     title: string
