@@ -11,12 +11,13 @@ import {
     TableRow,
     Text,
     TextInput
-} from "@tremor/react";
-import {useProcurementRecommendations} from "@/lib/api-hook";
-import {Procurement} from "@/lib/api";
-import {useEffect, useState} from "react";
-import useSearch from "@/app/procurement/search-hook";
-import {ExclamationTriangleIcon} from "@heroicons/react/24/solid";
+} from "@tremor/react"
+import {useProcurementRecommendations} from "@/lib/api-hook"
+import {Procurement} from "@/lib/api"
+import {useEffect, useState} from "react"
+import useSearch from "@/app/procurement/search-hook"
+import {ExclamationTriangleIcon} from "@heroicons/react/24/solid"
+import {usePrintMode} from "@/lib/print-mode";
 
 export interface Row {
     vmedisCode: string
@@ -27,66 +28,73 @@ export interface Row {
     alternatives?: string[]
     procurement: string
     supplier: string
+
+    raw: Procurement
 }
 
 const columns: Column[] = ["no.", "vmedisCode", "name", "manufacturer", "minimumStock", "stock", "alternatives", "procurement", "supplier"]
 
 interface ColumnConfig {
     displayName: string
-    editable: boolean
+    displayInPrint?: boolean
     formatter?: (value: any) => string
+    onEdit?: (procurement: Procurement, value: string) => Procurement
 }
 
 const columnConfig: Record<Column, ColumnConfig> = {
     "no.": {
         displayName: "No.",
-        editable: false,
+        displayInPrint: true,
     },
     vmedisCode: {
         displayName: "Kode Obat",
-        editable: false,
     },
     name: {
         displayName: "Nama Obat",
-        editable: true,
+        displayInPrint: true,
+        onEdit: (procurement: Procurement, value: string) => ({
+            ...procurement,
+            drug: {...procurement.drug, name: value}
+        }),
     },
     manufacturer: {
         displayName: "Pabrik",
-        editable: false,
     },
     minimumStock: {
         displayName: "Stok Minimum",
-        editable: false,
     },
     stock: {
         displayName: "Stok",
-        editable: false,
     },
     alternatives: {
         displayName: "Alternatif",
-        editable: false,
         formatter: (value?: string[]) => value?.join(" / ") || "",
     },
     procurement: {
-        displayName: "Pengadaan",
-        editable: true,
+        displayName: "Jumlah",
+        displayInPrint: true,
+        onEdit: (procurement: Procurement, value: string) => ({...procurement, procurement: value}),
     },
     supplier: {
         displayName: "Supplier",
-        editable: true,
+        onEdit: (procurement: Procurement, value: string) => ({...procurement, fromSupplier: value}),
     },
+    raw: {
+        displayName: "Raw",
+    }
 }
 
 type Column = keyof Row | 'no.'
 
 export default function ProcurementTable(): React.ReactElement {
-    const [ssrCompleted, setSsrCompleted] = useState(false);
-    useEffect(() => setSsrCompleted(true), []);
+    const [ssrCompleted, setSsrCompleted] = useState(false)
+    useEffect(() => setSsrCompleted(true), [])
 
     const [enabledColumns, setEnabledColumns] = useState<Column[]>(["no.", "vmedisCode", "name", "manufacturer", "minimumStock", "stock", "alternatives", "procurement", "supplier"])
 
-    const {data, isLoading, error, deleteData} = useProcurementRecommendations()
+    const {data, isLoading, error, setData, deleteData} = useProcurementRecommendations()
     const {query} = useSearch()
+    const {isPrintMode} = usePrintMode()
 
     if (isLoading || !ssrCompleted) return <Text>Loading...</Text>
 
@@ -108,12 +116,14 @@ export default function ProcurementTable(): React.ReactElement {
         alternatives: procurement.alternatives,
         procurement: procurement.procurement,
         supplier: procurement.fromSupplier,
+        raw: procurement,
     }))
         .filter((row: Row) =>
             (row.vmedisCode + row.name + row.manufacturer + row.supplier)
                 .toLowerCase()
                 .includes(query.toLowerCase())
         )
+        .sort((a, b) => a.name.localeCompare(b.name))
 
     return (
         <>
@@ -121,7 +131,8 @@ export default function ProcurementTable(): React.ReactElement {
                 <TableHead>
                     <TableRow>
                         {columns.map((key) => (
-                                <TableHeaderCell key={key} hidden={!enabledColumns.includes(key)}
+                                <TableHeaderCell key={key}
+                                                 hidden={!enabledColumns.includes(key) || (isPrintMode && !columnConfig[key].displayInPrint)}
                                                  onClick={() => setEnabledColumns(enabledColumns.filter(column => column != key))}>
                                     <Text
                                         onClick={() => setEnabledColumns(enabledColumns.filter(column => column != key))}
@@ -144,10 +155,14 @@ export default function ProcurementTable(): React.ReactElement {
                                         columnConfig[column].formatter?.(row[column]) || row[column]?.toString()
 
                                 return (
-                                    <TableCell key={column} hidden={!enabledColumns.includes(column)}>
-                                        {columnConfig[column].editable ?
+                                    <TableCell key={column}
+                                               hidden={!enabledColumns.includes(column) || (isPrintMode && !columnConfig[column].displayInPrint)}>
+                                        {!!columnConfig[column].onEdit && !isPrintMode ?
                                             <TextInput
                                                 value={value}
+                                                onChange={(e) =>
+                                                    setData(row.vmedisCode, columnConfig[column].onEdit?.(row.raw, e.target.value) || row.raw)
+                                                }
                                             />
                                             : value
                                         }
@@ -155,7 +170,7 @@ export default function ProcurementTable(): React.ReactElement {
                                 )
                             })}
 
-                            <TableCell>
+                            <TableCell hidden={isPrintMode}>
                                 <Button
                                     variant="light"
                                     size="xs"

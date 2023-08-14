@@ -1,5 +1,5 @@
-import {ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams} from "next/navigation";
-import {useTransition} from "react";
+import {ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams} from "next/navigation"
+import {useTransition} from "react"
 
 export interface SearchHook {
     query: string

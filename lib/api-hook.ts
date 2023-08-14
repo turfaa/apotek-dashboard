@@ -6,8 +6,8 @@ import {
     SalesStatisticsResponse
 } from "@/lib/api"
 import useSWR from "swr"
-import {create} from "zustand";
-import {devtools, persist} from "zustand/middleware";
+import {create} from "zustand"
+import {devtools, persist} from "zustand/middleware"
 
 export interface SalesStatisticsHook {
     data?: SalesStatisticsResponse

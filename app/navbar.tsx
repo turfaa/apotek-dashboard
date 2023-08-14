@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import {usePathname} from 'next/navigation'
+import {usePrintMode} from "@/lib/print-mode"
 
 interface NavigationItem {
     name: string
@@ -19,6 +20,11 @@ function classNames(...classes: string[]) {
 
 export default function Navbar(): React.ReactElement {
     const pathname = usePathname()
+    const {isPrintMode} = usePrintMode()
+
+    if (isPrintMode) {
+        return (<> </>)
+    }
 
     return (
         <nav className="bg-white shadow-sm">

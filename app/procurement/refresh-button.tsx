@@ -2,14 +2,19 @@
 
 import {Button} from "@tremor/react"
 import {ArrowPathIcon} from "@heroicons/react/24/outline"
-import {useProcurementRecommendations} from "@/lib/api-hook";
+import {useProcurementRecommendations} from "@/lib/api-hook"
+import {usePrintMode} from "@/lib/print-mode"
 
 export default function RefreshButton(): React.ReactElement {
     const {isLoading, refresh} = useProcurementRecommendations()
+    const {isPrintMode} = usePrintMode()
+
+    if (isPrintMode) {
+        return <></>
+    }
 
     return (
         <Button
-            className="justify-self-end"
             variant="secondary"
             icon={ArrowPathIcon}
             disabled={isLoading}
