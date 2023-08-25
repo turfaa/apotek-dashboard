@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import {usePathname} from 'next/navigation'
 import {usePrintMode} from '@/lib/print-mode'
-import Image from 'next/image';
+import Image from 'next/image'
 import Logo from './logo.svg'
 
 interface NavigationItem {
@@ -13,7 +13,7 @@ interface NavigationItem {
 
 const navigation: NavigationItem[] = [
     {name: 'Dashboard', href: '/'},
-    {name: 'Pembelian', href: '/procurement'}
+    {name: 'Pesanan', href: '/procurement'}
 ]
 
 function classNames(...classes: string[]) {

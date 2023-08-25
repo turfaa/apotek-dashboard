@@ -7,7 +7,7 @@ export interface SearchHook {
     isPending: boolean
 }
 
-export default function useSearch() {
+export default function useSearch(): SearchHook {
     const {replace} = useRouter()
     const pathname: string = usePathname()
     const [isPending, startTransition] = useTransition()

@@ -3,7 +3,31 @@ import Search from "@/app/procurement/search"
 import RefreshButton from "@/app/procurement/refresh-button"
 import ProcurementTable from "@/app/procurement/table"
 import NewDrugButton from "@/app/procurement/new-drug-button"
-import ProcurementTitle from "@/app/procurement/title";
+import ProcurementTitle from "@/app/procurement/title"
+import {Metadata} from "next"
+import moment from "moment/moment"
+
+interface ProcurementProps {
+    searchParams: {
+        [key: string]: string | string[] | undefined
+    }
+}
+
+export async function generateMetadata(props: ProcurementProps): Promise<Metadata> {
+    const {q, print} = props.searchParams
+
+    let title;
+    if (print === "true") {
+        title = `${moment().format("YYYY-MM-DD")}${q ? ` - ${q}` : ""}`
+    } else {
+        title = "Daftar Pesanan Obat"
+    }
+
+    return {
+        title: title,
+        description: "Daftar pesanan obat",
+    }
+}
 
 export default function Procurement() {
     return (

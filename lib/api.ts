@@ -1,4 +1,4 @@
-const baseUrl: string = process.env.VMEDIS_PROXY_URL || 'http://apotek.ed.id/api/v1'
+const baseUrl: string = process.env.NEXT_PUBLIC_VMEDIS_PROXY_URL ?? 'http://localhost:8080/api/v1'
 
 export interface SalesStatisticsResponse {
     history: SalesStatistics[]
