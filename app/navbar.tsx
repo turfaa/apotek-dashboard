@@ -6,7 +6,7 @@ import Logo from './logo.svg'
 import {Disclosure} from "@headlessui/react"
 import {Bars3Icon, XMarkIcon} from "@heroicons/react/24/outline"
 import {useNavigation} from "@/lib/navigation"
-import {usePrintMode} from "@/lib/print-mode";
+import {usePrintMode} from "@/lib/print-mode"
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')

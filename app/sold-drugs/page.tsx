@@ -3,7 +3,7 @@ import {getSoldDrugs} from "@/lib/api"
 import SoldDrugsTable, {Row} from "@/app/sold-drugs/table"
 
 export default async function SoldDrugs({searchParams}: {
-    searchParams?: { [key: string]: string | undefined };
+    searchParams?: { [key: string]: string | undefined }
 }): Promise<React.ReactElement> {
     const date = searchParams?.date
 
