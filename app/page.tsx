@@ -1,12 +1,9 @@
-import {Title} from "@tremor/react"
-import ClientSide from "@/app/client"
-
+import {useNavigation} from "@/lib/navigation"
+import {lazy} from "react"
 
 export default function Home(): React.ReactElement {
-    return (
-        <main className="p-4 md:p-10 mx-auto max-w-7xl">
-            <Title>Ringkasan Harian</Title>
-            <ClientSide/>
-        </main>
-    )
+    const {homepage} = useNavigation()
+    const Homepage = lazy(() => import(`@/app/${homepage}/page`))
+
+    return <Homepage/>
 }

@@ -1,6 +1,6 @@
 import {Grid} from "@tremor/react"
-import MetricCard from "@/app/metric-card"
-import MetricChart from "@/app/metric-chart"
+import MetricCard from "@/app/statistics/metric-card"
+import MetricChart from "@/app/statistics/metric-chart"
 
 export interface MetricGridProps {
     title: string

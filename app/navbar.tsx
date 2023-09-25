@@ -5,24 +5,18 @@ import Image from 'next/image'
 import Logo from './logo.svg'
 import {Disclosure} from "@headlessui/react"
 import {Bars3Icon, XMarkIcon} from "@heroicons/react/24/outline"
-
-interface NavigationItem {
-    name: string
-    href: string
-}
-
-const navigation: NavigationItem[] = [
-    {name: 'Dashboard', href: '/'},
-    {name: 'Pesanan', href: '/procurement'}
-]
+import {useNavigation} from "@/lib/navigation"
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
 }
 
 export default function Navbar(): React.ReactElement {
-    const pathname = usePathname()
-    
+    const {homepage, pages} = useNavigation()
+
+    let pathname = usePathname()
+    if (pathname === '/') pathname = `/${homepage}`
+
     return (
         <Disclosure as="nav" className="bg-white shadow-sm">
             {({open}) => (
@@ -34,7 +28,7 @@ export default function Navbar(): React.ReactElement {
                                     <Image src={Logo} height={40} width={40} alt="Logo"/>
                                 </div>
                                 <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
-                                    {navigation.map((item) => (
+                                    {pages.map((item) => (
                                         <a
                                             key={item.name}
                                             href={item.href}
@@ -126,7 +120,7 @@ export default function Navbar(): React.ReactElement {
 
                     <Disclosure.Panel className="sm:hidden">
                         <div className="space-y-1 pt-2 pb-3">
-                            {navigation.map((item) => (
+                            {pages.map((item) => (
                                 <Disclosure.Button
                                     key={item.name}
                                     as="a"

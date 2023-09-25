@@ -1,6 +1,6 @@
 'use client'
 
-import MetricGrid, {Datum} from "@/app/metric-grid"
+import MetricGrid, {Datum} from "@/app/statistics/metric-grid"
 import {SalesStatistics} from "@/lib/api"
 import {useDailySalesStatistics} from "@/lib/api-hook"
 import {Callout} from "@tremor/react"
