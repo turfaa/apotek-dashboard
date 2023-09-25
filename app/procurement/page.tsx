@@ -16,7 +16,7 @@ interface ProcurementProps {
 export async function generateMetadata(props: ProcurementProps): Promise<Metadata> {
     const {q, print} = props.searchParams
 
-    let title;
+    let title
     if (print === "true") {
         title = `${moment().format("YYYY-MM-DD")}${q ? ` - ${q}` : ""}`
     } else {

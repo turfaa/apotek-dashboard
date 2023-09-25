@@ -17,7 +17,7 @@ import {Procurement} from "@/lib/api"
 import {useEffect, useState} from "react"
 import useSearch from "@/app/procurement/search-hook"
 import {ExclamationTriangleIcon} from "@heroicons/react/24/solid"
-import {usePrintMode} from "@/lib/print-mode";
+import {usePrintMode} from "@/lib/print-mode"
 
 export interface Row {
     vmedisCode: string

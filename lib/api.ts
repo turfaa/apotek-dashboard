@@ -1,5 +1,40 @@
 const baseUrl: string = process.env.NEXT_PUBLIC_VMEDIS_PROXY_URL ?? 'http://localhost:8080/api/v1'
 
+export interface SoldDrugsResponse {
+    date: Date
+    drugs: SoldDrug[]
+}
+
+export interface SoldDrug {
+    drug: Drug
+    occurrences: number
+    totalAmount: number
+}
+
+interface UnderlyingSoldDrugsResponse {
+    date: string
+    drugs: UnderlyingSoldDrug[]
+}
+
+interface UnderlyingSoldDrug {
+    drug: Drug
+    occurrences: number
+    totalAmount: number
+}
+
+export async function getSoldDrugs(date?: string): Promise<SoldDrugsResponse> {
+    const underlying: UnderlyingSoldDrugsResponse = await fetchAPI<UnderlyingSoldDrugsResponse>(
+        'GET',
+        `/sales/drugs${date ? `?date=${date}` : ''}`,
+        null,
+    )
+
+    return {
+        ...underlying,
+        date: new Date(underlying.date),
+    }
+}
+
 export interface SalesStatisticsResponse {
     history: SalesStatistics[]
 }

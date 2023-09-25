@@ -9,8 +9,9 @@ export interface Page {
 }
 
 const pages: Page[] = [
-    {name: 'Ringkasan', href: '/statistics'},
-    {name: 'Pesanan', href: '/procurement'},
+    {name: "Ringkasan", href: "/statistics"},
+    {name: "Pesanan", href: "/procurement"},
+    {name: "Obat Terjual", href: "/sold-drugs"},
 ]
 
 export function useNavigation(): NavigationHook {
