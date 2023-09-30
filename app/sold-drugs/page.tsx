@@ -1,11 +1,12 @@
 import {Card, Title} from "@tremor/react"
 import {getSoldDrugs} from "@/lib/api"
 import SoldDrugsTable, {Row} from "@/app/sold-drugs/table"
+import moment from "moment/moment"
 
 export default async function SoldDrugs({searchParams}: {
     searchParams?: { [key: string]: string | undefined }
 }): Promise<React.ReactElement> {
-    const date = searchParams?.date
+    const date = searchParams?.date ?? moment().subtract(1, "day").format("YYYY-MM-DD")
 
     const soldDrugs = await getSoldDrugs(date)
 
