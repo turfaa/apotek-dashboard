@@ -3,6 +3,8 @@ import {getSoldDrugs} from "@/lib/api"
 import SoldDrugsTable, {Row} from "@/app/sold-drugs/table"
 import moment from "moment/moment"
 
+export const revalidate = 600
+
 export default async function SoldDrugs({searchParams}: {
     searchParams?: { [key: string]: string | undefined }
 }): Promise<React.ReactElement> {

@@ -3,6 +3,8 @@ import {getDrugsToStockOpname} from "@/lib/api"
 import DrugsTable, {Row} from "@/app/drugs-to-stock-opname/table"
 import moment from "moment/moment"
 
+export const revalidate = 600
+
 export default async function DrugsToStockOpname({searchParams}: {
     searchParams?: { [key: string]: string | undefined }
 }): Promise<React.ReactElement> {
