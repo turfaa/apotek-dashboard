@@ -40,6 +40,23 @@ export async function getSoldDrugs(date?: string): Promise<SoldDrugsResponse> {
     }
 }
 
+export interface DrugsToStockOpnameResponse {
+    drugs: Drug[]
+}
+
+export async function getDrugsToStockOpname(date?: string): Promise<DrugsToStockOpnameResponse> {
+    return await fetchAPI<DrugsToStockOpnameResponse>(
+        'GET',
+        `/drugs/to-stock-opname/${date ? `?date=${date}` : ''}`,
+        null,
+        {
+            next: {
+                revalidate: 3600, // Revalidate every hour.
+            }
+        }
+    )
+}
+
 export interface SalesStatisticsResponse {
     history: SalesStatistics[]
 }
