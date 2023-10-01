@@ -1,4 +1,4 @@
-const baseUrl: string = process.env.INTERNAL_VMEDIS_PROXY_URL ?? process.env.NEXT_PUBLIC_VMEDIS_PROXY_URL ?? 'http://localhost:6969/api/v1'
+const baseUrl: string = process.env.VMEDIS_PROXY_URL ?? '/api'
 
 export interface SoldDrugsResponse {
     date: Date
@@ -82,6 +82,9 @@ export async function getDailySalesStatistics(): Promise<SalesStatisticsResponse
         'GET',
         '/sales/statistics/daily',
         null,
+        {
+            cache: 'no-cache',
+        }
     )
 
     return {
