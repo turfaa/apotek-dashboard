@@ -27,6 +27,11 @@ export async function getSoldDrugs(date?: string): Promise<SoldDrugsResponse> {
         'GET',
         `/sales/drugs${date ? `?date=${date}` : ''}`,
         null,
+        {
+            next: {
+                revalidate: 3600, // Revalidate every hour.
+            }
+        }
     )
 
     return {
