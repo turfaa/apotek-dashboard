@@ -1,16 +1,20 @@
-import {Card, Title} from "@tremor/react"
+import {Card, Flex, Title} from "@tremor/react"
 import {getSoldDrugs} from "@/lib/api"
 import SoldDrugsTable, {Row} from "@/app/sold-drugs/table"
 import moment from "moment/moment"
+import {DatePicker} from "@/lib/date-picker"
 
 export const revalidate = 600
 
 export default async function SoldDrugs({searchParams}: {
     searchParams?: { [key: string]: string | undefined }
 }): Promise<React.ReactElement> {
-    const date = searchParams?.date ?? moment().subtract(1, "day").format("YYYY-MM-DD")
+    const dateStr = searchParams?.date ?? moment().subtract(1, "day").format("YYYY-MM-DD")
+    const date = new Date(dateStr)
 
-    const soldDrugs = await getSoldDrugs(date)
+    const isPrintMode = (searchParams?.print ?? "") == "true"
+
+    const soldDrugs = await getSoldDrugs(dateStr)
 
     const tableRows: Row[] =
         soldDrugs.drugs
@@ -25,7 +29,10 @@ export default async function SoldDrugs({searchParams}: {
 
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
-            <Title>Obat Terjual pada {soldDrugs.date.toLocaleDateString("id-ID")}</Title>
+            <Flex flexDirection="row" justifyContent="start" className="gap-2">
+                <Title>Obat Terjual pada {isPrintMode && date.toLocaleDateString("id-ID")}</Title>
+                {!isPrintMode && <DatePicker defaultValue={date} className="max-w-min"/>}
+            </Flex>
 
             <Card className="mt-4">
                 <SoldDrugsTable rows={tableRows}/>

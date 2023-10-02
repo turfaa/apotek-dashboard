@@ -2,7 +2,7 @@ import moment from "moment"
 import {getStockOpnames} from "@/lib/api"
 import {Card, Flex, Title} from "@tremor/react"
 import StockOpnamesTable from "@/app/stock-opnames/table"
-import {DatePicker} from "@/lib/date-picker";
+import {DatePicker} from "@/lib/date-picker"
 
 export const revalidate = 60
 
@@ -20,7 +20,7 @@ export default async function StockOpnames({searchParams}: {
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <Flex flexDirection="row" justifyContent="start" className="gap-2">
                 <Title>Laporan Stok Opname pada {isPrintMode && date.toLocaleDateString("id-ID")}</Title>
-                {!isPrintMode && <DatePicker className="max-w-min"/>}
+                {!isPrintMode && <DatePicker defaultValue={date} className="max-w-min"/>}
             </Flex>
 
             <Card className="mt-4">

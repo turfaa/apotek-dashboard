@@ -20,7 +20,6 @@ export default function SoldDrugsTable({rows}: SoldDrugsTableProps): React.React
             <TableHead>
                 <TableRow>
                     <TableHeaderCell>No</TableHeaderCell>
-                    <TableHeaderCell>Kode Obat</TableHeaderCell>
                     <TableHeaderCell>Nama Obat</TableHeaderCell>
                     <TableHeaderCell>Pabrik</TableHeaderCell>
                     <TableHeaderCell>Terjual</TableHeaderCell>
@@ -32,7 +31,6 @@ export default function SoldDrugsTable({rows}: SoldDrugsTableProps): React.React
                 {rows.map((row, index) => (
                     <TableRow key={index}>
                         <TableHeaderCell>{index + 1}</TableHeaderCell>
-                        <TableCell>{row.vmedisCode}</TableCell>
                         <TableCell>{row.name}</TableCell>
                         <TableCell>{row.manufacturer}</TableCell>
                         <TableCell>{row.occurrences.toLocaleString("id-ID")} Kali</TableCell>
