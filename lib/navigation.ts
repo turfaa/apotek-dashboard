@@ -13,6 +13,7 @@ const pages: Page[] = [
     {name: "Pesanan", href: "/procurement"},
     {name: "Obat Terjual", href: "/sold-drugs"},
     {name: "Obat Harus Stok Opname", href: "/drugs-to-stock-opname"},
+    {name: "Laporan Stok Opname", href: "/stock-opnames"},
 ]
 
 export function useNavigation(): NavigationHook {
