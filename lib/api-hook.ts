@@ -53,7 +53,7 @@ export const useProcurementRecommendations = create<ProcurementRecommendationsHo
                             ...acc, [curr.drug.vmedisCode]: curr
                         }), {})
 
-                        set({data: keyedData})
+                        set({data: keyedData, error: undefined})
                     } catch (error) {
                         if (error instanceof Error) {
                             set({error})
