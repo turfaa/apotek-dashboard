@@ -60,7 +60,7 @@ export async function getSoldDrugs(date?: string): Promise<SoldDrugsResponse> {
         null,
         {
             next: {
-                revalidate: 3600, // Revalidate every hour.
+                revalidate: 600, // Revalidate every 10 minutes.
             }
         }
     )
@@ -82,7 +82,7 @@ export async function getDrugsToStockOpname(date?: string): Promise<DrugsToStock
         null,
         {
             next: {
-                revalidate: 3600, // Revalidate every hour.
+                revalidate: 600, // Revalidate every 10 minutes.
             }
         }
     )

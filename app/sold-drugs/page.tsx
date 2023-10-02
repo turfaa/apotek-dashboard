@@ -4,7 +4,7 @@ import SoldDrugsTable, {Row} from "@/app/sold-drugs/table"
 import moment from "moment/moment"
 import {DatePicker} from "@/lib/date-picker"
 
-export const revalidate = 600
+export const dynamic = "force-dynamic"
 
 export default async function SoldDrugs({searchParams}: {
     searchParams?: { [key: string]: string | undefined }
