@@ -1,4 +1,3 @@
-import moment from "moment"
 import {getStockOpnames} from "@/lib/api"
 import {Card, Flex, Title} from "@tremor/react"
 import StockOpnamesTable from "@/app/stock-opnames/table"
@@ -9,12 +8,9 @@ export const dynamic = "force-dynamic"
 export default async function StockOpnames({searchParams}: {
     searchParams?: { [key: string]: string | undefined }
 }): Promise<React.ReactElement> {
-    const dateStr = searchParams?.date ?? moment().format("YYYY-MM-DD")
-    const date = new Date(dateStr)
-
     const isPrintMode = (searchParams?.print ?? "") == "true"
 
-    const {stockOpnames} = await getStockOpnames(dateStr)
+    const {stockOpnames, date} = await getStockOpnames(searchParams?.date)
 
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">

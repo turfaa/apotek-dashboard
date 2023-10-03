@@ -2,6 +2,12 @@ const baseUrl: string = process.env.VMEDIS_PROXY_URL ?? '/api'
 
 export interface StockOpnamesResponse {
     stockOpnames: StockOpname[]
+    date: Date
+}
+
+export interface UnderlyingStockOpnamesResponse {
+    stockOpnames: StockOpname[]
+    date: string
 }
 
 export interface StockOpname {
@@ -19,7 +25,7 @@ export interface StockOpname {
 }
 
 export async function getStockOpnames(date?: string): Promise<StockOpnamesResponse> {
-    return await fetchAPI<StockOpnamesResponse>(
+    const underlying = await fetchAPI<UnderlyingStockOpnamesResponse>(
         'GET',
         `/stock-opnames/${date ? `?date=${date}` : ''}`,
         null,
@@ -29,6 +35,11 @@ export async function getStockOpnames(date?: string): Promise<StockOpnamesRespon
             }
         }
     )
+
+    return {
+        ...underlying,
+        date: new Date(underlying.date),
+    }
 }
 
 export interface SoldDrugsResponse {
@@ -73,10 +84,16 @@ export async function getSoldDrugs(date?: string): Promise<SoldDrugsResponse> {
 
 export interface DrugsToStockOpnameResponse {
     drugs: Drug[]
+    date: Date
+}
+
+export interface UnderlyingDrugsToStockOpnameResponse {
+    drugs: Drug[]
+    date: string
 }
 
 export async function getDrugsToStockOpname(date?: string): Promise<DrugsToStockOpnameResponse> {
-    return await fetchAPI<DrugsToStockOpnameResponse>(
+    const underlying = await fetchAPI<UnderlyingDrugsToStockOpnameResponse>(
         'GET',
         `/drugs/to-stock-opname/${date ? `?date=${date}` : ''}`,
         null,
@@ -86,6 +103,11 @@ export async function getDrugsToStockOpname(date?: string): Promise<DrugsToStock
             }
         }
     )
+
+    return {
+        ...underlying,
+        date: new Date(underlying.date),
+    }
 }
 
 export interface SalesStatisticsResponse {

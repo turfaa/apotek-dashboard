@@ -1,7 +1,6 @@
 import {Card, Flex, Title} from "@tremor/react"
 import {getSoldDrugs} from "@/lib/api"
 import SoldDrugsTable, {Row} from "@/app/sold-drugs/table"
-import moment from "moment/moment"
 import {DatePicker} from "@/lib/date-picker"
 
 export const dynamic = "force-dynamic"
@@ -9,15 +8,12 @@ export const dynamic = "force-dynamic"
 export default async function SoldDrugs({searchParams}: {
     searchParams?: { [key: string]: string | undefined }
 }): Promise<React.ReactElement> {
-    const dateStr = searchParams?.date ?? moment().subtract(1, "day").format("YYYY-MM-DD")
-    const date = new Date(dateStr)
-
     const isPrintMode = (searchParams?.print ?? "") == "true"
 
-    const soldDrugs = await getSoldDrugs(dateStr)
+    const {date, drugs} = await getSoldDrugs(searchParams?.date)
 
     const tableRows: Row[] =
-        soldDrugs.drugs
+        drugs
             .filter(drug => drug.drug.vmedisCode !== undefined)
             .map(drug => ({
                 vmedisCode: drug.drug.vmedisCode,
