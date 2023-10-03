@@ -3,8 +3,6 @@ import {Card, Flex, Title} from "@tremor/react"
 import StockOpnamesTable from "@/app/stock-opnames/table"
 import {DatePicker} from "@/lib/date-picker"
 
-export const dynamic = "force-dynamic"
-
 export default async function StockOpnames({searchParams}: {
     searchParams?: { [key: string]: string | undefined }
 }): Promise<React.ReactElement> {
