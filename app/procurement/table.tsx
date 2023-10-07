@@ -12,8 +12,8 @@ import {
     Text,
     TextInput
 } from "@tremor/react"
-import {useProcurementRecommendations} from "@/lib/api-hook"
-import {Procurement} from "@/lib/api"
+import {useProcurementRecommendations} from "@/lib/api/hooks"
+import {Procurement} from "@/lib/api/procurement-recommendation"
 import {useEffect, useState} from "react"
 import useSearch from "@/app/procurement/search-hook"
 import {ExclamationTriangleIcon} from "@heroicons/react/24/solid"

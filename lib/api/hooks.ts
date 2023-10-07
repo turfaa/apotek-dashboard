@@ -1,13 +1,12 @@
 import {
-    getDailySalesStatistics,
     getProcurementRecommendations,
     Procurement,
-    ProcurementRecommendationsResponse,
-    SalesStatisticsResponse
-} from "@/lib/api"
+    ProcurementRecommendationsResponse
+} from "@/lib/api/procurement-recommendation"
 import useSWR from "swr"
 import {create} from "zustand"
 import {devtools, persist} from "zustand/middleware"
+import {getDailySalesStatistics, SalesStatisticsResponse} from "@/lib/api/sale-statistics"
 
 export interface SalesStatisticsHook {
     data?: SalesStatisticsResponse

@@ -1,9 +1,9 @@
 "use client"
 
-import {Procurement} from "@/lib/api"
+import {Procurement} from "@/lib/api/procurement-recommendation"
 import {Button} from "@tremor/react"
 import {PlusIcon} from "@heroicons/react/24/outline"
-import {useProcurementRecommendations} from "@/lib/api-hook"
+import {useProcurementRecommendations} from "@/lib/api/hooks"
 import useSearch from "@/app/procurement/search-hook"
 import {usePrintMode} from "@/lib/print-mode"
 

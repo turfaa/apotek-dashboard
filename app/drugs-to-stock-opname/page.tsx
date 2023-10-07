@@ -1,7 +1,7 @@
 import {Card, Flex, Title} from "@tremor/react"
-import {getDrugsToStockOpname} from "@/lib/api"
 import DrugsTable, {Row} from "@/app/drugs-to-stock-opname/table"
 import {DatePicker} from "@/lib/date-picker"
+import {getDrugsToStockOpname} from "@/lib/api/drugs-to-stock-opname"
 
 export default async function DrugsToStockOpname({searchParams}: {
     searchParams?: { [key: string]: string | undefined }

@@ -1,10 +1,10 @@
 'use client'
 
 import MetricGrid, {Datum} from "@/app/statistics/metric-grid"
-import {SalesStatistics} from "@/lib/api"
-import {useDailySalesStatistics} from "@/lib/api-hook"
+import {useDailySalesStatistics} from "@/lib/api/hooks"
 import {Callout} from "@tremor/react"
 import {ExclamationTriangleIcon} from "@heroicons/react/24/solid"
+import {SalesStatistics} from "@/lib/api/sale-statistics"
 
 const rupiah = new Intl.NumberFormat("id-ID", {style: "currency", currency: "IDR"})
 

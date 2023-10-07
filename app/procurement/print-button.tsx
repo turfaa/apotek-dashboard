@@ -1,7 +1,7 @@
 "use client"
 
 import {Button} from "@tremor/react"
-import {useProcurementRecommendations} from "@/lib/api-hook"
+import {useProcurementRecommendations} from "@/lib/api/hooks"
 import {usePrintMode} from "@/lib/print-mode"
 import {PrinterIcon} from "@heroicons/react/24/solid"
 

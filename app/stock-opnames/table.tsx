@@ -1,5 +1,6 @@
 import {Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow} from "@tremor/react"
-import {StockOpname} from "@/lib/api"
+
+import {StockOpname} from "@/lib/api/stock-opname"
 
 export interface StockOpnamesTableProps {
     rows: Row[]
