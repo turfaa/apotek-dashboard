@@ -68,7 +68,7 @@ function PriceCard({title, units, priceGetter}: {
             {units.map((unit, index) => (
                 <Text key={index}>
                     {rupiah.format(priceGetter(unit))} / {unit.unit}
-                    {index > 0 && <> ({unit.conversionToParentUnit} {units[index - 1].unit})</>}
+                    {!!unit.parentUnit && <> ({unit.conversionToParentUnit} {unit.parentUnit})</>}
                 </Text>
             ))}
         </Flex>
