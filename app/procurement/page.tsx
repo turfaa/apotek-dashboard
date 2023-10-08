@@ -1,5 +1,5 @@
 import {Card, Col, Flex, Grid} from "@tremor/react"
-import Search from "@/app/procurement/search"
+import SearchButton from "@/shared-components/search-button"
 import RefreshButton from "@/app/procurement/refresh-button"
 import ProcurementTable from "@/app/procurement/table"
 import NewDrugButton from "@/app/procurement/new-drug-button"
@@ -38,7 +38,7 @@ export default function Procurement() {
 
             <Grid numItemsSm={1} numItemsMd={2} className="gap-4">
                 <Col>
-                    <Search/>
+                    <SearchButton/>
                 </Col>
 
                 <Col className="justify-self-end flex gap-4">

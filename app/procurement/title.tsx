@@ -3,7 +3,7 @@
 import {Flex, Subtitle, Title} from "@tremor/react"
 import PrintButton from "@/app/procurement/print-button"
 import {usePrintMode} from "@/lib/print-mode"
-import useSearch from "@/app/procurement/search-hook"
+import useSearch from "@/lib/search-hook"
 import {useEffect, useState} from "react"
 
 export default function ProcurementTitle() {

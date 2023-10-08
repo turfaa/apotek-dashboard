@@ -3,13 +3,15 @@
 import {TextInput} from "@tremor/react"
 import {MagnifyingGlassIcon} from "@heroicons/react/24/solid"
 import {ChangeEvent} from "react"
-import useSearch from "@/app/procurement/search-hook"
-import {useProcurementRecommendations} from "@/lib/api/hooks"
+import useSearch from "@/lib/search-hook"
 import {usePrintMode} from "@/lib/print-mode"
 
-export default function Search(): React.ReactElement {
+export interface SearchButtonProps {
+    disabled?: boolean
+}
+
+export default function SearchButton({disabled}: SearchButtonProps): React.ReactElement {
     const {query, setQuery} = useSearch()
-    const {isLoading} = useProcurementRecommendations()
     const {isPrintMode} = usePrintMode()
 
     if (isPrintMode) {
@@ -22,7 +24,7 @@ export default function Search(): React.ReactElement {
             placeholder="Cari obat..."
             onChange={(event: ChangeEvent<HTMLInputElement>) => setQuery(event.target.value)}
             defaultValue={query}
-            disabled={isLoading}
+            disabled={disabled}
         />
     )
 }

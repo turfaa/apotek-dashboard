@@ -4,7 +4,7 @@ import {Procurement} from "@/lib/api/procurement-recommendation"
 import {Button} from "@tremor/react"
 import {PlusIcon} from "@heroicons/react/24/outline"
 import {useProcurementRecommendations} from "@/lib/api/hooks"
-import useSearch from "@/app/procurement/search-hook"
+import useSearch from "@/lib/search-hook"
 import {usePrintMode} from "@/lib/print-mode"
 
 export default function NewDrugButton(): React.ReactElement {
