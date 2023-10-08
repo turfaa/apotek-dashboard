@@ -1,18 +1,18 @@
 import {Card, Col, Grid, Text, Title} from "@tremor/react"
-import {getDrugs} from "@/lib/api/drug"
 import PriceListTable from "@/app/price-list/table"
 import SearchButton from "@/shared-components/search-button"
+import {Suspense} from "react"
 
 export default async function PriceList(): Promise<React.ReactElement> {
-    const {drugs} = await getDrugs()
-
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <Title className="mb-4">Daftar Harga Obat</Title>
 
             <Grid numItemsSm={1} numItemsMd={2} className="gap-4">
                 <Col>
-                    <SearchButton/>
+                    <Suspense>
+                        <SearchButton/>
+                    </Suspense>
                 </Col>
 
                 <Col className="justify-self-end">
@@ -24,7 +24,7 @@ export default async function PriceList(): Promise<React.ReactElement> {
             </Grid>
 
             <Card className="mt-4">
-                <PriceListTable rows={drugs}/>
+                <PriceListTable/>
             </Card>
         </main>
     )

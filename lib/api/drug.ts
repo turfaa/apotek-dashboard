@@ -1,6 +1,6 @@
 import {fetchAPI} from "@/lib/api/base"
 
-export interface DrugResponse {
+export interface DrugsResponse {
     drugs: DrugWithUnits[]
 }
 
@@ -27,7 +27,7 @@ export interface Unit {
     priceThree: number
 }
 
-export async function getDrugs(): Promise<DrugResponse> {
+export async function getDrugs(): Promise<DrugsResponse> {
     return fetchAPI(
         'GET',
         '/drugs',

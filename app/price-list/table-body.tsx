@@ -1,41 +1,64 @@
 "use client"
 
-import {DrugWithUnits, Unit} from "@/lib/api/drug"
-import {Col, Flex, Grid, Subtitle, TableBody, TableCell, TableRow, Text} from "@tremor/react"
+import {getDrugs, Unit} from "@/lib/api/drug"
+import {Callout, Col, Flex, Grid, Subtitle, TableBody, TableCell, TableRow, Text} from "@tremor/react"
 import useSearch from "@/lib/search-hook"
+import {useDrugs} from "@/lib/api/hooks"
+import {ExclamationTriangleIcon} from "@heroicons/react/24/solid"
+import {useEffect, useState} from "react"
+import {preload} from "swr"
 
-export interface PriceListTableBodyProps {
-    rows: Row[]
-}
-
-export interface Row extends DrugWithUnits {
-}
+preload("/drugs", getDrugs)
 
 const rupiah = new Intl.NumberFormat("id-ID", {style: "currency", currency: "IDR"})
 
-export default function PriceListTableBody({rows}: PriceListTableBodyProps): React.ReactElement {
+export default function PriceListTableBody(): React.ReactElement {
+    const [ssrCompleted, setSsrCompleted] = useState(false)
+    useEffect(() => setSsrCompleted(true), [])
+
     const {query} = useSearch()
-    const filteredRows = rows.filter(row => row.name.toLowerCase().includes(query.toLowerCase()))
+    const {data, isLoading, error} = useDrugs()
+
+    if (isLoading || !ssrCompleted) {
+        return (
+            <TableBody>
+                <TableRow><TableCell><Text>Tunggu sebentar...</Text></TableCell></TableRow>
+            </TableBody>
+        )
+    }
+
+    if (error) {
+        return (
+            <Callout
+                className="h-12 mt-4"
+                title={error.message}
+                icon={ExclamationTriangleIcon}
+                color="rose"
+            />
+        )
+    }
+
+    const drugs = data?.drugs.filter(drug => drug.name.toLowerCase().includes(query.toLowerCase())) ?? []
 
     return (
         <TableBody>
-            {filteredRows.map((row, index) => (
+            {drugs.map((drug, index) => (
                 <TableRow key={index}>
                     <TableCell>{index + 1}</TableCell>
 
                     <TableCell>
                         <Flex flexDirection="col" alignItems="start" className="gap-4">
-                            <Text>{row.name}</Text>
+                            <Text>{drug.name}</Text>
 
                             <Grid numItemsSm={1} numItemsMd={3} className="gap-4">
                                 <Col>
-                                    <PriceCard title="Harga Normal" units={row.units} priceGetter={normalPriceGetter}/>
+                                    <PriceCard title="Harga Normal" units={drug.units} priceGetter={normalPriceGetter}/>
                                 </Col>
 
                                 <Col>
                                     <PriceCard
                                         title="Harga Diskon"
-                                        units={row.units}
+                                        units={drug.units}
                                         priceGetter={discountPriceGetter}
                                     />
                                 </Col>
@@ -43,7 +66,7 @@ export default function PriceListTableBody({rows}: PriceListTableBodyProps): Rea
                                 <Col>
                                     <PriceCard
                                         title="Harga Resep"
-                                        units={row.units}
+                                        units={drug.units}
                                         priceGetter={prescriptionPriceGetter}
                                     />
                                 </Col>

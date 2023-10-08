@@ -7,6 +7,22 @@ import useSWR from "swr"
 import {create} from "zustand"
 import {devtools, persist} from "zustand/middleware"
 import {getDailySalesStatistics, SalesStatisticsResponse} from "@/lib/api/sale-statistics"
+import {DrugsResponse, getDrugs} from "@/lib/api/drug"
+
+export interface DrugsHook {
+    data?: DrugsResponse
+    isLoading: boolean
+    error?: Error
+}
+
+export function useDrugs(): DrugsHook {
+    const {data, error, isLoading} = useSWR(
+        '/drugs',
+        getDrugs,
+    )
+
+    return {data, isLoading, error}
+}
 
 export interface SalesStatisticsHook {
     data?: SalesStatisticsResponse
