@@ -1,5 +1,6 @@
 import {Table, TableHead, TableHeaderCell, TableRow} from "@tremor/react"
 import PriceListTableBody, {Row} from "@/app/price-list/table-body"
+import {Suspense} from "react"
 
 export interface PriceListTableProps {
     rows: Row[]
@@ -15,7 +16,9 @@ export default function PriceListTable({rows}: PriceListTableProps): React.React
                 </TableRow>
             </TableHead>
 
-            <PriceListTableBody rows={rows}/>
+            <Suspense>
+                <PriceListTableBody rows={rows}/>
+            </Suspense>
         </Table>
     )
 }

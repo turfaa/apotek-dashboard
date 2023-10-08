@@ -6,6 +6,7 @@ import NewDrugButton from "@/app/procurement/new-drug-button"
 import ProcurementTitle from "@/app/procurement/title"
 import {Metadata} from "next"
 import moment from "moment/moment"
+import {Suspense} from "react"
 
 interface ProcurementProps {
     searchParams: {
@@ -33,22 +34,30 @@ export default function Procurement() {
     return (
         <main className="p-4 md:p-10 mx-auto">
             <Flex className="pb-4">
-                <ProcurementTitle/>
+                <Suspense>
+                    <ProcurementTitle/>
+                </Suspense>
             </Flex>
 
             <Grid numItemsSm={1} numItemsMd={2} className="gap-4">
                 <Col>
-                    <SearchButton/>
+                    <Suspense>
+                        <SearchButton/>
+                    </Suspense>
                 </Col>
 
                 <Col className="justify-self-end flex gap-4">
-                    <NewDrugButton/>
-                    <RefreshButton/>
+                    <Suspense>
+                        <NewDrugButton/>
+                        <RefreshButton/>
+                    </Suspense>
                 </Col>
             </Grid>
 
             <Card className="mt-4">
-                <ProcurementTable/>
+                <Suspense>
+                    <ProcurementTable/>
+                </Suspense>
             </Card>
         </main>
     )
