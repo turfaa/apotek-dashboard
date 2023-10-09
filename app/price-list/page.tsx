@@ -1,8 +1,9 @@
 import {Card, Col, Grid, Text, Title} from "@tremor/react"
-import PriceListTable from "@/app/price-list/table"
 import {Suspense} from "react"
 import SearchButtonFallback from "@/shared-components/search-button-fallback"
 import SearchButton from "@/shared-components/search-button"
+import PriceListTableFallback from "@/app/price-list/table-fallback"
+import PriceListTableServerFetch from "@/app/price-list/table-server-fetch"
 
 export default async function PriceList(): Promise<React.ReactElement> {
     return (
@@ -25,7 +26,9 @@ export default async function PriceList(): Promise<React.ReactElement> {
             </Grid>
 
             <Card className="mt-4">
-                <PriceListTable/>
+                <Suspense fallback={<PriceListTableFallback/>}>
+                    <PriceListTableServerFetch/>
+                </Suspense>
             </Card>
         </main>
     )
