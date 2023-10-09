@@ -7,6 +7,7 @@ import {useDrugs} from "@/lib/api/hooks"
 import {ExclamationTriangleIcon} from "@heroicons/react/24/solid"
 import {useEffect, useState} from "react"
 import {preload} from "swr"
+import PriceListTableBodyFallback from "@/app/price-list/table-body-fallback"
 
 preload("/drugs", getDrugs)
 
@@ -20,11 +21,7 @@ export default function PriceListTableBody(): React.ReactElement {
     const {data, isLoading, error} = useDrugs()
 
     if (isLoading || !ssrCompleted) {
-        return (
-            <TableBody>
-                <TableRow><TableCell><Text>Tunggu sebentar...</Text></TableCell></TableRow>
-            </TableBody>
-        )
+        return <PriceListTableBodyFallback/>
     }
 
     if (error) {

@@ -1,7 +1,8 @@
 import {Card, Col, Grid, Text, Title} from "@tremor/react"
 import PriceListTable from "@/app/price-list/table"
-import SearchButton from "@/shared-components/search-button"
 import {Suspense} from "react"
+import SearchButtonFallback from "@/shared-components/search-button-fallback"
+import SearchButton from "@/shared-components/search-button"
 
 export default async function PriceList(): Promise<React.ReactElement> {
     return (
@@ -10,7 +11,7 @@ export default async function PriceList(): Promise<React.ReactElement> {
 
             <Grid numItemsSm={1} numItemsMd={2} className="gap-4">
                 <Col>
-                    <Suspense>
+                    <Suspense fallback={<SearchButtonFallback/>}>
                         <SearchButton/>
                     </Suspense>
                 </Col>
