@@ -4,6 +4,11 @@ import SearchButtonFallback from "@/shared-components/search-button-fallback"
 import SearchButton from "@/shared-components/search-button"
 import PriceListTableFallback from "@/app/price-list/table-fallback"
 import PriceListTableServerFetch from "@/app/price-list/table-server-fetch"
+import {Metadata} from "next"
+
+export const metadata: Metadata = {
+    title: "Daftar Harga",
+}
 
 export default async function PriceList(): Promise<React.ReactElement> {
     return (

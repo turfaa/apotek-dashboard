@@ -2,6 +2,11 @@ import {Card, Flex, Title} from "@tremor/react"
 import StockOpnamesTable from "@/app/stock-opnames/table"
 import {DatePicker} from "@/lib/date-picker"
 import {getStockOpnames} from "@/lib/api/stock-opname"
+import {Metadata} from "next"
+
+export const metadata: Metadata = {
+    title: "Laporan Stok Opname",
+}
 
 export default async function StockOpnames({searchParams}: {
     searchParams?: { [key: string]: string | undefined }

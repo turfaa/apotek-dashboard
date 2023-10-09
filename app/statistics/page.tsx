@@ -1,5 +1,10 @@
 import {Title} from "@tremor/react"
 import ClientSide from "@/app/statistics/client"
+import {Metadata} from "next"
+
+export const metadata: Metadata = {
+    title: "Ringkasan Harian",
+}
 
 
 export default function Statistics(): React.ReactElement {

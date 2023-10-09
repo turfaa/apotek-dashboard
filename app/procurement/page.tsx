@@ -19,9 +19,11 @@ export async function generateMetadata(props: ProcurementProps): Promise<Metadat
 
     let title
     if (print === "true") {
-        title = `${moment().format("YYYY-MM-DD")}${q ? ` - ${q}` : ""}`
+        title = {
+            absolute: `${moment().format("YYYY-MM-DD")}${q ? ` - ${q}` : ""}`
+        }
     } else {
-        title = "Daftar Pesanan Obat"
+        title = "Daftar Pesanan"
     }
 
     return {
