@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.2.3] - 2023-10-09
+### :bug: Bug Fixes
+- [`2be3795`](https://github.com/turfaa/apotek-dashboard/commit/2be3795b1848de8c1ab451b0f214cb52922d4f6f) - Use suspense when using client components with useSearchParams() *(commit by [@turfaa](https://github.com/turfaa))*
+- [`1bb106b`](https://github.com/turfaa/apotek-dashboard/commit/1bb106b5054ac60bcc9de215ed2cb30db3ac5ec0) - Use streaming pattern for price list page *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.2.2] - 2023-10-08
 ### :bug: Bug Fixes
 - [`0e9fb23`](https://github.com/turfaa/apotek-dashboard/commit/0e9fb2309e4573e42ca8e3d0fe013d678c096e2a) - Call /drugs API from client side to make the first load faster *(commit by [@turfaa](https://github.com/turfaa))*
@@ -59,3 +65,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.2.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.1.5...v0.2.0
 [v0.2.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.2.0...v0.2.1
 [v0.2.2]: https://github.com/turfaa/apotek-dashboard/compare/v0.2.1...v0.2.2
+[v0.2.3]: https://github.com/turfaa/apotek-dashboard/compare/v0.2.2...v0.2.3
