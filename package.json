@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "experimental-compile": "next experimental-compile"
+    "experimental-compile": "next build"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
