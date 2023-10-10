@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.4.4] - 2023-10-10
+### :bug: Bug Fixes
+- [`955b994`](https://github.com/turfaa/apotek-dashboard/commit/955b994f6940fab3ab1a8bf66589f96cfe70d3a4) - Use icon.png in navbar fallback *(commit by [@turfaa](https://github.com/turfaa))*
+- [`0757345`](https://github.com/turfaa/apotek-dashboard/commit/0757345eb933873543fdc1b801ef236a29b42877) - revamp price list page *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.4.3] - 2023-10-10
 ### :bug: Bug Fixes
 - [`17df2c5`](https://github.com/turfaa/apotek-dashboard/commit/17df2c5a364da201a3261dbe8166a3592e5b6469) - **Dockerfile**: Remove COPY /app/public because the folder is deleted *(commit by [@turfaa](https://github.com/turfaa))*
@@ -105,3 +111,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.4.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.4.0...v0.4.1
 [v0.4.2]: https://github.com/turfaa/apotek-dashboard/compare/v0.4.1...v0.4.2
 [v0.4.3]: https://github.com/turfaa/apotek-dashboard/compare/v0.4.2...v0.4.3
+[v0.4.4]: https://github.com/turfaa/apotek-dashboard/compare/v0.4.3...v0.4.4
