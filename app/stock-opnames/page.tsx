@@ -1,6 +1,6 @@
 import {Card, Flex, Title} from "@tremor/react"
 import StockOpnamesTable from "@/app/stock-opnames/table"
-import {DatePicker} from "@/lib/date-picker"
+import {DatePicker} from "@/shared-components/date-picker"
 import {getStockOpnames} from "@/lib/api/stock-opname"
 import {Metadata} from "next"
 

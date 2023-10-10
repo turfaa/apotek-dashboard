@@ -3,16 +3,25 @@
 import {DrugWithUnits, Unit} from "@/lib/api/drug"
 import {Col, Flex, Grid, Subtitle, TableBody, TableCell, TableRow, Text} from "@tremor/react"
 import useSearch from "@/lib/search-hook"
+import {Session} from "next-auth"
+import {Role} from "@/lib/api/auth"
 
 export interface PriceListTableBodyNoFetchProps {
+    session: Session | null
     drugs: DrugWithUnits[]
 }
 
 const rupiah = new Intl.NumberFormat("id-ID", {style: "currency", currency: "IDR"})
 
-export default function PriceListTableBodyNoFetch({drugs}: PriceListTableBodyNoFetchProps): React.ReactElement {
+const rolesAllowedToSeeDiscountedPrice = [Role.ADMIN, Role.STAFF, Role.RESELLER]
+const rolesAllowedToSeePrescriptionPrice = [Role.ADMIN, Role.STAFF]
+
+export default function PriceListTableBodyNoFetch({session, drugs}: PriceListTableBodyNoFetchProps): React.ReactElement {
     const {query} = useSearch()
     const filtered = drugs.filter(drug => drug.name.toLowerCase().includes(query.toLowerCase())) ?? []
+
+    const allowedToSeeDiscountedPrice = rolesAllowedToSeeDiscountedPrice.includes(session?.user?.role ?? Role.GUEST)
+    const allowedToSeePrescriptionPrice = rolesAllowedToSeePrescriptionPrice.includes(session?.user?.role ?? Role.GUEST)
 
     return (
         <TableBody>
@@ -29,21 +38,25 @@ export default function PriceListTableBodyNoFetch({drugs}: PriceListTableBodyNoF
                                     <PriceCard title="Harga Normal" units={drug.units} priceGetter={normalPriceGetter}/>
                                 </Col>
 
-                                <Col>
-                                    <PriceCard
-                                        title="Harga Diskon"
-                                        units={drug.units}
-                                        priceGetter={discountPriceGetter}
-                                    />
-                                </Col>
+                                {allowedToSeeDiscountedPrice && (
+                                    <Col>
+                                        <PriceCard
+                                            title="Harga Diskon"
+                                            units={drug.units}
+                                            priceGetter={discountPriceGetter}
+                                        />
+                                    </Col>
+                                )}
 
-                                <Col>
-                                    <PriceCard
-                                        title="Harga Resep"
-                                        units={drug.units}
-                                        priceGetter={prescriptionPriceGetter}
-                                    />
-                                </Col>
+                                {allowedToSeePrescriptionPrice && (
+                                    <Col>
+                                        <PriceCard
+                                            title="Harga Resep"
+                                            units={drug.units}
+                                            priceGetter={prescriptionPriceGetter}
+                                        />
+                                    </Col>
+                                )}
                             </Grid>
                         </Flex>
                     </TableCell>

@@ -1,6 +1,6 @@
 import {Card, Flex, Title} from "@tremor/react"
 import SoldDrugsTable, {Row} from "@/app/sold-drugs/table"
-import {DatePicker} from "@/lib/date-picker"
+import {DatePicker} from "@/shared-components/date-picker"
 import {getSoldDrugs} from "@/lib/api/sold-drug"
 import {Metadata} from "next"
 

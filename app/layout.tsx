@@ -3,7 +3,7 @@ import type {Metadata} from 'next'
 import {Inter} from 'next/font/google'
 import React, {Suspense} from "react"
 import NavbarFallback from "@/app/navbar-fallback"
-import Navbar from "@/app/navbar"
+import Nav from "@/app/nav"
 
 const inter = Inter({subsets: ['latin']})
 
@@ -41,7 +41,7 @@ export default function RootLayout({children}: { children: React.ReactNode }) {
         <html lang="en" className="h-full bg-gray-50">
         <body className={inter.className}>
         <Suspense fallback={<NavbarFallback/>}>
-            <Navbar/>
+            <Nav/>
         </Suspense>
         {children}
         </body>

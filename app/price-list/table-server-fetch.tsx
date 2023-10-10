@@ -3,9 +3,14 @@ import PriceListTableBodyNoFetch from "@/app/price-list/table-body-no-fetch"
 import {Suspense} from "react"
 import PriceListTableBodyFallback from "@/app/price-list/table-body-fallback"
 import {getDrugs} from "@/lib/api/drug"
+import {authOptions} from "@/lib/auth"
+import {getServerSession} from "next-auth/next"
 
 export default async function PriceListTableServerFetch(): Promise<React.ReactElement> {
-    const {drugs} = await getDrugs()
+    const drugsPromise = getDrugs()
+    const sessionPromise = getServerSession(authOptions)
+
+    const [{drugs}, session] = await Promise.all([drugsPromise, sessionPromise])
 
     return (
         <Table>
@@ -17,7 +22,7 @@ export default async function PriceListTableServerFetch(): Promise<React.ReactEl
             </TableHead>
 
             <Suspense fallback={<PriceListTableBodyFallback/>}>
-                <PriceListTableBodyNoFetch drugs={drugs}/>
+                <PriceListTableBodyNoFetch session={session} drugs={drugs}/>
             </Suspense>
         </Table>
     )
