@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.4.2] - 2023-10-10
+### :sparkles: New Features
+- [`c2aa860`](https://github.com/turfaa/apotek-dashboard/commit/c2aa86000bad7a95626ac8516a85fd9f80e41ff9) - Add authorization *(commit by [@turfaa](https://github.com/turfaa))*
+
+### :bug: Bug Fixes
+- [`bf313d0`](https://github.com/turfaa/apotek-dashboard/commit/bf313d058337fabaf1e1c2172e6f09a07eb78fc8) - Add metadata *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.4.1] - 2023-10-09
 ### :bug: Bug Fixes
 - [`b442d7c`](https://github.com/turfaa/apotek-dashboard/commit/b442d7c1f5a7adbf20daff3e5ebf70f3dc29065d) - use apotek-api.ed.id in .env *(commit by [@turfaa](https://github.com/turfaa))*
@@ -90,3 +98,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.2.5]: https://github.com/turfaa/apotek-dashboard/compare/v0.2.4...v0.2.5
 [v0.3.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.2.6...v0.3.0
 [v0.4.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.4.0...v0.4.1
+[v0.4.2]: https://github.com/turfaa/apotek-dashboard/compare/v0.4.1...v0.4.2
