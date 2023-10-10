@@ -1,5 +1,5 @@
 import Image from "next/image"
-import Logo from "@/app/logo.svg"
+import Logo from "@/app/icon.png"
 
 export default function NavbarFallback(): React.ReactElement {
     return (
