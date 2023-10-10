@@ -1,7 +1,7 @@
 "use client"
 
 import {DrugWithUnits, Unit} from "@/lib/api/drug"
-import {Col, Flex, Grid, Subtitle, TableBody, TableCell, TableRow, Text} from "@tremor/react"
+import {Bold, Flex, Grid, Subtitle, TableBody, TableCell, TableRow, Text} from "@tremor/react"
 import useSearch from "@/lib/search-hook"
 import {Session} from "next-auth"
 import {Role} from "@/lib/api/auth"
@@ -27,38 +27,28 @@ export default function PriceListTableBodyNoFetch({session, drugs}: PriceListTab
         <TableBody>
             {filtered.map((drug, index) => (
                 <TableRow key={index}>
-                    <TableCell>{index + 1}</TableCell>
+                    <TableCell className="flex flex-col gap-4">
+                        <Bold>{drug.name}</Bold>
 
-                    <TableCell>
-                        <Flex flexDirection="col" alignItems="start" className="gap-4">
-                            <Text>{drug.name}</Text>
+                        <Grid numItemsSm={1} numItemsMd={3} className="gap-4">
+                            <PriceCard title="Harga Normal" units={drug.units} priceGetter={normalPriceGetter}/>
 
-                            <Grid numItemsSm={1} numItemsMd={3} className="gap-4">
-                                <Col>
-                                    <PriceCard title="Harga Normal" units={drug.units} priceGetter={normalPriceGetter}/>
-                                </Col>
+                            {allowedToSeeDiscountedPrice && (
+                                <PriceCard
+                                    title="Harga Diskon"
+                                    units={drug.units}
+                                    priceGetter={discountPriceGetter}
+                                />
+                            )}
 
-                                {allowedToSeeDiscountedPrice && (
-                                    <Col>
-                                        <PriceCard
-                                            title="Harga Diskon"
-                                            units={drug.units}
-                                            priceGetter={discountPriceGetter}
-                                        />
-                                    </Col>
-                                )}
-
-                                {allowedToSeePrescriptionPrice && (
-                                    <Col>
-                                        <PriceCard
-                                            title="Harga Resep"
-                                            units={drug.units}
-                                            priceGetter={prescriptionPriceGetter}
-                                        />
-                                    </Col>
-                                )}
-                            </Grid>
-                        </Flex>
+                            {allowedToSeePrescriptionPrice && (
+                                <PriceCard
+                                    title="Harga Resep"
+                                    units={drug.units}
+                                    priceGetter={prescriptionPriceGetter}
+                                />
+                            )}
+                        </Grid>
                     </TableCell>
                 </TableRow>
             ))}
@@ -75,12 +65,16 @@ function PriceCard({title, units, priceGetter}: {
         <Flex flexDirection="col" alignItems="start" className="mr-4">
             <Subtitle>{title}</Subtitle>
 
-            {units.map((unit, index) => (
-                <Text key={index}>
-                    {rupiah.format(priceGetter(unit))} / {unit.unit}
-                    {!!unit.parentUnit && <> ({unit.conversionToParentUnit} {unit.parentUnit})</>}
-                </Text>
-            ))}
+            {units.map((unit, index) => {
+                let text = `${rupiah.format(priceGetter(unit))} / ${unit.unit}`
+                if (unit.conversionToParentUnit) {
+                    text += ` (${unit.conversionToParentUnit} ${unit.parentUnit})`
+                }
+
+                return (
+                    <Text key={index}>{text}</Text>
+                )
+            })}
         </Flex>
     )
 }

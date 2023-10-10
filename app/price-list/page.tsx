@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     title: "Daftar Harga",
 }
 
-export default async function PriceList(): Promise<React.ReactElement> {
+export default function PriceList(): React.ReactElement {
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <Title className="mb-4">Daftar Harga Obat</Title>
