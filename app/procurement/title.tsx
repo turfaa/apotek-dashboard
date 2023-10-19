@@ -1,24 +1,12 @@
 'use client'
 
-import {Flex, Subtitle, Title} from "@tremor/react"
-import PrintButton from "@/app/procurement/print-button"
-import {usePrintMode} from "@/lib/print-mode"
+import { usePrintMode } from "@/lib/print-mode"
 import useSearch from "@/lib/search-hook"
-import {useEffect, useState} from "react"
+import { Flex, Subtitle, Title } from "@tremor/react"
 
 export default function ProcurementTitle() {
-    const {isPrintMode, setPrintMode} = usePrintMode()
-    const {query} = useSearch()
-    const [pageLoadCompleted, setPageLoadCompleted] = useState(false)
-
-    useEffect(() => setPageLoadCompleted(true), [])
-
-    useEffect(() => {
-        if (isPrintMode && pageLoadCompleted) {
-            window.print()
-            setPrintMode(false)
-        }
-    }, [isPrintMode, setPrintMode, pageLoadCompleted])
+    const { isPrintMode } = usePrintMode()
+    const { query } = useSearch()
 
     const showQuery = isPrintMode && query.length > 0
 
@@ -28,8 +16,6 @@ export default function ProcurementTitle() {
                 <Title>Pesanan Apotek Aulia Farma ({new Date().toLocaleDateString("id-ID")})</Title>
                 {showQuery && <Subtitle>Kepada: {query}</Subtitle>}
             </Flex>
-
-            <PrintButton/>
         </Flex>
     )
 }

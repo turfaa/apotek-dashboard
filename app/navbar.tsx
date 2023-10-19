@@ -1,28 +1,42 @@
 'use client'
 
-import {usePathname} from 'next/navigation'
+import { Role } from '@/lib/api/auth'
+import { useNavigation } from "@/lib/navigation"
+import { usePrintMode } from "@/lib/print-mode"
+import PrintButton from '@/shared-components/print-button'
+import { Disclosure, Menu, Transition } from "@headlessui/react"
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"
+import { Session } from "next-auth"
+import { signIn, signOut } from "next-auth/react"
 import Image from 'next/image'
-import Logo from './icon.png'
+import { usePathname } from 'next/navigation'
+import { Fragment, useEffect, useState } from "react"
 import Anonymous from './anonymous.png'
-import {Disclosure, Menu, Transition} from "@headlessui/react"
-import {Bars3Icon, XMarkIcon} from "@heroicons/react/24/outline"
-import {useNavigation} from "@/lib/navigation"
-import {usePrintMode} from "@/lib/print-mode"
-import {Fragment} from "react"
-import {signIn, signOut} from "next-auth/react"
-import {Session} from "next-auth"
+import Logo from './icon.png'
+
+const rolesAllowedToPrint = [Role.ADMIN, Role.STAFF]
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
 }
 
-export default function Navbar({session}: { session?: Session | null }): React.ReactElement {
-    const {homepage, pages} = useNavigation(session?.user?.role)
+export default function Navbar({ session }: { session?: Session | null }): React.ReactElement {
+    const { homepage, pages } = useNavigation(session?.user?.role)
 
     let pathname = usePathname()
     if (pathname === '/') pathname = `/${homepage}`
 
-    const {isPrintMode} = usePrintMode()
+    const { isPrintMode, setPrintMode } = usePrintMode(session?.user?.role ?? Role.GUEST)
+    const [pageLoadCompleted, setPageLoadCompleted] = useState(false)
+
+    useEffect(() => setPageLoadCompleted(true), [])
+
+    useEffect(() => {
+        if (isPrintMode && pageLoadCompleted) {
+            window.print()
+            setPrintMode(false)
+        }
+    }, [isPrintMode, setPrintMode, pageLoadCompleted])
 
     if (isPrintMode) {
         return (<> </>)
@@ -30,13 +44,13 @@ export default function Navbar({session}: { session?: Session | null }): React.R
 
     return (
         <Disclosure as="nav" className="bg-white shadow-sm">
-            {({open}) => (
+            {({ open }) => (
                 <>
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                         <div className="flex h-16 justify-between">
                             <div className="flex">
                                 <div className="flex flex-shrink-0 items-center">
-                                    <Image src={Logo} height={40} width={40} alt="Logo"/>
+                                    <Image src={Logo} height={40} width={40} alt="Logo" />
                                 </div>
                                 <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
                                     {pages.map((item) => (
@@ -57,6 +71,8 @@ export default function Navbar({session}: { session?: Session | null }): React.R
                                 </div>
                             </div>
                             <div className="hidden sm:ml-6 sm:flex sm:items-center">
+                                {rolesAllowedToPrint.includes(session?.user?.role ?? Role.GUEST) && <PrintButton />}
+
                                 <Menu as="div" className="relative ml-3">
                                     <div>
                                         <Menu.Button
@@ -84,7 +100,7 @@ export default function Navbar({session}: { session?: Session | null }): React.R
                                             className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                             {session?.user ? (
                                                 <Menu.Item>
-                                                    {({active}) => (
+                                                    {({ active }) => (
                                                         <button
                                                             className={classNames(
                                                                 active ? 'bg-gray-100' : '',
@@ -98,7 +114,7 @@ export default function Navbar({session}: { session?: Session | null }): React.R
                                                 </Menu.Item>
                                             ) : (
                                                 <Menu.Item>
-                                                    {({active}) => (
+                                                    {({ active }) => (
                                                         <button
                                                             className={classNames(
                                                                 active ? 'bg-gray-100' : '',
@@ -120,9 +136,9 @@ export default function Navbar({session}: { session?: Session | null }): React.R
                                     className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2">
                                     <span className="sr-only">Open main menu</span>
                                     {open ? (
-                                        <XMarkIcon className="block h-6 w-6" aria-hidden="true"/>
+                                        <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
                                     ) : (
-                                        <Bars3Icon className="block h-6 w-6" aria-hidden="true"/>
+                                        <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
                                     )}
                                 </Disclosure.Button>
                             </div>
