@@ -1,18 +1,12 @@
-import {fetchAPI} from "@/lib/api/base"
-import {Drug} from "@/lib/api/drug"
+import { fetchAPI } from "@/lib/api/base"
+import { Drug } from "@/lib/api/drug"
 
 export interface DrugsToStockOpnameResponse {
     drugs: Drug[]
-    date: Date
-}
-
-export interface UnderlyingDrugsToStockOpnameResponse {
-    drugs: Drug[]
-    date: string
 }
 
 export async function getDrugsToStockOpname(date?: string): Promise<DrugsToStockOpnameResponse> {
-    const underlying = await fetchAPI<UnderlyingDrugsToStockOpnameResponse>(
+    return await fetchAPI<DrugsToStockOpnameResponse>(
         'GET',
         `/drugs/to-stock-opname/${date ? `?date=${date}` : ''}`,
         null,
@@ -22,9 +16,4 @@ export async function getDrugsToStockOpname(date?: string): Promise<DrugsToStock
             }
         }
     )
-
-    return {
-        ...underlying,
-        date: new Date(underlying.date),
-    }
 }
