@@ -18,7 +18,7 @@ export default async function StockOpnames({ searchParams }: {
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <Flex flexDirection="row" justifyContent="start" className="gap-2">
                 <Title>Laporan Stok Opname pada</Title>
-                <DatePicker value={searchParams?.date ? new Date(searchParams.date) : undefined} className="max-w-min" />
+                <DatePicker className="max-w-min" />
             </Flex>
 
             <TabGroup className="mt-4" tabLabels={["ringkasan", "detail"]}>
