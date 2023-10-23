@@ -4,6 +4,10 @@ export interface StockOpnamesResponse {
     stockOpnames: StockOpname[]
 }
 
+export interface StockOpnameSummariesResponse {
+    summaries: StockOpnameSummary[]
+}
+
 export interface StockOpname {
     vmedisId: string
     drugCode: string
@@ -18,10 +22,39 @@ export interface StockOpname {
     notes: string
 }
 
+export interface StockOpnameSummary {
+    drugCode: string
+    drugName: string
+    unit: string
+    changes: StockChange[]
+    quantityDifference: number
+    hppDifference: number
+    salePriceDifference: number
+}
+
+export interface StockChange {
+    batchCode: string
+    initialQuantity: number
+    realQuantity: number
+}
+
 export async function getStockOpnames(date?: string): Promise<StockOpnamesResponse> {
     return fetchAPI<StockOpnamesResponse>(
         'GET',
         `/stock-opnames/${date ? `?date=${date}` : ''}`,
+        null,
+        {
+            next: {
+                revalidate: 0, // Always revalidate.
+            }
+        }
+    )
+}
+
+export async function getStockOpnameSummaries(date?: string): Promise<StockOpnameSummariesResponse> {
+    return fetchAPI<StockOpnameSummariesResponse>(
+        'GET',
+        `/stock-opnames/summaries/${date ? `?date=${date}` : ''}`,
         null,
         {
             next: {

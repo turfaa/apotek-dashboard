@@ -1,17 +1,16 @@
-import {Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow} from "@tremor/react"
+import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@tremor/react"
 
-import {StockOpname} from "@/lib/api/stock-opname"
+import { getStockOpnames } from "@/lib/api/stock-opname"
 
 export interface StockOpnamesTableProps {
-    rows: Row[]
+    date?: string
 }
 
-export interface Row extends StockOpname {
-}
+const rupiah = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" })
 
-const rupiah = new Intl.NumberFormat("id-ID", {style: "currency", currency: "IDR"})
+export default async function StockOpnamesReportTable({ date }: StockOpnamesTableProps): Promise<React.ReactElement> {
+    const { stockOpnames } = await getStockOpnames(date)
 
-export default function StockOpnamesTable({rows}: StockOpnamesTableProps): React.ReactElement {
     return (
         <Table>
             <TableHead>
@@ -31,9 +30,9 @@ export default function StockOpnamesTable({rows}: StockOpnamesTableProps): React
             </TableHead>
 
             <TableBody>
-                {rows.map((row, index) => (
+                {stockOpnames.map((row, index) => (
                     <TableRow key={index}>
-                        <TableHeaderCell>{index + 1}</TableHeaderCell>
+                        <TableCell>{index + 1}</TableCell>
                         <TableCell>{row.vmedisId}</TableCell>
                         <TableCell>{row.drugName}</TableCell>
                         <TableCell>{row.batchCode}</TableCell>

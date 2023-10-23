@@ -1,8 +1,11 @@
-import StockOpnamesTable from "@/app/stock-opnames/table"
-import { getStockOpnames } from "@/lib/api/stock-opname"
 import { DatePicker } from "@/shared-components/date-picker"
-import { Card, Flex, Title } from "@tremor/react"
+import TabGroup from "@/shared-components/tab-group"
+import { Card, Flex, TabPanel, TabPanels, Text, Title } from "@tremor/react"
 import { Metadata } from "next"
+import { Suspense } from "react"
+import StockOpnamesReportTable from "./report-table"
+import StockOpnameSummaryTable from "./summary-table"
+import StockOpnameTabList from "./tab-list"
 
 export const metadata: Metadata = {
     title: "Laporan Stok Opname",
@@ -11,8 +14,6 @@ export const metadata: Metadata = {
 export default async function StockOpnames({ searchParams }: {
     searchParams?: { [key: string]: string | undefined }
 }): Promise<React.ReactElement> {
-    const { stockOpnames } = await getStockOpnames(searchParams?.date)
-
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <Flex flexDirection="row" justifyContent="start" className="gap-2">
@@ -20,9 +21,27 @@ export default async function StockOpnames({ searchParams }: {
                 <DatePicker value={searchParams?.date ? new Date(searchParams.date) : undefined} className="max-w-min" />
             </Flex>
 
-            <Card className="mt-4">
-                <StockOpnamesTable rows={stockOpnames} />
-            </Card>
-        </main>
+            <TabGroup className="mt-4" tabLabels={["ringkasan", "detail"]}>
+                <StockOpnameTabList />
+
+                <TabPanels className="mt-4">
+                    <TabPanel>
+                        <Card>
+                            <Suspense fallback={<Text>Loading...</Text>}>
+                                <StockOpnameSummaryTable date={searchParams?.date} />
+                            </Suspense>
+                        </Card>
+                    </TabPanel>
+
+                    <TabPanel>
+                        <Card>
+                            <Suspense fallback={<Text>Loading...</Text>}>
+                                <StockOpnamesReportTable date={searchParams?.date} />
+                            </Suspense>
+                        </Card>
+                    </TabPanel>
+                </TabPanels>
+            </TabGroup>
+        </main >
     )
 }
