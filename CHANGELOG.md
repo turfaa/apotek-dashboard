@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.6.0] - 2023-10-23
+### :sparkles: New Features
+- [`8cf1d7b`](https://github.com/turfaa/apotek-dashboard/commit/8cf1d7b6a4dbb0c563c62de0fa1b72eed15c68a5) - Remove dependencies to Sun Oct 22 05:50:16 WIB 2023 fields *(commit by [@turfaa](https://github.com/turfaa))*
+- [`fd44807`](https://github.com/turfaa/apotek-dashboard/commit/fd448071bb51a86446cbf3b450bf70cfc119b5bf) - **stock-opname-summary**: Show stock opname summaries in the stock opname report page *(commit by [@turfaa](https://github.com/turfaa))*
+
+### :bug: Bug Fixes
+- [`c0b4263`](https://github.com/turfaa/apotek-dashboard/commit/c0b426330565d8eb18a0c99f00177be21a4df630) - **date-picker**: Read date query param directly from DatePicker *(commit by [@turfaa](https://github.com/turfaa))*
+- [`92bea35`](https://github.com/turfaa/apotek-dashboard/commit/92bea35a2ecc27caed7801be056d9983ba55ce12) - Fetch in tables instead of in the parent page *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.5.1] - 2023-10-19
 ### :bug: Bug Fixes
 - [`aab23de`](https://github.com/turfaa/apotek-dashboard/commit/aab23de9fedc23616550926f37c1498ba7798dbd) - Update all dependencies to latest version *(commit by [@turfaa](https://github.com/turfaa))*
@@ -124,3 +134,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.4.4]: https://github.com/turfaa/apotek-dashboard/compare/v0.4.3...v0.4.4
 [v0.5.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.4.4...v0.5.0
 [v0.5.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.5.0...v0.5.1
+[v0.6.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.5.1...v0.6.0
