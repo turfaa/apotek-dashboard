@@ -1,20 +1,15 @@
-import {Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow} from "@tremor/react"
+import { getSoldDrugs } from "@/lib/api/sold-drug"
+import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@tremor/react"
 
 export interface SoldDrugsTableProps {
-    rows: Row[]
+    date?: string
 }
 
-export interface Row {
-    vmedisCode: string
-    name: string
-    manufacturer: string
-    occurrences: number
-    totalAmount: number
-}
+const rupiah = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" })
 
-const rupiah = new Intl.NumberFormat("id-ID", {style: "currency", currency: "IDR"})
+export default async function SoldDrugsTable({ date }: SoldDrugsTableProps): Promise<React.ReactElement> {
+    const { drugs } = await getSoldDrugs(date)
 
-export default function SoldDrugsTable({rows}: SoldDrugsTableProps): React.ReactElement {
     return (
         <Table>
             <TableHead>
@@ -28,13 +23,13 @@ export default function SoldDrugsTable({rows}: SoldDrugsTableProps): React.React
             </TableHead>
 
             <TableBody>
-                {rows.map((row, index) => (
+                {drugs.map((drug, index) => (
                     <TableRow key={index}>
                         <TableHeaderCell>{index + 1}</TableHeaderCell>
-                        <TableCell>{row.name}</TableCell>
-                        <TableCell>{row.manufacturer}</TableCell>
-                        <TableCell>{row.occurrences.toLocaleString("id-ID")} Kali</TableCell>
-                        <TableCell>{rupiah.format(row.totalAmount)}</TableCell>
+                        <TableCell>{drug.drug.name}</TableCell>
+                        <TableCell>{drug.drug.manufacturer}</TableCell>
+                        <TableCell>{drug.occurrences.toLocaleString("id-ID")} Kali</TableCell>
+                        <TableCell>{rupiah.format(drug.totalAmount)}</TableCell>
                     </TableRow>
                 ))}
             </TableBody>

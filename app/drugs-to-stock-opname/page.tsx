@@ -1,24 +1,14 @@
-import DrugsTable, { Row } from "@/app/drugs-to-stock-opname/table"
-import { getDrugsToStockOpname } from "@/lib/api/drugs-to-stock-opname"
+import DrugsTable from "@/app/drugs-to-stock-opname/table"
 import { DatePicker } from "@/shared-components/date-picker"
-import { Card, Flex, Title } from "@tremor/react"
+import { Card, Flex, Text, Title } from "@tremor/react"
 import { Metadata } from "next"
+import { Suspense } from "react"
 
 export const metadata: Metadata = {
     title: "Obat Harus Stok Opname",
 }
 
-export default async function DrugsToStockOpname({ searchParams }: {
-    searchParams?: { [key: string]: string | undefined }
-}): Promise<React.ReactElement> {
-    const { drugs } = await getDrugsToStockOpname(searchParams?.date)
-
-    const tableRows: Row[] = drugs.map(drug => ({
-        vmedisCode: drug.vmedisCode,
-        name: drug.name,
-        manufacturer: drug.manufacturer,
-    }))
-
+export default function DrugsToStockOpname({ searchParams }: { searchParams?: { [key: string]: string | undefined } }): React.ReactElement {
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <Flex flexDirection="row" justifyContent="start" className="gap-2">
@@ -27,7 +17,9 @@ export default async function DrugsToStockOpname({ searchParams }: {
             </Flex>
 
             <Card className="mt-4">
-                <DrugsTable rows={tableRows} />
+                <Suspense fallback={<Text>Loading...</Text>}>
+                    <DrugsTable date={searchParams?.date} />
+                </Suspense>
             </Card>
         </main>
     )

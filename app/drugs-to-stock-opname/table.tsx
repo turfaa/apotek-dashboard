@@ -1,16 +1,13 @@
-import {Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow} from "@tremor/react"
+import { getDrugsToStockOpname } from "@/lib/api/drugs-to-stock-opname"
+import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@tremor/react"
 
 export interface DrugsTableProps {
-    rows: Row[]
+    date?: string
 }
 
-export interface Row {
-    vmedisCode: string
-    name: string
-    manufacturer: string
-}
+export default async function DrugsTable({ date }: DrugsTableProps): Promise<React.ReactElement> {
+    const { drugs } = await getDrugsToStockOpname(date)
 
-export default function DrugsTable({rows}: DrugsTableProps): React.ReactElement {
     return (
         <Table>
             <TableHead>
@@ -22,11 +19,11 @@ export default function DrugsTable({rows}: DrugsTableProps): React.ReactElement 
             </TableHead>
 
             <TableBody>
-                {rows.map((row, index) => (
+                {drugs.map((drug, index) => (
                     <TableRow key={index}>
                         <TableHeaderCell>{index + 1}</TableHeaderCell>
-                        <TableCell>{row.name}</TableCell>
-                        <TableCell>{row.manufacturer}</TableCell>
+                        <TableCell>{drug.name}</TableCell>
+                        <TableCell>{drug.manufacturer}</TableCell>
                     </TableRow>
                 ))}
             </TableBody>
