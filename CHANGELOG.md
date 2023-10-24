@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.7.0] - 2023-10-24
+### :sparkles: New Features
+- [`f74c995`](https://github.com/turfaa/apotek-dashboard/commit/f74c995a1eb7dd7155cec832149dca1e498fdbe5) - Support using date range *(commit by [@turfaa](https://github.com/turfaa))*
+
+### :wrench: Chores
+- [`145e08f`](https://github.com/turfaa/apotek-dashboard/commit/145e08ff85bc361d72a471414308a52be8e0647a) - Remove './' usage *(commit by [@turfaa](https://github.com/turfaa))*
+- [`64b8a50`](https://github.com/turfaa/apotek-dashboard/commit/64b8a502efb01ff869490730066c138c9bc0f394) - Update all dependencies *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.6.1] - 2023-10-24
 ### :bug: Bug Fixes
 - [`033b6c9`](https://github.com/turfaa/apotek-dashboard/commit/033b6c9f80b362484b4375e9b2cec6cd78e2e090) - **stock-opname-report**: Use English for tab names *(commit by [@turfaa](https://github.com/turfaa))*
@@ -141,3 +150,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.5.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.5.0...v0.5.1
 [v0.6.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.5.1...v0.6.0
 [v0.6.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.6.0...v0.6.1
+[v0.7.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.6.1...v0.7.0
