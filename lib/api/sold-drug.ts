@@ -1,4 +1,5 @@
 import { fetchAPI } from "@/lib/api/base"
+import { buildDateRangeQueryParams } from "@/lib/api/common"
 import { Drug } from "@/lib/api/drug"
 
 export interface SoldDrugsResponse {
@@ -11,10 +12,10 @@ export interface SoldDrug {
     totalAmount: number
 }
 
-export async function getSoldDrugs(date?: string): Promise<SoldDrugsResponse> {
+export async function getSoldDrugs(from?: string, until?: string): Promise<SoldDrugsResponse> {
     return await fetchAPI<SoldDrugsResponse>(
         'GET',
-        `/sales/drugs${date ? `?date=${date}` : ''}`,
+        `/sales/drugs?${buildDateRangeQueryParams(from, until)}`,
         null,
         {
             next: {

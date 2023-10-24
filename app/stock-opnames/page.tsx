@@ -1,11 +1,11 @@
-import { DatePicker } from "@/shared-components/date-picker"
+import StockOpnamesReportTable from "@/app/stock-opnames/report-table"
+import StockOpnameSummaryTable from "@/app/stock-opnames/summary-table"
+import StockOpnameTabList from "@/app/stock-opnames/tab-list"
+import { DateRangePicker } from "@/shared-components/date-range-picker"
 import TabGroup from "@/shared-components/tab-group"
 import { Card, Flex, TabPanel, TabPanels, Text, Title } from "@tremor/react"
 import { Metadata } from "next"
 import { Suspense } from "react"
-import StockOpnamesReportTable from "./report-table"
-import StockOpnameSummaryTable from "./summary-table"
-import StockOpnameTabList from "./tab-list"
 
 export const metadata: Metadata = {
     title: "Laporan Stok Opname",
@@ -18,7 +18,7 @@ export default async function StockOpnames({ searchParams }: {
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <Flex flexDirection="row" justifyContent="start" className="gap-2">
                 <Title>Laporan Stok Opname pada</Title>
-                <DatePicker className="max-w-min" />
+                <DateRangePicker className="max-w-min" />
             </Flex>
 
             <TabGroup className="mt-4" tabLabels={["summary", "details"]}>
@@ -28,7 +28,7 @@ export default async function StockOpnames({ searchParams }: {
                     <TabPanel>
                         <Card>
                             <Suspense fallback={<Text>Loading...</Text>}>
-                                <StockOpnameSummaryTable date={searchParams?.date} />
+                                <StockOpnameSummaryTable from={searchParams?.from} until={searchParams?.until} />
                             </Suspense>
                         </Card>
                     </TabPanel>
@@ -36,7 +36,7 @@ export default async function StockOpnames({ searchParams }: {
                     <TabPanel>
                         <Card>
                             <Suspense fallback={<Text>Loading...</Text>}>
-                                <StockOpnamesReportTable date={searchParams?.date} />
+                                <StockOpnamesReportTable from={searchParams?.from} until={searchParams?.until} />
                             </Suspense>
                         </Card>
                     </TabPanel>

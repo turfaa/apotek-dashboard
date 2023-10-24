@@ -1,5 +1,5 @@
 import SoldDrugsTable from "@/app/sold-drugs/table"
-import { DatePicker } from "@/shared-components/date-picker"
+import { DateRangePicker } from "@/shared-components/date-range-picker"
 import { Card, Flex, Text, Title } from "@tremor/react"
 import { Metadata } from "next"
 import { Suspense } from "react"
@@ -13,12 +13,12 @@ export default function SoldDrugs({ searchParams }: { searchParams?: { [key: str
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <Flex flexDirection="row" justifyContent="start" className="gap-2">
                 <Title>Obat Terjual pada</Title>
-                <DatePicker className="max-w-min" />
+                <DateRangePicker className="max-w-min" />
             </Flex>
 
             <Card className="mt-4">
                 <Suspense fallback={<Text>Loading...</Text>}>
-                    <SoldDrugsTable date={searchParams?.date} />
+                    <SoldDrugsTable from={searchParams?.from} until={searchParams?.until} />
                 </Suspense>
             </Card>
         </main>

@@ -1,4 +1,5 @@
 import { fetchAPI } from "@/lib/api/base"
+import { buildDateRangeQueryParams } from "@/lib/api/common"
 
 export interface StockOpnamesResponse {
     stockOpnames: StockOpname[]
@@ -38,10 +39,10 @@ export interface StockChange {
     realQuantity: number
 }
 
-export async function getStockOpnames(date?: string): Promise<StockOpnamesResponse> {
+export async function getStockOpnames(from?: string, until?: string): Promise<StockOpnamesResponse> {
     return fetchAPI<StockOpnamesResponse>(
         'GET',
-        `/stock-opnames/${date ? `?date=${date}` : ''}`,
+        `/stock-opnames?${buildDateRangeQueryParams(from, until)}`,
         null,
         {
             next: {
@@ -51,10 +52,10 @@ export async function getStockOpnames(date?: string): Promise<StockOpnamesRespon
     )
 }
 
-export async function getStockOpnameSummaries(date?: string): Promise<StockOpnameSummariesResponse> {
+export async function getStockOpnameSummaries(from?: string, until?: string): Promise<StockOpnameSummariesResponse> {
     return fetchAPI<StockOpnameSummariesResponse>(
         'GET',
-        `/stock-opnames/summaries/${date ? `?date=${date}` : ''}`,
+        `/stock-opnames/summaries?${buildDateRangeQueryParams(from, until)}`,
         null,
         {
             next: {

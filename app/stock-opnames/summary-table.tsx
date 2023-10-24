@@ -2,13 +2,14 @@ import { getStockOpnameSummaries } from "@/lib/api/stock-opname"
 import { Flex, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, Text } from "@tremor/react"
 
 export interface StockOpnameSummaryTableProps {
-    date?: string
+    from?: string
+    until?: string
 }
 
 const rupiah = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" })
 
-export default async function StockOpnameSummaryTable({ date }: StockOpnameSummaryTableProps): Promise<React.ReactElement> {
-    const { summaries } = await getStockOpnameSummaries(date)
+export default async function StockOpnameSummaryTable({ from, until }: StockOpnameSummaryTableProps): Promise<React.ReactElement> {
+    const { summaries } = await getStockOpnameSummaries(from, until)
     const totalHppDifference = summaries.reduce((total, summary) => total + summary.hppDifference, 0)
     const totalSalePriceDifference = summaries.reduce((total, summary) => total + summary.salePriceDifference, 0)
 

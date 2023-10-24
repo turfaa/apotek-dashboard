@@ -3,13 +3,14 @@ import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } fro
 import { getStockOpnames } from "@/lib/api/stock-opname"
 
 export interface StockOpnamesTableProps {
-    date?: string
+    from?: string
+    until?: string
 }
 
 const rupiah = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" })
 
-export default async function StockOpnamesReportTable({ date }: StockOpnamesTableProps): Promise<React.ReactElement> {
-    const { stockOpnames } = await getStockOpnames(date)
+export default async function StockOpnamesReportTable({ from, until }: StockOpnamesTableProps): Promise<React.ReactElement> {
+    const { stockOpnames } = await getStockOpnames(from, until)
 
     return (
         <Table>
