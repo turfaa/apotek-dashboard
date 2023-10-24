@@ -21,7 +21,7 @@ export default async function StockOpnames({ searchParams }: {
                 <DatePicker className="max-w-min" />
             </Flex>
 
-            <TabGroup className="mt-4" tabLabels={["ringkasan", "detail"]}>
+            <TabGroup className="mt-4" tabLabels={["summary", "details"]}>
                 <StockOpnameTabList />
 
                 <TabPanels className="mt-4">
