@@ -1,6 +1,6 @@
+import { Role } from "@/lib/api/auth"
 import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation"
 import { startTransition } from "react"
-import { Role } from "./api/auth"
 
 const rolesAllowedToPrint = [Role.ADMIN, Role.STAFF]
 export interface PrintModeHook {
