@@ -3,5 +3,5 @@ export function buildDateRangeQueryParams(from?: string, until?: string): string
         return ""
     }
 
-    return until ? `from=${from}&to=${until}` : `from=${from}`
+    return until ? `from=${from}&until=${until}` : `from=${from}`
 }
