@@ -1,5 +1,5 @@
 import { getSoldDrugs } from "@/lib/api/sold-drug"
-import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@tremor/react"
+import { Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow } from "@tremor/react"
 
 export interface SoldDrugsTableProps {
     from?: string
@@ -10,6 +10,7 @@ const rupiah = new Intl.NumberFormat("id-ID", { style: "currency", currency: "ID
 
 export default async function SoldDrugsTable({ from, until }: SoldDrugsTableProps): Promise<React.ReactElement> {
     const { drugs } = await getSoldDrugs(from, until)
+    const totalPrice = drugs.reduce((total, drug) => total + drug.totalAmount, 0)
 
     return (
         <Table>
@@ -34,6 +35,13 @@ export default async function SoldDrugsTable({ from, until }: SoldDrugsTableProp
                     </TableRow>
                 ))}
             </TableBody>
+
+            <TableFoot>
+                <TableRow>
+                    <TableCell colSpan={4}>Total</TableCell>
+                    <TableCell>{rupiah.format(totalPrice)}</TableCell>
+                </TableRow>
+            </TableFoot>
         </Table>
     )
 }
