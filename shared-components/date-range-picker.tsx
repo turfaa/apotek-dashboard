@@ -82,6 +82,7 @@ export function DateRangePicker(props: DateRangePickerProps): React.ReactElement
                 params.set("from", moment(newFrom).format("YYYY-MM-DD"))
                 params.set("until", moment(newUntil).format("YYYY-MM-DD"))
                 setTextValue(dateRange.selectValue)
+
                 push(`${pathname}?${params.toString()}`)
             }}
         >
