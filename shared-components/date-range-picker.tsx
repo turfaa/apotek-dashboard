@@ -75,8 +75,12 @@ export function DateRangePicker(props: DateRangePickerProps): React.ReactElement
             enableClear={false}
             onValueChange={dateRange => {
                 const params: URLSearchParams = new URLSearchParams(window.location.search)
-                params.set("from", moment(dateRange.from ?? new Date()).format("YYYY-MM-DD"))
-                params.set("until", moment(dateRange.to ?? new Date()).format("YYYY-MM-DD"))
+
+                const newFrom = dateRange.from ?? from
+                const newUntil = dateRange.to ?? newFrom
+
+                params.set("from", moment(newFrom).format("YYYY-MM-DD"))
+                params.set("until", moment(newUntil).format("YYYY-MM-DD"))
                 setTextValue(dateRange.selectValue)
                 push(`${pathname}?${params.toString()}`)
             }}
