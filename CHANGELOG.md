@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.8.0] - 2023-10-26
+### :sparkles: New Features
+- [`019573f`](https://github.com/turfaa/apotek-dashboard/commit/019573f8f80a23acd679de12ad8e796babce9bf1) - **sold-drugs**: Add total price in the footer *(commit by [@turfaa](https://github.com/turfaa))*
+- [`af5a881`](https://github.com/turfaa/apotek-dashboard/commit/af5a881456122ce7c1d8a386020343b60764d711) - **sale-statistics**: Support changing date range for sale statistics *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.7.2] - 2023-10-25
 ### :bug: Bug Fixes
 - [`92bc00f`](https://github.com/turfaa/apotek-dashboard/commit/92bc00f6d62d7809ed8d55639a2d225b46503920) - **date-range-picker**: Fix date range API url *(commit by [@turfaa](https://github.com/turfaa))*
@@ -166,3 +172,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.7.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.6.1...v0.7.0
 [v0.7.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.7.0...v0.7.1
 [v0.7.2]: https://github.com/turfaa/apotek-dashboard/compare/v0.7.1...v0.7.2
+[v0.8.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.7.2...v0.8.0
