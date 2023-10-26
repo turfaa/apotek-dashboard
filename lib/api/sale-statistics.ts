@@ -1,4 +1,5 @@
-import {fetchAPI} from "@/lib/api/base"
+import { fetchAPI } from "@/lib/api/base"
+import { buildDateRangeQueryParams } from "@/lib/api/common"
 
 export interface SalesStatisticsResponse {
     history: SalesStatistics[]
@@ -20,8 +21,28 @@ interface UnderlyingSalesStatistics {
     numberOfSales: number
 }
 
+export async function getSalesStatistics(from?: string, until?: string): Promise<SalesStatisticsResponse> {
+    const underlying = await fetchAPI<UnderlyingSalesStatisticsResponse>(
+        'GET',
+        `/sales/statistics?${buildDateRangeQueryParams(from, until)}`,
+        null,
+        {
+            cache: 'no-cache',
+        }
+    )
+
+    return {
+        history: underlying.history.map((item: UnderlyingSalesStatistics): SalesStatistics => {
+            return {
+                ...item,
+                pulledAt: new Date(item.pulledAt),
+            }
+        })
+    }
+}
+
 export async function getDailySalesStatistics(): Promise<SalesStatisticsResponse> {
-    let underlying: UnderlyingSalesStatisticsResponse = await fetchAPI<UnderlyingSalesStatisticsResponse>(
+    const underlying: UnderlyingSalesStatisticsResponse = await fetchAPI<UnderlyingSalesStatisticsResponse>(
         'GET',
         '/sales/statistics/daily',
         null,

@@ -1,8 +1,8 @@
-import {Card} from "@tremor/react"
-import {Line} from "react-chartjs-2"
-import {Chart, registerables} from "chart.js"
-import ChartDataLabels from 'chartjs-plugin-datalabels'
+import { Card } from "@tremor/react"
+import { Chart, registerables } from "chart.js"
 import 'chartjs-adapter-moment'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
+import { Line } from "react-chartjs-2"
 
 export interface MetricChartProps {
     title: string
@@ -24,17 +24,17 @@ export default function MetricChart(props: MetricChartProps): React.ReactElement
             // The y value is the difference between the current datum and the previous datum.
             {
                 x: datum.timestamp,
-                y: datum.value - (index == 0 ? 0 : self[index - 1].value),
+                y: Math.max(0, datum.value - (index == 0 ? 0 : self[index - 1].value)),
             }))
-        .filter((datum, index, self) =>
-            // Filter out a datum if it's the same as the next datum.
-            index == self.length - 1 || datum.y != self[index + 1].y
-        )
+    // .filter((datum, index, self) =>
+    //     // Filter out a datum if it's the same as the next datum.
+    //     index == self.length - 1 || datum.y != self[index + 1].y
+    // )
 
     return (
         <Card>
             <Line
-                data={{datasets: [{data}]}}
+                data={{ datasets: [{ data }] }}
                 options={{
                     responsive: true,
                     maintainAspectRatio: false,
@@ -45,14 +45,14 @@ export default function MetricChart(props: MetricChartProps): React.ReactElement
                                 unit: 'hour'
                             }
                         },
-                        y: {beginAtZero: true}
+                        y: { beginAtZero: true }
                     },
                     plugins: {
-                        legend: {display: false},
+                        legend: { display: false },
                         datalabels: {
                             display: 'auto',
                             anchor: 'end',
-                            formatter: ({y}) => formatter(y),
+                            formatter: ({ y }) => formatter(y),
                         },
                     },
                     locale: 'id-ID',

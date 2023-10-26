@@ -1,13 +1,15 @@
+import { buildDateRangeQueryParams } from "@/lib/api/common"
+import { DrugsResponse, getDrugs } from "@/lib/api/drug"
 import {
-    getProcurementRecommendations,
     Procurement,
-    ProcurementRecommendationsResponse
+    ProcurementRecommendationsResponse,
+    getProcurementRecommendations
 } from "@/lib/api/procurement-recommendation"
+import { SalesStatisticsResponse, getDailySalesStatistics, getSalesStatistics } from "@/lib/api/sale-statistics"
+import { useState } from "react"
 import useSWR from "swr"
-import {create} from "zustand"
-import {devtools, persist} from "zustand/middleware"
-import {getDailySalesStatistics, SalesStatisticsResponse} from "@/lib/api/sale-statistics"
-import {DrugsResponse, getDrugs} from "@/lib/api/drug"
+import { create } from "zustand"
+import { devtools, persist } from "zustand/middleware"
 
 export interface DrugsHook {
     data?: DrugsResponse
@@ -16,25 +18,52 @@ export interface DrugsHook {
 }
 
 export function useDrugs(): DrugsHook {
-    const {data, error, isLoading} = useSWR(
+    const { data, error, isLoading } = useSWR(
         '/drugs',
         getDrugs,
     )
 
-    return {data, isLoading, error}
+    return { data, isLoading, error }
 }
 
-export interface SalesStatisticsHook {
+export interface DailySalesStatisticsHook {
     data?: SalesStatisticsResponse
     isLoading: boolean
     error?: Error
 }
 
-export function useDailySalesStatistics(): SalesStatisticsHook {
-    const {data, error, isLoading} = useSWR(
+export interface SalesStatisticsHook {
+    setDateRange: (from?: string, until?: string) => void
+    data?: SalesStatisticsResponse
+    isLoading: boolean
+    error?: Error
+}
+
+export function useSalesStatistics(): SalesStatisticsHook {
+    const [dateRange, setDateRange] = useState<[string?, string?]>()
+    const [from, until] = dateRange ?? [undefined, undefined]
+
+    const { data, error, isLoading } = useSWR(
+        `/sales/statistics?${buildDateRangeQueryParams(from, until)}`,
+        () => getSalesStatistics(from, until),
+        { refreshInterval: 10 * 1000 },
+    )
+
+    return {
+        setDateRange: (from?: string, until?: string) => {
+            setDateRange([from, until])
+        },
+        data,
+        isLoading,
+        error,
+    }
+}
+
+export function useDailySalesStatistics(): DailySalesStatisticsHook {
+    const { data, error, isLoading } = useSWR(
         '/sales/statistics/daily',
         getDailySalesStatistics,
-        {refreshInterval: 10 * 1000},
+        { refreshInterval: 10 * 1000 },
     )
 
     return {
@@ -61,23 +90,23 @@ export const useProcurementRecommendations = create<ProcurementRecommendationsHo
             (set): ProcurementRecommendationsHook => ({
                 isLoading: false,
                 refresh: async () => {
-                    set({isLoading: true})
+                    set({ isLoading: true })
                     try {
                         const data: ProcurementRecommendationsResponse = await getProcurementRecommendations()
                         const keyedData: Record<string, Procurement> = data.recommendations.reduce((acc, curr): Record<string, Procurement> => ({
                             ...acc, [curr.drug.vmedisCode]: curr
                         }), {})
 
-                        set({data: keyedData, error: undefined})
+                        set({ data: keyedData, error: undefined })
                     } catch (error) {
                         if (error instanceof Error) {
-                            set({error})
+                            set({ error })
                         } else {
-                            set({error: new Error('Unknown error: ' + JSON.stringify(error))})
+                            set({ error: new Error('Unknown error: ' + JSON.stringify(error)) })
                         }
                     }
 
-                    set({isLoading: false})
+                    set({ isLoading: false })
                 },
                 setData: (key, value) => {
                     set(state => ({
@@ -89,8 +118,8 @@ export const useProcurementRecommendations = create<ProcurementRecommendationsHo
                 },
                 deleteData: (key) => {
                     set(state => {
-                        const {[key]: _, ...rest} = state.data ?? {}
-                        return {data: rest}
+                        const { [key]: _, ...rest } = state.data ?? {}
+                        return { data: rest }
                     })
                 },
             }),
