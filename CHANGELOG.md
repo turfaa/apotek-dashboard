@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.9.0] - 2023-10-31
+### :sparkles: New Features
+- [`88a0ec4`](https://github.com/turfaa/apotek-dashboard/commit/88a0ec45d70c6e52b0d59a382102d148585a62f7) - **drugs-to-stock-opname**: Support both sales-based and conservative mode for fetching drugs to stock opname *(commit by [@turfaa](https://github.com/turfaa))*
+- [`55735cc`](https://github.com/turfaa/apotek-dashboard/commit/55735cca9dd13f1b7932cb67ed7979d271f590f7) - Use GeistSans font *(commit by [@turfaa](https://github.com/turfaa))*
+
+### :bug: Bug Fixes
+- [`920a9b4`](https://github.com/turfaa/apotek-dashboard/commit/920a9b4d35bc5883872b0f6ada96f49f1f57030c) - **hooks**: Use useMemo and directly get date range from useSearchParams *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.8.0] - 2023-10-26
 ### :sparkles: New Features
 - [`019573f`](https://github.com/turfaa/apotek-dashboard/commit/019573f8f80a23acd679de12ad8e796babce9bf1) - **sold-drugs**: Add total price in the footer *(commit by [@turfaa](https://github.com/turfaa))*
@@ -173,3 +182,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.7.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.7.0...v0.7.1
 [v0.7.2]: https://github.com/turfaa/apotek-dashboard/compare/v0.7.1...v0.7.2
 [v0.8.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.7.2...v0.8.0
+[v0.9.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.8.0...v0.9.0
