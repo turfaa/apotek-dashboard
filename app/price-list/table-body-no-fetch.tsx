@@ -1,24 +1,25 @@
 "use client"
 
-import {DrugWithUnits, Unit} from "@/lib/api/drug"
-import {Bold, Flex, Grid, Subtitle, TableBody, TableCell, TableRow, Text} from "@tremor/react"
+import { Role } from "@/lib/api/auth"
+import { DrugWithUnits, Unit } from "@/lib/api/drug"
 import useSearch from "@/lib/search-hook"
-import {Session} from "next-auth"
-import {Role} from "@/lib/api/auth"
+import { Bold, Flex, Grid, Subtitle, TableBody, TableCell, TableRow, Text } from "@tremor/react"
+import { Session } from "next-auth"
+import { useMemo } from "react"
 
 export interface PriceListTableBodyNoFetchProps {
     session: Session | null
     drugs: DrugWithUnits[]
 }
 
-const rupiah = new Intl.NumberFormat("id-ID", {style: "currency", currency: "IDR"})
+const rupiah = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" })
 
 const rolesAllowedToSeeDiscountedPrice = [Role.ADMIN, Role.STAFF, Role.RESELLER]
 const rolesAllowedToSeePrescriptionPrice = [Role.ADMIN, Role.STAFF]
 
-export default function PriceListTableBodyNoFetch({session, drugs}: PriceListTableBodyNoFetchProps): React.ReactElement {
-    const {query} = useSearch()
-    const filtered = drugs.filter(drug => drug.name.toLowerCase().includes(query.toLowerCase())) ?? []
+export default function PriceListTableBodyNoFetch({ session, drugs }: PriceListTableBodyNoFetchProps): React.ReactElement {
+    const { query } = useSearch()
+    const filtered = useMemo(() => drugs.filter(drug => drug.name.toLowerCase().includes(query.toLowerCase())) ?? [], [drugs, query])
 
     const allowedToSeeDiscountedPrice = rolesAllowedToSeeDiscountedPrice.includes(session?.user?.role ?? Role.GUEST)
     const allowedToSeePrescriptionPrice = rolesAllowedToSeePrescriptionPrice.includes(session?.user?.role ?? Role.GUEST)
@@ -31,7 +32,7 @@ export default function PriceListTableBodyNoFetch({session, drugs}: PriceListTab
                         <Bold>{drug.name}</Bold>
 
                         <Grid numItemsSm={1} numItemsMd={3} className="gap-4">
-                            <PriceCard title="Harga Normal" units={drug.units} priceGetter={normalPriceGetter}/>
+                            <PriceCard title="Harga Normal" units={drug.units} priceGetter={normalPriceGetter} />
 
                             {allowedToSeeDiscountedPrice && (
                                 <PriceCard
@@ -56,7 +57,7 @@ export default function PriceListTableBodyNoFetch({session, drugs}: PriceListTab
     )
 }
 
-function PriceCard({title, units, priceGetter}: {
+function PriceCard({ title, units, priceGetter }: {
     title: string,
     units: Unit[],
     priceGetter: (unit: Unit) => number

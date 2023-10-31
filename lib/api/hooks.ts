@@ -6,7 +6,7 @@ import {
     getProcurementRecommendations
 } from "@/lib/api/procurement-recommendation"
 import { SalesStatisticsResponse, getDailySalesStatistics, getSalesStatistics } from "@/lib/api/sale-statistics"
-import { useState } from "react"
+import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation"
 import useSWR from "swr"
 import { create } from "zustand"
 import { devtools, persist } from "zustand/middleware"
@@ -33,15 +33,15 @@ export interface DailySalesStatisticsHook {
 }
 
 export interface SalesStatisticsHook {
-    setDateRange: (from?: string, until?: string) => void
     data?: SalesStatisticsResponse
     isLoading: boolean
     error?: Error
 }
 
 export function useSalesStatistics(): SalesStatisticsHook {
-    const [dateRange, setDateRange] = useState<[string?, string?]>()
-    const [from, until] = dateRange ?? [undefined, undefined]
+    const searchParams: ReadonlyURLSearchParams = useSearchParams()
+    const from = searchParams.get('from') ?? undefined
+    const until = searchParams.get('until') ?? undefined
 
     const { data, error, isLoading } = useSWR(
         `/sales/statistics?${buildDateRangeQueryParams(from, until)}`,
@@ -50,9 +50,6 @@ export function useSalesStatistics(): SalesStatisticsHook {
     )
 
     return {
-        setDateRange: (from?: string, until?: string) => {
-            setDateRange([from, until])
-        },
         data,
         isLoading,
         error,

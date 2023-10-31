@@ -11,15 +11,7 @@ import { useEffect } from "react"
 const rupiah = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" })
 
 export default function ClientSide(): React.ReactElement {
-    const { setDateRange, data, error, isLoading } = useSalesStatistics()
-    const searchParams: ReadonlyURLSearchParams = useSearchParams()
-
-    const from = searchParams.get("from") ?? undefined
-    const until = searchParams.get("until") ?? undefined
-
-    useEffect(() => {
-        setDateRange(from, until)
-    }, [from, until])
+    const { data, error, isLoading } = useSalesStatistics()
 
     if (isLoading) return <p>Loading...</p>
 
