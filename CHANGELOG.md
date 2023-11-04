@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.10.0] - 2023-11-04
+### :sparkles: New Features
+- [`6f942b5`](https://github.com/turfaa/apotek-dashboard/commit/6f942b56a5846dca9e7bdb3f68140560e2bcfeb3) - Add invoice calculator page *(commit by [@turfaa](https://github.com/turfaa))*
+
+### :wrench: Chores
+- [`8bc75d2`](https://github.com/turfaa/apotek-dashboard/commit/8bc75d29a26d01ccc59f6064d8d8dc87edf8f588) - Use shared rupiah object *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.9.1] - 2023-10-31
 ### :bug: Bug Fixes
 - [`85e7752`](https://github.com/turfaa/apotek-dashboard/commit/85e7752a085ce6b323ab1e8cd22617a0b2e37c7b) - **tabs**: Hide tabs in print mode *(commit by [@turfaa](https://github.com/turfaa))*
@@ -189,3 +197,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.8.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.7.2...v0.8.0
 [v0.9.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.8.0...v0.9.0
 [v0.9.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.9.0...v0.9.1
+[v0.10.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.9.1...v0.10.0
