@@ -1,9 +1,9 @@
+import '@/app/globals.css'
 import Nav from "@/app/nav"
 import NavbarFallback from "@/app/navbar-fallback"
 import { GeistSans } from "geist/font"
 import type { Metadata } from 'next'
 import React, { Suspense } from "react"
-import './globals.css'
 
 export const metadata: Metadata = {
     title: {

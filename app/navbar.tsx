@@ -1,5 +1,7 @@
 'use client'
 
+import Anonymous from '@/app/anonymous.png'
+import Logo from '@/app/icon.png'
 import { Role } from '@/lib/api/auth'
 import { useNavigation } from "@/lib/navigation"
 import { usePrintMode } from "@/lib/print-mode"
@@ -11,8 +13,6 @@ import { signIn, signOut } from "next-auth/react"
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { Fragment, useEffect, useState } from "react"
-import Anonymous from './anonymous.png'
-import Logo from './icon.png'
 
 const rolesAllowedToPrint = [Role.ADMIN, Role.STAFF]
 
