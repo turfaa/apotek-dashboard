@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
+    "@maskito/kit": "^1.8.1",
+    "@maskito/react": "^1.8.1",
     "@tremor/react": "^3.10.1",
     "@types/react": "18.2.31",
     "autoprefixer": "^10.4.16",
