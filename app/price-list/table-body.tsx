@@ -1,27 +1,26 @@
 "use client"
 
-import {getDrugs, Unit} from "@/lib/api/drug"
-import {Callout, Col, Flex, Grid, Subtitle, TableBody, TableCell, TableRow, Text} from "@tremor/react"
-import useSearch from "@/lib/search-hook"
-import {useDrugs} from "@/lib/api/hooks"
-import {ExclamationTriangleIcon} from "@heroicons/react/24/solid"
-import {useEffect, useState} from "react"
-import {preload} from "swr"
 import PriceListTableBodyFallback from "@/app/price-list/table-body-fallback"
+import { getDrugs, Unit } from "@/lib/api/drug"
+import { useDrugs } from "@/lib/api/hooks"
+import { rupiah } from "@/lib/rupiah"
+import useSearch from "@/lib/search-hook"
+import { ExclamationTriangleIcon } from "@heroicons/react/24/solid"
+import { Callout, Col, Flex, Grid, Subtitle, TableBody, TableCell, TableRow, Text } from "@tremor/react"
+import { useEffect, useState } from "react"
+import { preload } from "swr"
 
 preload("/drugs", getDrugs)
-
-const rupiah = new Intl.NumberFormat("id-ID", {style: "currency", currency: "IDR"})
 
 export default function PriceListTableBody(): React.ReactElement {
     const [ssrCompleted, setSsrCompleted] = useState(false)
     useEffect(() => setSsrCompleted(true), [])
 
-    const {query} = useSearch()
-    const {data, isLoading, error} = useDrugs()
+    const { query } = useSearch()
+    const { data, isLoading, error } = useDrugs()
 
     if (isLoading || !ssrCompleted) {
-        return <PriceListTableBodyFallback/>
+        return <PriceListTableBodyFallback />
     }
 
     if (error) {
@@ -49,7 +48,7 @@ export default function PriceListTableBody(): React.ReactElement {
 
                             <Grid numItemsSm={1} numItemsMd={3} className="gap-4">
                                 <Col>
-                                    <PriceCard title="Harga Normal" units={drug.units} priceGetter={normalPriceGetter}/>
+                                    <PriceCard title="Harga Normal" units={drug.units} priceGetter={normalPriceGetter} />
                                 </Col>
 
                                 <Col>
@@ -76,7 +75,7 @@ export default function PriceListTableBody(): React.ReactElement {
     )
 }
 
-function PriceCard({title, units, priceGetter}: {
+function PriceCard({ title, units, priceGetter }: {
     title: string,
     units: Unit[],
     priceGetter: (unit: Unit) => number

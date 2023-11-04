@@ -2,6 +2,7 @@
 
 import { Role } from "@/lib/api/auth"
 import { DrugWithUnits, Unit } from "@/lib/api/drug"
+import { rupiah } from "@/lib/rupiah"
 import useSearch from "@/lib/search-hook"
 import { Bold, Flex, Grid, Subtitle, TableBody, TableCell, TableRow, Text } from "@tremor/react"
 import { Session } from "next-auth"
@@ -11,8 +12,6 @@ export interface PriceListTableBodyNoFetchProps {
     session: Session | null
     drugs: DrugWithUnits[]
 }
-
-const rupiah = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" })
 
 const rolesAllowedToSeeDiscountedPrice = [Role.ADMIN, Role.STAFF, Role.RESELLER]
 const rolesAllowedToSeePrescriptionPrice = [Role.ADMIN, Role.STAFF]

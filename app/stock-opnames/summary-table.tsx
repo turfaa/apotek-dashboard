@@ -1,12 +1,11 @@
 import { getStockOpnameSummaries } from "@/lib/api/stock-opname"
+import { rupiah } from "@/lib/rupiah"
 import { Flex, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, Text } from "@tremor/react"
 
 export interface StockOpnameSummaryTableProps {
     from?: string
     until?: string
 }
-
-const rupiah = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" })
 
 export default async function StockOpnameSummaryTable({ from, until }: StockOpnameSummaryTableProps): Promise<React.ReactElement> {
     const { summaries } = await getStockOpnameSummaries(from, until)

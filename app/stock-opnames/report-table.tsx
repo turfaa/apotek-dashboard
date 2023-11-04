@@ -1,13 +1,12 @@
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@tremor/react"
 
 import { getStockOpnames } from "@/lib/api/stock-opname"
+import { rupiah } from "@/lib/rupiah"
 
 export interface StockOpnamesTableProps {
     from?: string
     until?: string
 }
-
-const rupiah = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" })
 
 export default async function StockOpnamesReportTable({ from, until }: StockOpnamesTableProps): Promise<React.ReactElement> {
     const { stockOpnames } = await getStockOpnames(from, until)

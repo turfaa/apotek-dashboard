@@ -1,12 +1,11 @@
 import { getSoldDrugs } from "@/lib/api/sold-drug"
+import { rupiah } from "@/lib/rupiah"
 import { Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow } from "@tremor/react"
 
 export interface SoldDrugsTableProps {
     from?: string
     until?: string
 }
-
-const rupiah = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" })
 
 export default async function SoldDrugsTable({ from, until }: SoldDrugsTableProps): Promise<React.ReactElement> {
     const { drugs } = await getSoldDrugs(from, until)

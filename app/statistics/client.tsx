@@ -3,12 +3,9 @@
 import MetricGrid, { Datum } from "@/app/statistics/metric-grid"
 import { useSalesStatistics } from "@/lib/api/hooks"
 import { SalesStatistics } from "@/lib/api/sale-statistics"
+import { rupiah } from "@/lib/rupiah"
 import { ExclamationTriangleIcon } from "@heroicons/react/24/solid"
 import { Callout } from "@tremor/react"
-import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation"
-import { useEffect } from "react"
-
-const rupiah = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" })
 
 export default function ClientSide(): React.ReactElement {
     const { data, error, isLoading } = useSalesStatistics()
