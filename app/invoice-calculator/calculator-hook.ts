@@ -27,10 +27,14 @@ export const useCalculator = create<CalculatorHook>()(
             (set) => ({
                 invoices: [] as Invoice[],
 
-                setCalculator: (calculator) => {
+                setCalculator: (calculator) => set(state => {
+                    if (calculator.supplier == state.calculator?.supplier) {
+                        return {}
+                    }
+
                     const invoices = calculator ? [newInvoice(calculator)] : []
-                    set({ calculator, invoices })
-                },
+                    return { calculator, invoices }
+                }),
 
                 addInvoice: () => set(state => {
                     if (!state.calculator) {

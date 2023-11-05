@@ -5,8 +5,8 @@ import { TrashIcon } from "@heroicons/react/24/outline"
 import { maskitoTransform } from "@maskito/core"
 import { maskitoNumberOptionsGenerator, maskitoParseNumber } from "@maskito/kit"
 import { useMaskito } from "@maskito/react"
-import { Bold, Button, Flex, Switch, Text, Title, TextInput as UnderlyingTextInput } from "@tremor/react"
-import { FormEventHandler, useMemo } from "react"
+import { Bold, Button, Flex, Switch, Text, TextInputProps, Title, TextInput as UnderlyingTextInput } from "@tremor/react"
+import { useMemo } from "react"
 
 export interface InvoiceCardProps {
     title: string
@@ -43,6 +43,7 @@ export default function InvoiceCard({ title, invoice, shouldRound, updateInvoice
                         <TextInput
                             className="max-w-xs"
                             value={maskitoTransform(component.amount.toString().replace(".", ","), maskitoOptions)}
+                            onFocus={e => e.currentTarget.select()}
                             onInput={e => {
                                 let amount = maskitoParseNumber(e.currentTarget.value, ",")
                                 if (isNaN(amount)) {
@@ -86,15 +87,13 @@ export default function InvoiceCard({ title, invoice, shouldRound, updateInvoice
     )
 }
 
-function TextInput({ value, onInput, className }: { value: string, onInput: FormEventHandler<HTMLInputElement>, className?: string }): React.ReactElement {
+function TextInput(props: TextInputProps): React.ReactElement {
     const rupiahMask = useMaskito({ options: maskitoOptions })
 
     return (
         <UnderlyingTextInput
+            {...props}
             ref={rupiahMask}
-            className={className}
-            value={value}
-            onInput={onInput}
         />
     )
 }
