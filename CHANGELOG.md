@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.10.1] - 2023-11-05
+### :bug: Bug Fixes
+- [`f1f33d5`](https://github.com/turfaa/apotek-dashboard/commit/f1f33d53779a50d33be6fecfef87afdab0833994) - Minor improvements on Invoice Calculator *(commit by [@turfaa](https://github.com/turfaa))*
+
+### :wrench: Chores
+- [`2fd3047`](https://github.com/turfaa/apotek-dashboard/commit/2fd30475d7c0dc891f387f8b6546944c34f821c9) - Fully use import '@' instead of './' *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.10.0] - 2023-11-04
 ### :sparkles: New Features
 - [`6f942b5`](https://github.com/turfaa/apotek-dashboard/commit/6f942b56a5846dca9e7bdb3f68140560e2bcfeb3) - Add invoice calculator page *(commit by [@turfaa](https://github.com/turfaa))*
@@ -198,3 +206,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.9.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.8.0...v0.9.0
 [v0.9.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.9.0...v0.9.1
 [v0.10.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.9.1...v0.10.0
+[v0.10.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.10.0...v0.10.1
