@@ -15,9 +15,9 @@ const availablePages: Page[] = [
     { name: "Ringkasan", href: "/statistics", allowedRoles: [Role.ADMIN] },
     { name: "Daftar Harga", href: "/price-list" },
     { name: "Pesanan", href: "/procurement", allowedRoles: [Role.ADMIN, Role.STAFF] },
-    { name: "Obat Terjual", href: "/sold-drugs", allowedRoles: [Role.ADMIN, Role.STAFF] },
+    { name: "Obat Terjual", href: "/sold-drugs", allowedRoles: [Role.ADMIN] },
     { name: "Obat Harus Stok Opname", href: "/drugs-to-stock-opname", allowedRoles: [Role.ADMIN, Role.STAFF] },
-    { name: "Laporan Stok Opname", href: "/stock-opnames", allowedRoles: [Role.ADMIN, Role.STAFF] },
+    { name: "Laporan Stok Opname", href: "/stock-opnames", allowedRoles: [Role.ADMIN] },
     { name: "Kalkulator Faktur", href: "/invoice-calculator", allowedRoles: [Role.ADMIN, Role.STAFF] },
 ]
 
