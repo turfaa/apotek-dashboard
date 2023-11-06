@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.10.2] - 2023-11-06
+### :bug: Bug Fixes
+- [`0459042`](https://github.com/turfaa/apotek-dashboard/commit/0459042648479d883d79aa8c1e1a283e8d809ae5) - Revamp STAFF privileges *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.10.1] - 2023-11-05
 ### :bug: Bug Fixes
 - [`f1f33d5`](https://github.com/turfaa/apotek-dashboard/commit/f1f33d53779a50d33be6fecfef87afdab0833994) - Minor improvements on Invoice Calculator *(commit by [@turfaa](https://github.com/turfaa))*
@@ -207,3 +212,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.9.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.9.0...v0.9.1
 [v0.10.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.9.1...v0.10.0
 [v0.10.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.10.0...v0.10.1
+[v0.10.2]: https://github.com/turfaa/apotek-dashboard/compare/v0.10.1...v0.10.2
