@@ -18,6 +18,8 @@ RUN \
 
 # Rebuild the source code only when needed
 FROM base AS builder
+RUN apk add --no-cache tzdata
+
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -51,5 +53,6 @@ EXPOSE 3000
 
 ENV PORT 3000
 ENV HOSTNAME 0.0.0.0
+ENV TZ Asia/Jakarta
 
 CMD ["node", "server.js"]
