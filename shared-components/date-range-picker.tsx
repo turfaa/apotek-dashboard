@@ -6,6 +6,7 @@ import {
     startOfMonth,
     startOfToday,
     startOfYear,
+    startOfYesterday,
     sub
 } from "date-fns"
 import { id } from "date-fns/locale"
@@ -20,12 +21,18 @@ interface DateRangePickerOption {
 }
 
 const today = startOfToday()
+const yesterday = startOfYesterday()
 
 const options: DateRangePickerOption[] = [
     {
         value: "Hari ini",
         from: today,
         until: today,
+    },
+    {
+        value: "Kemarin",
+        from: yesterday,
+        until: yesterday,
     },
     {
         value: "7 hari terakhir",
