@@ -11,7 +11,7 @@ import {
 import { id } from "date-fns/locale"
 import moment from "moment/moment"
 import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation"
-import { useState } from "react"
+import { useState, useTransition } from "react"
 
 interface DateRangePickerOption {
     value: string
@@ -50,6 +50,7 @@ const options: DateRangePickerOption[] = [
 ]
 
 export function DateRangePicker(props: DateRangePickerProps): React.ReactElement {
+    const [isPending, startTransition] = useTransition()
     const { push } = useRouter()
     const pathname: string = usePathname()
     const { isPrintMode } = usePrintMode()
@@ -70,20 +71,23 @@ export function DateRangePicker(props: DateRangePickerProps): React.ReactElement
     return (
         <Underlying
             {...props}
+            disabled={isPending}
             value={{ from: from, to: until, selectValue: textValue }}
             locale={id}
             enableClear={false}
             onValueChange={dateRange => {
-                const params: URLSearchParams = new URLSearchParams(window.location.search)
 
                 const newFrom = dateRange.from ?? from
                 const newUntil = dateRange.to ?? newFrom
 
+                const params: URLSearchParams = new URLSearchParams(window.location.search)
                 params.set("from", moment(newFrom).format("YYYY-MM-DD"))
                 params.set("until", moment(newUntil).format("YYYY-MM-DD"))
-                setTextValue(dateRange.selectValue)
 
-                push(`${pathname}?${params.toString()}`)
+                startTransition(() => {
+                    setTextValue(dateRange.selectValue)
+                    push(`${pathname}?${params.toString()}`)
+                })
             }}
         >
             {options.map(option => <DateRangePickerItem key={option.value} value={option.value} from={option.from} to={option.until} />)}

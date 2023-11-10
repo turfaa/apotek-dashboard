@@ -7,6 +7,7 @@ import useSearch from "@/lib/search-hook"
 import { Bold, Flex, Grid, Subtitle, TableBody, TableCell, TableRow, Text } from "@tremor/react"
 import { Session } from "next-auth"
 import { useMemo } from "react"
+import PriceListTableBodyFallback from "./table-body-fallback"
 
 export interface PriceListTableBodyNoFetchProps {
     session: Session | null
@@ -17,11 +18,15 @@ const rolesAllowedToSeeDiscountedPrice = [Role.ADMIN, Role.STAFF, Role.RESELLER]
 const rolesAllowedToSeePrescriptionPrice = [Role.ADMIN, Role.STAFF]
 
 export default function PriceListTableBodyNoFetch({ session, drugs }: PriceListTableBodyNoFetchProps): React.ReactElement {
-    const { query } = useSearch()
+    const { isPending, query } = useSearch()
     const filtered = useMemo(() => drugs.filter(drug => drug.name.toLowerCase().includes(query.toLowerCase())) ?? [], [drugs, query])
 
     const allowedToSeeDiscountedPrice = rolesAllowedToSeeDiscountedPrice.includes(session?.user?.role ?? Role.GUEST)
     const allowedToSeePrescriptionPrice = rolesAllowedToSeePrescriptionPrice.includes(session?.user?.role ?? Role.GUEST)
+
+    if (isPending) {
+        return <PriceListTableBodyFallback />
+    }
 
     return (
         <TableBody>
