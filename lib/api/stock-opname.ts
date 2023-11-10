@@ -9,6 +9,10 @@ export interface StockOpnameSummariesResponse {
     summaries: StockOpnameSummary[]
 }
 
+interface UnderlyingStockOpnameSummariesResponse {
+    summaries: UnderlyingStockOpnameSummary[]
+}
+
 export interface StockOpname {
     vmedisId: string
     drugCode: string
@@ -24,6 +28,18 @@ export interface StockOpname {
 }
 
 export interface StockOpnameSummary {
+    date: Date
+    drugCode: string
+    drugName: string
+    unit: string
+    changes: StockChange[]
+    quantityDifference: number
+    hppDifference: number
+    salePriceDifference: number
+}
+
+interface UnderlyingStockOpnameSummary {
+    date: string
     drugCode: string
     drugName: string
     unit: string
@@ -53,7 +69,7 @@ export async function getStockOpnames(from?: string, until?: string): Promise<St
 }
 
 export async function getStockOpnameSummaries(from?: string, until?: string): Promise<StockOpnameSummariesResponse> {
-    return fetchAPI<StockOpnameSummariesResponse>(
+    const res = await fetchAPI<UnderlyingStockOpnameSummariesResponse>(
         'GET',
         `/stock-opnames/summaries?${buildDateRangeQueryParams(from, until)}`,
         null,
@@ -63,4 +79,13 @@ export async function getStockOpnameSummaries(from?: string, until?: string): Pr
             }
         }
     )
+
+    return {
+        summaries: res.summaries.map((item: UnderlyingStockOpnameSummary): StockOpnameSummary => {
+            return {
+                ...item,
+                date: new Date(item.date),
+            }
+        })
+    }
 }

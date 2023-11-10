@@ -17,6 +17,7 @@ export default async function StockOpnameSummaryTable({ from, until }: StockOpna
             <TableHead>
                 <TableRow>
                     <TableHeaderCell>No</TableHeaderCell>
+                    <TableHeaderCell>Tanggal</TableHeaderCell>
                     <TableHeaderCell>Nama Obat</TableHeaderCell>
                     <TableHeaderCell>Perubahan Stok</TableHeaderCell>
                     <TableHeaderCell>Selisih Stok</TableHeaderCell>
@@ -29,6 +30,7 @@ export default async function StockOpnameSummaryTable({ from, until }: StockOpna
                 {summaries.map((row, index) => (
                     <TableRow key={index}>
                         <TableCell>{index + 1}</TableCell>
+                        <TableCell>{row.date.toLocaleDateString("id-ID")}</TableCell>
                         <TableCell>{row.drugName}</TableCell>
                         <TableCell>
                             <Flex flexDirection="col" alignItems="start">
@@ -46,7 +48,7 @@ export default async function StockOpnameSummaryTable({ from, until }: StockOpna
 
             <TableFoot>
                 <TableRow>
-                    <TableCell colSpan={4}>Total</TableCell>
+                    <TableCell colSpan={5}>Total</TableCell>
                     <TableCell>{rupiah.format(totalHppDifference)}</TableCell>
                     <TableCell>{rupiah.format(totalSalePriceDifference)}</TableCell>
                 </TableRow>
