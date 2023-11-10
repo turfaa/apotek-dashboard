@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.10.4] - 2023-11-10
+### :bug: Bug Fixes
+- [`935a7a3`](https://github.com/turfaa/apotek-dashboard/commit/935a7a31383465fe8e205f2c83ace8078cf26628) - use transitions when changing url *(commit by [@turfaa](https://github.com/turfaa))*
+- [`af22d46`](https://github.com/turfaa/apotek-dashboard/commit/af22d46afec68b254d31c6dfbbde8e445989af01) - **stock-opname-summary**: Add date column *(commit by [@turfaa](https://github.com/turfaa))*
+- [`f496fcd`](https://github.com/turfaa/apotek-dashboard/commit/f496fcda97a2bbf7813689ec9de63665fbfe27f9) - **date-range-picker**: Add yesterday query *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.10.3] - 2023-11-09
 ### :bug: Bug Fixes
 - [`f846868`](https://github.com/turfaa/apotek-dashboard/commit/f8468688335a047e16dd68ae5cf2bd457ab4956c) - Use Asia/Jakarta timezone *(commit by [@turfaa](https://github.com/turfaa))*
@@ -219,3 +226,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.10.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.10.0...v0.10.1
 [v0.10.2]: https://github.com/turfaa/apotek-dashboard/compare/v0.10.1...v0.10.2
 [v0.10.3]: https://github.com/turfaa/apotek-dashboard/compare/v0.10.2...v0.10.3
+[v0.10.4]: https://github.com/turfaa/apotek-dashboard/compare/v0.10.3...v0.10.4
