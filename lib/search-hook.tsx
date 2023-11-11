@@ -1,5 +1,6 @@
-import {ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams} from "next/navigation"
-import {useTransition} from "react"
+import { useQueryState } from "next-usequerystate"
+import { useCallback, useTransition } from "react"
+
 
 export interface SearchHook {
     query: string
@@ -8,29 +9,25 @@ export interface SearchHook {
 }
 
 export default function useSearch(): SearchHook {
-    const {replace} = useRouter()
-    const pathname: string = usePathname()
+    const [query, setRawQuery] = useQueryState("query", { throttleMs: 500 })
     const [isPending, startTransition] = useTransition()
-    const searchParams: ReadonlyURLSearchParams = useSearchParams()
 
-    function handleSearch(query: string): void {
-        const trimmedQuery = titleCase(query).trim()
-        const params: URLSearchParams = new URLSearchParams(window.location.search)
-        if (trimmedQuery) {
-            params.set("q", trimmedQuery)
-        } else {
-            params.delete("q")
-        }
+    const setQuery = useCallback((q: string) => {
+        const trimmedQuery = titleCase(q).trim()
 
         startTransition(() => {
-            replace(`${pathname}?${params.toString()}`)
+            if (trimmedQuery == "") {
+                setRawQuery(null)
+            } else {
+                setRawQuery(trimmedQuery)
+            }
         })
-    }
+    }, [setRawQuery])
 
     return {
-        query: searchParams.get("q") ?? "",
-        setQuery: handleSearch,
-        isPending,
+        query: query ?? "",
+        setQuery,
+        isPending
     }
 }
 
