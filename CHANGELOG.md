@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.10.6] - 2023-11-13
+### :bug: Bug Fixes
+- [`0bb7315`](https://github.com/turfaa/apotek-dashboard/commit/0bb7315b7e043443f6108311bcb68b3dafb168a7) - Use 'query' query param to create procurement page title *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.10.5] - 2023-11-11
 ### :bug: Bug Fixes
 - [`26050af`](https://github.com/turfaa/apotek-dashboard/commit/26050af89721a961d7abbeb856a56cd2c7414fe7) - **search-hook**: Don't fetch from server when client-only search is supported *(commit by [@turfaa](https://github.com/turfaa))*
@@ -233,3 +238,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.10.3]: https://github.com/turfaa/apotek-dashboard/compare/v0.10.2...v0.10.3
 [v0.10.4]: https://github.com/turfaa/apotek-dashboard/compare/v0.10.3...v0.10.4
 [v0.10.5]: https://github.com/turfaa/apotek-dashboard/compare/v0.10.4...v0.10.5
+[v0.10.6]: https://github.com/turfaa/apotek-dashboard/compare/v0.10.5...v0.10.6
