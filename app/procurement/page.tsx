@@ -1,12 +1,12 @@
-import {Card, Col, Flex, Grid} from "@tremor/react"
-import SearchButton from "@/shared-components/search-button"
+import NewDrugButton from "@/app/procurement/new-drug-button"
 import RefreshButton from "@/app/procurement/refresh-button"
 import ProcurementTable from "@/app/procurement/table"
-import NewDrugButton from "@/app/procurement/new-drug-button"
 import ProcurementTitle from "@/app/procurement/title"
-import {Metadata} from "next"
+import SearchButton from "@/shared-components/search-button"
+import { Card, Col, Flex, Grid } from "@tremor/react"
 import moment from "moment/moment"
-import {Suspense} from "react"
+import { Metadata } from "next"
+import { Suspense } from "react"
 
 interface ProcurementProps {
     searchParams: {
@@ -15,12 +15,12 @@ interface ProcurementProps {
 }
 
 export async function generateMetadata(props: ProcurementProps): Promise<Metadata> {
-    const {q, print} = props.searchParams
+    const { query, print } = props.searchParams
 
     let title
     if (print === "true") {
         title = {
-            absolute: `${moment().format("YYYY-MM-DD")}${q ? ` - ${q}` : ""}`
+            absolute: `${moment().format("YYYY-MM-DD")}${query ? ` - ${query}` : ""}`
         }
     } else {
         title = "Daftar Pesanan"
@@ -37,28 +37,28 @@ export default function Procurement() {
         <main className="p-4 md:p-10 mx-auto">
             <Flex className="pb-4">
                 <Suspense>
-                    <ProcurementTitle/>
+                    <ProcurementTitle />
                 </Suspense>
             </Flex>
 
             <Grid numItemsSm={1} numItemsMd={2} className="gap-4">
                 <Col>
                     <Suspense>
-                        <SearchButton/>
+                        <SearchButton />
                     </Suspense>
                 </Col>
 
                 <Col className="justify-self-end flex gap-4">
                     <Suspense>
-                        <NewDrugButton/>
-                        <RefreshButton/>
+                        <NewDrugButton />
+                        <RefreshButton />
                     </Suspense>
                 </Col>
             </Grid>
 
             <Card className="mt-4">
                 <Suspense>
-                    <ProcurementTable/>
+                    <ProcurementTable />
                 </Suspense>
             </Card>
         </main>
