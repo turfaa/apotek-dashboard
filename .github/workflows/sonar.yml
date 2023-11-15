@@ -1,7 +1,8 @@
 name: Sonar
 on:
   push:
-    tags: [ 'v*.*.*' ]
+    branches:
+      - main
 
 jobs:
   sonarcloud:
