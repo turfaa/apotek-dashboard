@@ -75,7 +75,7 @@ export interface ProcurementRecommendationsHook {
     isLoading: boolean
     error?: Error
 
-    refresh: () => void
+    refresh: () => Promise<void>
     setData: (key: string, value: Procurement) => void
     deleteData: (key: string) => void
 }
