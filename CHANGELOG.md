@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.10.8] - 2023-11-15
+### :bug: Bug Fixes
+- [`556dea3`](https://github.com/turfaa/apotek-dashboard/commit/556dea3c405bc4ccd770202f36802bd5eb040c72) - Use sonar on main branch *(commit by [@turfaa](https://github.com/turfaa))*
+- [`de6f243`](https://github.com/turfaa/apotek-dashboard/commit/de6f2431fea04df0726491f1e30a90931a19d4b3) - **procurement-recommendations-hook**: Change refresh function return to Promise *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.10.7] - 2023-11-15
 ### :bug: Bug Fixes
 - [`c84a707`](https://github.com/turfaa/apotek-dashboard/commit/c84a707af9ddd72cddde2c80456bf83117aeb6e4) - Add sonar *(commit by [@turfaa](https://github.com/turfaa))*
@@ -245,3 +251,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.10.5]: https://github.com/turfaa/apotek-dashboard/compare/v0.10.4...v0.10.5
 [v0.10.6]: https://github.com/turfaa/apotek-dashboard/compare/v0.10.5...v0.10.6
 [v0.10.7]: https://github.com/turfaa/apotek-dashboard/compare/v0.10.6...v0.10.7
+[v0.10.8]: https://github.com/turfaa/apotek-dashboard/compare/v0.10.7...v0.10.8
