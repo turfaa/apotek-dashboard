@@ -17,11 +17,11 @@ export interface InvoiceComponent {
 
 export async function GetInvoiceCalculators(): Promise<InvoiceCalculatorsResponse> {
     return await fetchAPI<InvoiceCalculatorsResponse>(
-        'GET',
-        '/procurement/invoice-calculators',
+        "GET",
+        "/procurement/invoice-calculators",
         null,
         {
-            cache: 'no-cache',
-        }
+            cache: "no-cache",
+        },
     )
 }

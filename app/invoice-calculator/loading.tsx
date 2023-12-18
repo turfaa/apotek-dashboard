@@ -11,6 +11,6 @@ export default function InvoiceCalculator(): React.ReactElement {
             <Card className="mt-4">
                 <Text>Silakan pilih supplier terlebih dahulu...</Text>
             </Card>
-        </main >
+        </main>
     )
 }

@@ -1,4 +1,11 @@
-import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@tremor/react"
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeaderCell,
+    TableRow,
+} from "@tremor/react"
 
 import { getStockOpnames } from "@/lib/api/stock-opname"
 import { rupiah } from "@/lib/rupiah"
@@ -8,7 +15,10 @@ export interface StockOpnamesTableProps {
     until?: string
 }
 
-export default async function StockOpnamesReportTable({ from, until }: StockOpnamesTableProps): Promise<React.ReactElement> {
+export default async function StockOpnamesReportTable({
+    from,
+    until,
+}: StockOpnamesTableProps): Promise<React.ReactElement> {
     const { stockOpnames } = await getStockOpnames(from, until)
 
     return (
@@ -37,11 +47,21 @@ export default async function StockOpnamesReportTable({ from, until }: StockOpna
                         <TableCell>{row.drugName}</TableCell>
                         <TableCell>{row.batchCode}</TableCell>
                         <TableCell>{row.unit}</TableCell>
-                        <TableCell>{row.initialQuantity.toLocaleString("id-ID")}</TableCell>
-                        <TableCell>{row.realQuantity.toLocaleString("id-ID")}</TableCell>
-                        <TableCell>{row.quantityDifference.toLocaleString("id-ID")}</TableCell>
-                        <TableCell>{rupiah.format(row.hppDifference)}</TableCell>
-                        <TableCell>{rupiah.format(row.salePriceDifference)}</TableCell>
+                        <TableCell>
+                            {row.initialQuantity.toLocaleString("id-ID")}
+                        </TableCell>
+                        <TableCell>
+                            {row.realQuantity.toLocaleString("id-ID")}
+                        </TableCell>
+                        <TableCell>
+                            {row.quantityDifference.toLocaleString("id-ID")}
+                        </TableCell>
+                        <TableCell>
+                            {rupiah.format(row.hppDifference)}
+                        </TableCell>
+                        <TableCell>
+                            {rupiah.format(row.salePriceDifference)}
+                        </TableCell>
                         <TableCell>{row.notes}</TableCell>
                     </TableRow>
                 ))}

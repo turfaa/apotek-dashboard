@@ -1,12 +1,14 @@
-import {NextResponse} from "next/server"
-import {NextRequestWithAuth, withAuth} from "next-auth/middleware"
-import {isPageAllowed} from "@/lib/navigation"
-import {Role} from "@/lib/api/auth"
+import { NextResponse } from "next/server"
+import { NextRequestWithAuth, withAuth } from "next-auth/middleware"
+import { isPageAllowed } from "@/lib/navigation"
+import { Role } from "@/lib/api/auth"
 
 export default withAuth(
-    async function middleware(request: NextRequestWithAuth): Promise<NextResponse> {
-        const {pathname, search} = request.nextUrl
-        const {token} = request.nextauth
+    async function middleware(
+        request: NextRequestWithAuth,
+    ): Promise<NextResponse> {
+        const { pathname, search } = request.nextUrl
+        const { token } = request.nextauth
 
         if (pathname.includes("/api") && !pathname.includes("/api/auth")) {
             const path = pathname.replace("/api", "")
@@ -28,7 +30,7 @@ export default withAuth(
         callbacks: {
             authorized(): boolean {
                 return true
-            }
-        }
-    }
+            },
+        },
+    },
 )

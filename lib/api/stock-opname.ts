@@ -55,37 +55,45 @@ export interface StockChange {
     realQuantity: number
 }
 
-export async function getStockOpnames(from?: string, until?: string): Promise<StockOpnamesResponse> {
+export async function getStockOpnames(
+    from?: string,
+    until?: string,
+): Promise<StockOpnamesResponse> {
     return fetchAPI<StockOpnamesResponse>(
-        'GET',
+        "GET",
         `/stock-opnames?${buildDateRangeQueryParams(from, until)}`,
         null,
         {
             next: {
                 revalidate: 0, // Always revalidate.
-            }
-        }
+            },
+        },
     )
 }
 
-export async function getStockOpnameSummaries(from?: string, until?: string): Promise<StockOpnameSummariesResponse> {
+export async function getStockOpnameSummaries(
+    from?: string,
+    until?: string,
+): Promise<StockOpnameSummariesResponse> {
     const res = await fetchAPI<UnderlyingStockOpnameSummariesResponse>(
-        'GET',
+        "GET",
         `/stock-opnames/summaries?${buildDateRangeQueryParams(from, until)}`,
         null,
         {
             next: {
                 revalidate: 0, // Always revalidate.
-            }
-        }
+            },
+        },
     )
 
     return {
-        summaries: res.summaries.map((item: UnderlyingStockOpnameSummary): StockOpnameSummary => {
-            return {
-                ...item,
-                date: new Date(item.date),
-            }
-        })
+        summaries: res.summaries.map(
+            (item: UnderlyingStockOpnameSummary): StockOpnameSummary => {
+                return {
+                    ...item,
+                    date: new Date(item.date),
+                }
+            },
+        ),
     }
 }

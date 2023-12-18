@@ -1,12 +1,25 @@
-import { DrugsToStockOpnameMode, getDrugsToStockOpname } from "@/lib/api/drugs-to-stock-opname"
-import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@tremor/react"
+import {
+    DrugsToStockOpnameMode,
+    getDrugsToStockOpname,
+} from "@/lib/api/drugs-to-stock-opname"
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeaderCell,
+    TableRow,
+} from "@tremor/react"
 
 export interface DrugsTableProps {
     date?: string
     mode?: DrugsToStockOpnameMode
 }
 
-export default async function DrugsTable({ date, mode }: DrugsTableProps): Promise<React.ReactElement> {
+export default async function DrugsTable({
+    date,
+    mode,
+}: DrugsTableProps): Promise<React.ReactElement> {
     const { drugs } = await getDrugsToStockOpname(date, mode)
 
     return (

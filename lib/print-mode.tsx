@@ -1,5 +1,10 @@
 import { Role } from "@/lib/api/auth"
-import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation"
+import {
+    ReadonlyURLSearchParams,
+    usePathname,
+    useRouter,
+    useSearchParams,
+} from "next/navigation"
 import { startTransition } from "react"
 
 const rolesAllowedToPrint = [Role.ADMIN, Role.STAFF]
@@ -16,12 +21,14 @@ export function usePrintMode(role?: Role): PrintModeHook {
     if (role && !rolesAllowedToPrint.includes(role)) {
         return {
             isPrintMode: false,
-            setPrintMode: () => { },
+            setPrintMode: () => {},
         }
     }
 
     function handlePrintMode(printMode: boolean): void {
-        const params: URLSearchParams = new URLSearchParams(window.location.search)
+        const params: URLSearchParams = new URLSearchParams(
+            window.location.search,
+        )
         if (printMode) {
             params.set("print", Boolean(printMode).toString())
         } else {
@@ -34,7 +41,8 @@ export function usePrintMode(role?: Role): PrintModeHook {
     }
 
     return {
-        isPrintMode: (searchParams.get("print")?.toLowerCase() ?? "false") == "true",
+        isPrintMode:
+            (searchParams.get("print")?.toLowerCase() ?? "false") == "true",
         setPrintMode: handlePrintMode,
     }
 }

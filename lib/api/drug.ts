@@ -1,4 +1,4 @@
-import {fetchAPI} from "@/lib/api/base"
+import { fetchAPI } from "@/lib/api/base"
 
 export interface DrugsResponse {
     drugs: DrugWithUnits[]
@@ -28,14 +28,9 @@ export interface Unit {
 }
 
 export async function getDrugs(): Promise<DrugsResponse> {
-    return fetchAPI(
-        'GET',
-        '/drugs',
-        null,
-        {
-            next: {
-                revalidate: 3600, // Revalidate every hour.
-            }
-        }
-    )
+    return fetchAPI("GET", "/drugs", null, {
+        next: {
+            revalidate: 3600, // Revalidate every hour.
+        },
+    })
 }

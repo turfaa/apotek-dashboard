@@ -4,7 +4,12 @@ import { usePrintMode } from "@/lib/print-mode"
 import { DatePickerProps, Title, DatePicker as Underlying } from "@tremor/react"
 import { id } from "date-fns/locale"
 import moment from "moment/moment"
-import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation"
+import {
+    ReadonlyURLSearchParams,
+    usePathname,
+    useRouter,
+    useSearchParams,
+} from "next/navigation"
 import { useTransition } from "react"
 
 export function DatePicker(props: DatePickerProps): React.ReactElement {
@@ -28,9 +33,14 @@ export function DatePicker(props: DatePickerProps): React.ReactElement {
             value={date}
             locale={id}
             enableClear={false}
-            onValueChange={date => {
-                const params: URLSearchParams = new URLSearchParams(window.location.search)
-                params.set("date", moment(date ?? new Date()).format("YYYY-MM-DD"))
+            onValueChange={(date) => {
+                const params: URLSearchParams = new URLSearchParams(
+                    window.location.search,
+                )
+                params.set(
+                    "date",
+                    moment(date ?? new Date()).format("YYYY-MM-DD"),
+                )
 
                 startTransition(() => {
                     push(`${pathname}?${params.toString()}`)

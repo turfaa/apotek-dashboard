@@ -6,19 +6,24 @@ export interface DrugsToStockOpnameResponse {
 }
 
 export enum DrugsToStockOpnameMode {
-    SalesBased = 'sales-based',
-    Conservative = 'conservative',
+    SalesBased = "sales-based",
+    Conservative = "conservative",
 }
 
-export async function getDrugsToStockOpname(date?: string, mode?: DrugsToStockOpnameMode): Promise<DrugsToStockOpnameResponse> {
+export async function getDrugsToStockOpname(
+    date?: string,
+    mode?: DrugsToStockOpnameMode,
+): Promise<DrugsToStockOpnameResponse> {
     return await fetchAPI<DrugsToStockOpnameResponse>(
-        'GET',
-        `/drugs/to-stock-opname/?mode=${mode ?? DrugsToStockOpnameMode.SalesBased}${date ? `&date=${date}` : ''}`,
+        "GET",
+        `/drugs/to-stock-opname/?mode=${
+            mode ?? DrugsToStockOpnameMode.SalesBased
+        }${date ? `&date=${date}` : ""}`,
         null,
         {
             next: {
                 revalidate: 0, // Always revalidate.
-            }
-        }
+            },
+        },
     )
 }

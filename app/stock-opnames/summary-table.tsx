@@ -1,16 +1,35 @@
 import { getStockOpnameSummaries } from "@/lib/api/stock-opname"
 import { rupiah } from "@/lib/rupiah"
-import { Flex, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, Text } from "@tremor/react"
+import {
+    Flex,
+    Table,
+    TableBody,
+    TableCell,
+    TableFoot,
+    TableHead,
+    TableHeaderCell,
+    TableRow,
+    Text,
+} from "@tremor/react"
 
 export interface StockOpnameSummaryTableProps {
     from?: string
     until?: string
 }
 
-export default async function StockOpnameSummaryTable({ from, until }: StockOpnameSummaryTableProps): Promise<React.ReactElement> {
+export default async function StockOpnameSummaryTable({
+    from,
+    until,
+}: StockOpnameSummaryTableProps): Promise<React.ReactElement> {
     const { summaries } = await getStockOpnameSummaries(from, until)
-    const totalHppDifference = summaries.reduce((total, summary) => total + summary.hppDifference, 0)
-    const totalSalePriceDifference = summaries.reduce((total, summary) => total + summary.salePriceDifference, 0)
+    const totalHppDifference = summaries.reduce(
+        (total, summary) => total + summary.hppDifference,
+        0,
+    )
+    const totalSalePriceDifference = summaries.reduce(
+        (total, summary) => total + summary.salePriceDifference,
+        0,
+    )
 
     return (
         <Table>
@@ -30,18 +49,30 @@ export default async function StockOpnameSummaryTable({ from, until }: StockOpna
                 {summaries.map((row, index) => (
                     <TableRow key={index}>
                         <TableCell>{index + 1}</TableCell>
-                        <TableCell>{row.date.toLocaleDateString("id-ID")}</TableCell>
+                        <TableCell>
+                            {row.date.toLocaleDateString("id-ID")}
+                        </TableCell>
                         <TableCell>{row.drugName}</TableCell>
                         <TableCell>
                             <Flex flexDirection="col" alignItems="start">
-                                {row.changes.map(change => (
-                                    <Text key={change.batchCode}>{change.initialQuantity} {row.unit} {"->"} {change.realQuantity} {row.unit} [{change.batchCode}] </Text>
+                                {row.changes.map((change) => (
+                                    <Text key={change.batchCode}>
+                                        {change.initialQuantity} {row.unit}{" "}
+                                        {"->"} {change.realQuantity} {row.unit}{" "}
+                                        [{change.batchCode}]{" "}
+                                    </Text>
                                 ))}
                             </Flex>
                         </TableCell>
-                        <TableCell>{row.quantityDifference} {row.unit}</TableCell>
-                        <TableCell>{rupiah.format(row.hppDifference)}</TableCell>
-                        <TableCell>{rupiah.format(row.salePriceDifference)}</TableCell>
+                        <TableCell>
+                            {row.quantityDifference} {row.unit}
+                        </TableCell>
+                        <TableCell>
+                            {rupiah.format(row.hppDifference)}
+                        </TableCell>
+                        <TableCell>
+                            {rupiah.format(row.salePriceDifference)}
+                        </TableCell>
                     </TableRow>
                 ))}
             </TableBody>
@@ -50,7 +81,9 @@ export default async function StockOpnameSummaryTable({ from, until }: StockOpna
                 <TableRow>
                     <TableCell colSpan={5}>Total</TableCell>
                     <TableCell>{rupiah.format(totalHppDifference)}</TableCell>
-                    <TableCell>{rupiah.format(totalSalePriceDifference)}</TableCell>
+                    <TableCell>
+                        {rupiah.format(totalSalePriceDifference)}
+                    </TableCell>
                 </TableRow>
             </TableFoot>
         </Table>

@@ -1,4 +1,4 @@
-import {fetchAPI} from "@/lib/api/base"
+import { fetchAPI } from "@/lib/api/base"
 
 export interface UserInfo {
     email: string
@@ -17,14 +17,9 @@ interface LoginRequest {
 }
 
 export async function postLogin(request: LoginRequest): Promise<UserInfo> {
-    return await fetchAPI<UserInfo>(
-        "POST",
-        "/users/login",
-        request,
-        {
-            next: {
-                tags: ["auth"],
-            }
-        }
-    )
+    return await fetchAPI<UserInfo>("POST", "/users/login", request, {
+        next: {
+            tags: ["auth"],
+        },
+    })
 }

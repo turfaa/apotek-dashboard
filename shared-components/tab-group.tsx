@@ -1,31 +1,51 @@
 "use client"
 
-import { Card, TabPanels, Text, TabGroup as Underlying, TabGroupProps as UnderlyingProps } from "@tremor/react"
-import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation"
+import {
+    Card,
+    TabPanels,
+    Text,
+    TabGroup as Underlying,
+    TabGroupProps as UnderlyingProps,
+} from "@tremor/react"
+import {
+    ReadonlyURLSearchParams,
+    usePathname,
+    useRouter,
+    useSearchParams,
+} from "next/navigation"
 import React, { useTransition } from "react"
 
 export interface TabGroupProps extends UnderlyingProps {
     tabLabels: string[]
 }
 
-export default function TabGroup({ tabLabels, children, ...underlyingProps }: TabGroupProps): React.ReactElement {
+export default function TabGroup({
+    tabLabels,
+    children,
+    ...underlyingProps
+}: TabGroupProps): React.ReactElement {
     const [isPending, startTransition] = useTransition()
     const { push } = useRouter()
     const pathname: string = usePathname()
     const searchParams: ReadonlyURLSearchParams = useSearchParams()
 
-    const currentIndex = tabLabels.findIndex(label => label.toLowerCase() == searchParams.get("tab")?.toLowerCase())
+    const currentIndex = tabLabels.findIndex(
+        (label) =>
+            label.toLowerCase() == searchParams.get("tab")?.toLowerCase(),
+    )
 
     return (
         <Underlying
             {...underlyingProps}
             index={currentIndex == -1 ? 0 : currentIndex}
-            onIndexChange={index => {
+            onIndexChange={(index) => {
                 if (index < 0 || index >= tabLabels.length) {
                     return
                 }
 
-                const params: URLSearchParams = new URLSearchParams(searchParams)
+                const params: URLSearchParams = new URLSearchParams(
+                    searchParams,
+                )
                 params.set("tab", tabLabels[index])
 
                 startTransition(() => {
@@ -48,6 +68,6 @@ export default function TabGroup({ tabLabels, children, ...underlyingProps }: Ta
 
                 return child
             })}
-        </Underlying >
+        </Underlying>
     )
 }

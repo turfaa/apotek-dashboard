@@ -10,14 +10,14 @@ import {
     TableHeaderCell,
     TableRow,
     Text,
-    TextInput
+    TextInput,
 } from "@tremor/react"
-import {useProcurementRecommendations} from "@/lib/api/hooks"
-import {Procurement} from "@/lib/api/procurement-recommendation"
-import {useEffect, useState} from "react"
+import { useProcurementRecommendations } from "@/lib/api/hooks"
+import { Procurement } from "@/lib/api/procurement-recommendation"
+import { useEffect, useState } from "react"
 import useSearch from "@/lib/search-hook"
-import {ExclamationTriangleIcon} from "@heroicons/react/24/solid"
-import {usePrintMode} from "@/lib/print-mode"
+import { ExclamationTriangleIcon } from "@heroicons/react/24/solid"
+import { usePrintMode } from "@/lib/print-mode"
 
 export interface Row {
     vmedisCode: string
@@ -32,7 +32,17 @@ export interface Row {
     raw: Procurement
 }
 
-const columns: Column[] = ["no.", "vmedisCode", "name", "manufacturer", "minimumStock", "stock", "alternatives", "procurement", "supplier"]
+const columns: Column[] = [
+    "no.",
+    "vmedisCode",
+    "name",
+    "manufacturer",
+    "minimumStock",
+    "stock",
+    "alternatives",
+    "procurement",
+    "supplier",
+]
 
 interface ColumnConfig {
     displayName: string
@@ -54,7 +64,7 @@ const columnConfig: Record<Column, ColumnConfig> = {
         displayInPrint: true,
         onEdit: (procurement: Procurement, value: string) => ({
             ...procurement,
-            drug: {...procurement.drug, name: value}
+            drug: { ...procurement.drug, name: value },
         }),
     },
     manufacturer: {
@@ -73,55 +83,74 @@ const columnConfig: Record<Column, ColumnConfig> = {
     procurement: {
         displayName: "Jumlah",
         displayInPrint: true,
-        onEdit: (procurement: Procurement, value: string) => ({...procurement, procurement: value}),
+        onEdit: (procurement: Procurement, value: string) => ({
+            ...procurement,
+            procurement: value,
+        }),
     },
     supplier: {
         displayName: "Supplier",
-        onEdit: (procurement: Procurement, value: string) => ({...procurement, fromSupplier: value}),
+        onEdit: (procurement: Procurement, value: string) => ({
+            ...procurement,
+            fromSupplier: value,
+        }),
     },
     raw: {
         displayName: "Raw",
-    }
+    },
 }
 
-type Column = keyof Row | 'no.'
+type Column = keyof Row | "no."
 
 export default function ProcurementTable(): React.ReactElement {
     const [ssrCompleted, setSsrCompleted] = useState(false)
     useEffect(() => setSsrCompleted(true), [])
 
-    const [enabledColumns, setEnabledColumns] = useState<Column[]>(["no.", "vmedisCode", "name", "manufacturer", "minimumStock", "stock", "alternatives", "procurement", "supplier"])
+    const [enabledColumns, setEnabledColumns] = useState<Column[]>([
+        "no.",
+        "vmedisCode",
+        "name",
+        "manufacturer",
+        "minimumStock",
+        "stock",
+        "alternatives",
+        "procurement",
+        "supplier",
+    ])
 
-    const {data, isLoading, error, setData, deleteData} = useProcurementRecommendations()
-    const {query} = useSearch()
-    const {isPrintMode} = usePrintMode()
+    const { data, isLoading, error, setData, deleteData } =
+        useProcurementRecommendations()
+    const { query } = useSearch()
+    const { isPrintMode } = usePrintMode()
 
     if (isLoading || !ssrCompleted) return <Text>Loading...</Text>
 
-    if (error) return (
-        <Callout
-            className="h-12 mt-4"
-            title={error.message}
-            icon={ExclamationTriangleIcon}
-            color="rose"
-        />
-    )
+    if (error)
+        return (
+            <Callout
+                className="h-12 mt-4"
+                title={error.message}
+                icon={ExclamationTriangleIcon}
+                color="rose"
+            />
+        )
 
-    const rows: Row[] = Object.values(data || {}).map((procurement: Procurement) => ({
-        vmedisCode: procurement.drug.vmedisCode,
-        name: procurement.drug.name,
-        manufacturer: procurement.drug.manufacturer,
-        minimumStock: procurement.drug.minimumStock,
-        stock: procurement.stock,
-        alternatives: procurement.alternatives,
-        procurement: procurement.procurement,
-        supplier: procurement.fromSupplier,
-        raw: procurement,
-    }))
+    const rows: Row[] = Object.values(data || {})
+        .map((procurement: Procurement) => ({
+            vmedisCode: procurement.drug.vmedisCode,
+            name: procurement.drug.name,
+            manufacturer: procurement.drug.manufacturer,
+            minimumStock: procurement.drug.minimumStock,
+            stock: procurement.stock,
+            alternatives: procurement.alternatives,
+            procurement: procurement.procurement,
+            supplier: procurement.fromSupplier,
+            raw: procurement,
+        }))
         .filter((row: Row) =>
             (row.vmedisCode + row.name + row.manufacturer + row.supplier)
                 .toLowerCase()
-                .includes(query.toLowerCase())
+                .includes(query.toLowerCase()),
         )
         .sort((a, b) => a.name.localeCompare(b.name))
 
@@ -131,17 +160,34 @@ export default function ProcurementTable(): React.ReactElement {
                 <TableHead>
                     <TableRow>
                         {columns.map((key) => (
-                                <TableHeaderCell key={key}
-                                                 hidden={!enabledColumns.includes(key) || (isPrintMode && !columnConfig[key].displayInPrint)}
-                                                 onClick={() => setEnabledColumns(enabledColumns.filter(column => column != key))}>
-                                    <Text
-                                        onClick={() => setEnabledColumns(enabledColumns.filter(column => column != key))}
-                                    >
-                                        {columnConfig[key].displayName}
-                                    </Text>
-                                </TableHeaderCell>
-                            )
-                        )}
+                            <TableHeaderCell
+                                key={key}
+                                hidden={
+                                    !enabledColumns.includes(key) ||
+                                    (isPrintMode &&
+                                        !columnConfig[key].displayInPrint)
+                                }
+                                onClick={() =>
+                                    setEnabledColumns(
+                                        enabledColumns.filter(
+                                            (column) => column != key,
+                                        ),
+                                    )
+                                }
+                            >
+                                <Text
+                                    onClick={() =>
+                                        setEnabledColumns(
+                                            enabledColumns.filter(
+                                                (column) => column != key,
+                                            ),
+                                        )
+                                    }
+                                >
+                                    {columnConfig[key].displayName}
+                                </Text>
+                            </TableHeaderCell>
+                        ))}
                     </TableRow>
                 </TableHead>
 
@@ -150,22 +196,41 @@ export default function ProcurementTable(): React.ReactElement {
                         <TableRow key={row.vmedisCode}>
                             {columns.map((column) => {
                                 const value =
-                                    column === "no." ?
-                                        `${index + 1}` :
-                                        columnConfig[column].formatter?.(row[column]) || row[column]?.toString()
+                                    column === "no."
+                                        ? `${index + 1}`
+                                        : columnConfig[column].formatter?.(
+                                            row[column],
+                                        ) || row[column]?.toString()
 
                                 return (
-                                    <TableCell key={column}
-                                               hidden={!enabledColumns.includes(column) || (isPrintMode && !columnConfig[column].displayInPrint)}>
-                                        {!!columnConfig[column].onEdit && !isPrintMode ?
-                                            <TextInput
-                                                value={value}
-                                                onChange={(e) =>
-                                                    setData(row.vmedisCode, columnConfig[column].onEdit?.(row.raw, e.target.value) || row.raw)
-                                                }
-                                            />
-                                            : value
+                                    <TableCell
+                                        key={column}
+                                        hidden={
+                                            !enabledColumns.includes(column) ||
+                                            (isPrintMode &&
+                                                !columnConfig[column]
+                                                    .displayInPrint)
                                         }
+                                    >
+                                        {!!columnConfig[column].onEdit &&
+                                        !isPrintMode ? (
+                                                <TextInput
+                                                    value={value}
+                                                    onChange={(e) =>
+                                                        setData(
+                                                            row.vmedisCode,
+                                                            columnConfig[
+                                                                column
+                                                            ].onEdit?.(
+                                                                row.raw,
+                                                                e.target.value,
+                                                            ) || row.raw,
+                                                        )
+                                                    }
+                                                />
+                                            ) : (
+                                                value
+                                            )}
                                     </TableCell>
                                 )
                             })}

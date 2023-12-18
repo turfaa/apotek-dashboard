@@ -6,7 +6,17 @@ import { useDrugs } from "@/lib/api/hooks"
 import { rupiah } from "@/lib/rupiah"
 import useSearch from "@/lib/search-hook"
 import { ExclamationTriangleIcon } from "@heroicons/react/24/solid"
-import { Callout, Col, Flex, Grid, Subtitle, TableBody, TableCell, TableRow, Text } from "@tremor/react"
+import {
+    Callout,
+    Col,
+    Flex,
+    Grid,
+    Subtitle,
+    TableBody,
+    TableCell,
+    TableRow,
+    Text,
+} from "@tremor/react"
 import { useEffect, useState } from "react"
 import { preload } from "swr"
 
@@ -34,7 +44,10 @@ export default function PriceListTableBody(): React.ReactElement {
         )
     }
 
-    const drugs = data?.drugs.filter(drug => drug.name.toLowerCase().includes(query.toLowerCase())) ?? []
+    const drugs =
+        data?.drugs.filter((drug) =>
+            drug.name.toLowerCase().includes(query.toLowerCase()),
+        ) ?? []
 
     return (
         <TableBody>
@@ -43,12 +56,24 @@ export default function PriceListTableBody(): React.ReactElement {
                     <TableCell>{index + 1}</TableCell>
 
                     <TableCell>
-                        <Flex flexDirection="col" alignItems="start" className="gap-4">
+                        <Flex
+                            flexDirection="col"
+                            alignItems="start"
+                            className="gap-4"
+                        >
                             <Text>{drug.name}</Text>
 
-                            <Grid numItemsSm={1} numItemsMd={3} className="gap-4">
+                            <Grid
+                                numItemsSm={1}
+                                numItemsMd={3}
+                                className="gap-4"
+                            >
                                 <Col>
-                                    <PriceCard title="Harga Normal" units={drug.units} priceGetter={normalPriceGetter} />
+                                    <PriceCard
+                                        title="Harga Normal"
+                                        units={drug.units}
+                                        priceGetter={normalPriceGetter}
+                                    />
                                 </Col>
 
                                 <Col>
@@ -75,9 +100,13 @@ export default function PriceListTableBody(): React.ReactElement {
     )
 }
 
-function PriceCard({ title, units, priceGetter }: {
-    title: string,
-    units: Unit[],
+function PriceCard({
+    title,
+    units,
+    priceGetter,
+}: {
+    title: string
+    units: Unit[]
     priceGetter: (unit: Unit) => number
 }): React.ReactElement {
     return (
@@ -87,7 +116,12 @@ function PriceCard({ title, units, priceGetter }: {
             {units.map((unit, index) => (
                 <Text key={index}>
                     {rupiah.format(priceGetter(unit))} / {unit.unit}
-                    {!!unit.parentUnit && <> ({unit.conversionToParentUnit} {unit.parentUnit})</>}
+                    {!!unit.parentUnit && (
+                        <>
+                            {" "}
+                            ({unit.conversionToParentUnit} {unit.parentUnit})
+                        </>
+                    )}
                 </Text>
             ))}
         </Flex>

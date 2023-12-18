@@ -1,10 +1,5 @@
-import {TextInput} from "@tremor/react"
+import { TextInput } from "@tremor/react"
 
 export default function SearchButtonFallback(): React.ReactElement {
-    return (
-        <TextInput
-            placeholder="Cari obat..."
-            disabled={true}
-        />
-    )
+    return <TextInput placeholder="Cari obat..." disabled={true} />
 }

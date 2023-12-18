@@ -8,7 +8,9 @@ export interface PrintButtonProps {
     disabled?: boolean
 }
 
-export default function PrintButton({ disabled }: PrintButtonProps): React.ReactElement {
+export default function PrintButton({
+    disabled,
+}: PrintButtonProps): React.ReactElement {
     const { isPrintMode, setPrintMode } = usePrintMode()
 
     if (isPrintMode) {

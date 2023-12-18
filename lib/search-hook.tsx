@@ -1,7 +1,6 @@
 import { useQueryState } from "next-usequerystate"
 import { useCallback, useTransition } from "react"
 
-
 export interface SearchHook {
     query: string
     setQuery: (query: string) => void
@@ -12,29 +11,32 @@ export default function useSearch(): SearchHook {
     const [query, setRawQuery] = useQueryState("query", { throttleMs: 500 })
     const [isPending, startTransition] = useTransition()
 
-    const setQuery = useCallback((q: string) => {
-        const trimmedQuery = titleCase(q).trim()
+    const setQuery = useCallback(
+        (q: string) => {
+            const trimmedQuery = titleCase(q).trim()
 
-        startTransition(() => {
-            if (trimmedQuery == "") {
-                setRawQuery(null)
-            } else {
-                setRawQuery(trimmedQuery)
-            }
-        })
-    }, [setRawQuery])
+            startTransition(() => {
+                if (trimmedQuery == "") {
+                    setRawQuery(null)
+                } else {
+                    setRawQuery(trimmedQuery)
+                }
+            })
+        },
+        [setRawQuery],
+    )
 
     return {
         query: query ?? "",
         setQuery,
-        isPending
+        isPending,
     }
 }
 
 function titleCase(str: string): string {
-    const strs = str.toLowerCase().split(' ')
+    const strs = str.toLowerCase().split(" ")
     for (var i = 0; i < strs.length; i++) {
         strs[i] = strs[i].charAt(0).toUpperCase() + strs[i].slice(1)
     }
-    return strs.join(' ')
+    return strs.join(" ")
 }

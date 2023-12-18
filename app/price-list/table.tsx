@@ -1,6 +1,6 @@
-import {Table, TableHead, TableHeaderCell, TableRow} from "@tremor/react"
+import { Table, TableHead, TableHeaderCell, TableRow } from "@tremor/react"
 import PriceListTableBody from "@/app/price-list/table-body"
-import {Suspense} from "react"
+import { Suspense } from "react"
 import PriceListTableBodyFallback from "@/app/price-list/table-body-fallback"
 
 export default function PriceListTable(): React.ReactElement {
@@ -13,8 +13,8 @@ export default function PriceListTable(): React.ReactElement {
                 </TableRow>
             </TableHead>
 
-            <Suspense fallback={<PriceListTableBodyFallback/>}>
-                <PriceListTableBody/>
+            <Suspense fallback={<PriceListTableBodyFallback />}>
+                <PriceListTableBody />
             </Suspense>
         </Table>
     )

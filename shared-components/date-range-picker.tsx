@@ -1,17 +1,27 @@
 "use client"
 
 import { usePrintMode } from "@/lib/print-mode"
-import { DateRangePickerItem, DateRangePickerProps, Title, DateRangePicker as Underlying } from "@tremor/react"
+import {
+    DateRangePickerItem,
+    DateRangePickerProps,
+    Title,
+    DateRangePicker as Underlying,
+} from "@tremor/react"
 import {
     startOfMonth,
     startOfToday,
     startOfYear,
     startOfYesterday,
-    sub
+    sub,
 } from "date-fns"
 import { id } from "date-fns/locale"
 import moment from "moment/moment"
-import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation"
+import {
+    ReadonlyURLSearchParams,
+    usePathname,
+    useRouter,
+    useSearchParams,
+} from "next/navigation"
 import { useState, useTransition } from "react"
 
 interface DateRangePickerOption {
@@ -56,7 +66,9 @@ const options: DateRangePickerOption[] = [
     },
 ]
 
-export function DateRangePicker(props: DateRangePickerProps): React.ReactElement {
+export function DateRangePicker(
+    props: DateRangePickerProps,
+): React.ReactElement {
     const [isPending, startTransition] = useTransition()
     const { push } = useRouter()
     const pathname: string = usePathname()
@@ -72,7 +84,12 @@ export function DateRangePicker(props: DateRangePickerProps): React.ReactElement
     const [textValue, setTextValue] = useState(undefined as string | undefined)
 
     if (isPrintMode) {
-        return <Title>{from.toLocaleDateString("id-ID")} - {until.toLocaleDateString("id-ID")}</Title>
+        return (
+            <Title>
+                {from.toLocaleDateString("id-ID")} -{" "}
+                {until.toLocaleDateString("id-ID")}
+            </Title>
+        )
     }
 
     return (
@@ -82,12 +99,13 @@ export function DateRangePicker(props: DateRangePickerProps): React.ReactElement
             value={{ from: from, to: until, selectValue: textValue }}
             locale={id}
             enableClear={false}
-            onValueChange={dateRange => {
-
+            onValueChange={(dateRange) => {
                 const newFrom = dateRange.from ?? from
                 const newUntil = dateRange.to ?? newFrom
 
-                const params: URLSearchParams = new URLSearchParams(window.location.search)
+                const params: URLSearchParams = new URLSearchParams(
+                    window.location.search,
+                )
                 params.set("from", moment(newFrom).format("YYYY-MM-DD"))
                 params.set("until", moment(newUntil).format("YYYY-MM-DD"))
 
@@ -97,7 +115,14 @@ export function DateRangePicker(props: DateRangePickerProps): React.ReactElement
                 })
             }}
         >
-            {options.map(option => <DateRangePickerItem key={option.value} value={option.value} from={option.from} to={option.until} />)}
+            {options.map((option) => (
+                <DateRangePickerItem
+                    key={option.value}
+                    value={option.value}
+                    from={option.from}
+                    to={option.until}
+                />
+            ))}
         </Underlying>
     )
 }

@@ -11,7 +11,11 @@ export const metadata: Metadata = {
     title: "Obat Harus Stok Opname",
 }
 
-export default function DrugsToStockOpname({ searchParams }: { searchParams?: { [key: string]: string | undefined } }): React.ReactElement {
+export default function DrugsToStockOpname({
+    searchParams,
+}: {
+    searchParams?: { [key: string]: string | undefined }
+}): React.ReactElement {
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <Flex flexDirection="row" justifyContent="start" className="gap-2">
@@ -19,15 +23,20 @@ export default function DrugsToStockOpname({ searchParams }: { searchParams?: { 
                 <DatePicker className="max-w-min" />
             </Flex>
 
-
-            <TabGroup className="mt-4" tabLabels={["sales-based", "conservative"]}>
+            <TabGroup
+                className="mt-4"
+                tabLabels={["sales-based", "conservative"]}
+            >
                 <DrugsToStockOpnameTabList />
 
                 <TabPanels className="mt-4">
                     <TabPanel>
                         <Card>
                             <Suspense fallback={<Text>Loading...</Text>}>
-                                <DrugsTable mode={DrugsToStockOpnameMode.SalesBased} date={searchParams?.date} />
+                                <DrugsTable
+                                    mode={DrugsToStockOpnameMode.SalesBased}
+                                    date={searchParams?.date}
+                                />
                             </Suspense>
                         </Card>
                     </TabPanel>
@@ -35,13 +44,15 @@ export default function DrugsToStockOpname({ searchParams }: { searchParams?: { 
                     <TabPanel>
                         <Card>
                             <Suspense fallback={<Text>Loading...</Text>}>
-                                <DrugsTable mode={DrugsToStockOpnameMode.Conservative} date={searchParams?.date} />
+                                <DrugsTable
+                                    mode={DrugsToStockOpnameMode.Conservative}
+                                    date={searchParams?.date}
+                                />
                             </Suspense>
                         </Card>
                     </TabPanel>
                 </TabPanels>
             </TabGroup>
-
         </main>
     )
 }

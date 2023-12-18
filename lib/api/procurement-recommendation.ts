@@ -1,5 +1,5 @@
-import {fetchAPI} from "@/lib/api/base"
-import {Drug} from "@/lib/api/drug"
+import { fetchAPI } from "@/lib/api/base"
+import { Drug } from "@/lib/api/drug"
 
 export interface ProcurementRecommendationsResponse {
     recommendations: Procurement[]
@@ -20,15 +20,15 @@ export interface Procurement {
 }
 
 export async function getProcurementRecommendations(): Promise<ProcurementRecommendationsResponse> {
-    const underlying: UnderlyingProcurementRecommendationsResponse = await fetchAPI<UnderlyingProcurementRecommendationsResponse>(
-        'GET',
-        '/procurement/recommendations',
-        null,
-    )
+    const underlying: UnderlyingProcurementRecommendationsResponse =
+        await fetchAPI<UnderlyingProcurementRecommendationsResponse>(
+            "GET",
+            "/procurement/recommendations",
+            null,
+        )
 
     return {
         ...underlying,
         computedAt: new Date(underlying.computedAt),
     }
 }
-

@@ -14,13 +14,17 @@ interface ProcurementProps {
     }
 }
 
-export async function generateMetadata(props: ProcurementProps): Promise<Metadata> {
+export async function generateMetadata(
+    props: ProcurementProps,
+): Promise<Metadata> {
     const { query, print } = props.searchParams
 
     let title
     if (print === "true") {
         title = {
-            absolute: `${moment().format("YYYY-MM-DD")}${query ? ` - ${query}` : ""}`
+            absolute: `${moment().format("YYYY-MM-DD")}${
+                query ? ` - ${query}` : ""
+            }`,
         }
     } else {
         title = "Daftar Pesanan"

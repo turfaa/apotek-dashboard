@@ -11,7 +11,9 @@ export const metadata: Metadata = {
     title: "Laporan Stok Opname",
 }
 
-export default async function StockOpnames({ searchParams }: {
+export default async function StockOpnames({
+    searchParams,
+}: {
     searchParams?: { [key: string]: string | undefined }
 }): Promise<React.ReactElement> {
     return (
@@ -28,7 +30,10 @@ export default async function StockOpnames({ searchParams }: {
                     <TabPanel>
                         <Card>
                             <Suspense fallback={<Text>Loading...</Text>}>
-                                <StockOpnameSummaryTable from={searchParams?.from} until={searchParams?.until} />
+                                <StockOpnameSummaryTable
+                                    from={searchParams?.from}
+                                    until={searchParams?.until}
+                                />
                             </Suspense>
                         </Card>
                     </TabPanel>
@@ -36,12 +41,15 @@ export default async function StockOpnames({ searchParams }: {
                     <TabPanel>
                         <Card>
                             <Suspense fallback={<Text>Loading...</Text>}>
-                                <StockOpnamesReportTable from={searchParams?.from} until={searchParams?.until} />
+                                <StockOpnamesReportTable
+                                    from={searchParams?.from}
+                                    until={searchParams?.until}
+                                />
                             </Suspense>
                         </Card>
                     </TabPanel>
                 </TabPanels>
             </TabGroup>
-        </main >
+        </main>
     )
 }

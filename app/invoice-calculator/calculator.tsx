@@ -9,13 +9,16 @@ import { Bold, Button, Divider, Flex, Metric, Text } from "@tremor/react"
 import { useEffect, useMemo, useState } from "react"
 
 export default function Calculator(): React.ReactElement {
-    const calculator = useCalculator(state => state.calculator)
-    const invoices = useCalculator(state => state.invoices)
-    const addInvoice = useCalculator(state => state.addInvoice)
-    const updateInvoice = useCalculator(state => state.updateInvoice)
-    const removeInvoice = useCalculator(state => state.removeInvoice)
+    const calculator = useCalculator((state) => state.calculator)
+    const invoices = useCalculator((state) => state.invoices)
+    const addInvoice = useCalculator((state) => state.addInvoice)
+    const updateInvoice = useCalculator((state) => state.updateInvoice)
+    const removeInvoice = useCalculator((state) => state.removeInvoice)
 
-    const totalPrice = useMemo(() => calculateInvoices(invoices, calculator?.shouldRound ?? false), [invoices, calculator])
+    const totalPrice = useMemo(
+        () => calculateInvoices(invoices, calculator?.shouldRound ?? false),
+        [invoices, calculator],
+    )
 
     const [hasHydrated, setHasHydrated] = useState(false)
     useEffect(() => {
@@ -27,9 +30,7 @@ export default function Calculator(): React.ReactElement {
     }
 
     if (!calculator) {
-        return (
-            <Text>Silakan pilih supplier terlebih dahulu...</Text>
-        )
+        return <Text>Silakan pilih supplier terlebih dahulu...</Text>
     }
 
     return (
@@ -40,7 +41,7 @@ export default function Calculator(): React.ReactElement {
                         title={`Faktur #${index + 1}`}
                         invoice={invoice}
                         shouldRound={calculator.shouldRound}
-                        updateInvoice={iv => updateInvoice(index, iv)}
+                        updateInvoice={(iv) => updateInvoice(index, iv)}
                         removeInvoice={() => removeInvoice(index)}
                     />
 
@@ -48,7 +49,15 @@ export default function Calculator(): React.ReactElement {
                 </div>
             ))}
 
-            <Button icon={PlusIcon} size="xs" variant="light" onClick={addInvoice} className="self-end">Tambah Faktur</Button>
+            <Button
+                icon={PlusIcon}
+                size="xs"
+                variant="light"
+                onClick={addInvoice}
+                className="self-end"
+            >
+                Tambah Faktur
+            </Button>
 
             <Divider />
 

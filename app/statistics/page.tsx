@@ -7,7 +7,6 @@ export const metadata: Metadata = {
     title: "Ringkasan Penjualan",
 }
 
-
 export default function Statistics(): React.ReactElement {
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">

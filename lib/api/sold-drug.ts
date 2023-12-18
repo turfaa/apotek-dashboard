@@ -12,15 +12,18 @@ export interface SoldDrug {
     totalAmount: number
 }
 
-export async function getSoldDrugs(from?: string, until?: string): Promise<SoldDrugsResponse> {
+export async function getSoldDrugs(
+    from?: string,
+    until?: string,
+): Promise<SoldDrugsResponse> {
     return await fetchAPI<SoldDrugsResponse>(
-        'GET',
+        "GET",
         `/sales/drugs?${buildDateRangeQueryParams(from, until)}`,
         null,
         {
             next: {
                 revalidate: 0, // Always revalidate.
-            }
-        }
+            },
+        },
     )
 }

@@ -1,15 +1,29 @@
 import { getSoldDrugs } from "@/lib/api/sold-drug"
 import { rupiah } from "@/lib/rupiah"
-import { Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow } from "@tremor/react"
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableFoot,
+    TableHead,
+    TableHeaderCell,
+    TableRow,
+} from "@tremor/react"
 
 export interface SoldDrugsTableProps {
     from?: string
     until?: string
 }
 
-export default async function SoldDrugsTable({ from, until }: SoldDrugsTableProps): Promise<React.ReactElement> {
+export default async function SoldDrugsTable({
+    from,
+    until,
+}: SoldDrugsTableProps): Promise<React.ReactElement> {
     const { drugs } = await getSoldDrugs(from, until)
-    const totalPrice = drugs.reduce((total, drug) => total + drug.totalAmount, 0)
+    const totalPrice = drugs.reduce(
+        (total, drug) => total + drug.totalAmount,
+        0,
+    )
 
     return (
         <Table>
@@ -29,7 +43,9 @@ export default async function SoldDrugsTable({ from, until }: SoldDrugsTableProp
                         <TableHeaderCell>{index + 1}</TableHeaderCell>
                         <TableCell>{drug.drug.name}</TableCell>
                         <TableCell>{drug.drug.manufacturer}</TableCell>
-                        <TableCell>{drug.occurrences.toLocaleString("id-ID")} Kali</TableCell>
+                        <TableCell>
+                            {drug.occurrences.toLocaleString("id-ID")} Kali
+                        </TableCell>
                         <TableCell>{rupiah.format(drug.totalAmount)}</TableCell>
                     </TableRow>
                 ))}

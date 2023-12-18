@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import MetricGrid, { Datum } from "@/app/statistics/metric-grid"
 import { useSalesStatistics } from "@/lib/api/hooks"
@@ -12,19 +12,21 @@ export default function ClientSide(): React.ReactElement {
 
     if (isLoading) return <p>Loading...</p>
 
-    const salesTotals: Datum[] = data?.history.map((statistic: SalesStatistics): Datum => {
-        return {
-            value: statistic.totalSales,
-            timestamp: statistic.pulledAt,
-        }
-    }) || []
+    const salesTotals: Datum[] =
+        data?.history.map((statistic: SalesStatistics): Datum => {
+            return {
+                value: statistic.totalSales,
+                timestamp: statistic.pulledAt,
+            }
+        }) || []
 
-    const salesNumbers: Datum[] = data?.history.map((statistic: SalesStatistics): Datum => {
-        return {
-            value: statistic.numberOfSales,
-            timestamp: statistic.pulledAt,
-        }
-    }) || []
+    const salesNumbers: Datum[] =
+        data?.history.map((statistic: SalesStatistics): Datum => {
+            return {
+                value: statistic.numberOfSales,
+                timestamp: statistic.pulledAt,
+            }
+        }) || []
 
     return (
         <>
@@ -37,7 +39,11 @@ export default function ClientSide(): React.ReactElement {
                 />
             )}
 
-            <MetricGrid title="Nominal Penjualan" data={salesTotals} valueFormatter={rupiah.format} />
+            <MetricGrid
+                title="Nominal Penjualan"
+                data={salesTotals}
+                valueFormatter={rupiah.format}
+            />
             <MetricGrid title="Banyak Penjualan" data={salesNumbers} />
         </>
     )

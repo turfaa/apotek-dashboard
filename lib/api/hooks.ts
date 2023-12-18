@@ -3,9 +3,13 @@ import { DrugsResponse, getDrugs } from "@/lib/api/drug"
 import {
     Procurement,
     ProcurementRecommendationsResponse,
-    getProcurementRecommendations
+    getProcurementRecommendations,
 } from "@/lib/api/procurement-recommendation"
-import { SalesStatisticsResponse, getDailySalesStatistics, getSalesStatistics } from "@/lib/api/sale-statistics"
+import {
+    SalesStatisticsResponse,
+    getDailySalesStatistics,
+    getSalesStatistics,
+} from "@/lib/api/sale-statistics"
 import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation"
 import useSWR from "swr"
 import { create } from "zustand"
@@ -18,10 +22,7 @@ export interface DrugsHook {
 }
 
 export function useDrugs(): DrugsHook {
-    const { data, error, isLoading } = useSWR(
-        '/drugs',
-        getDrugs,
-    )
+    const { data, error, isLoading } = useSWR("/drugs", getDrugs)
 
     return { data, isLoading, error }
 }
@@ -40,8 +41,8 @@ export interface SalesStatisticsHook {
 
 export function useSalesStatistics(): SalesStatisticsHook {
     const searchParams: ReadonlyURLSearchParams = useSearchParams()
-    const from = searchParams.get('from') ?? undefined
-    const until = searchParams.get('until') ?? undefined
+    const from = searchParams.get("from") ?? undefined
+    const until = searchParams.get("until") ?? undefined
 
     const { data, error, isLoading } = useSWR(
         `/sales/statistics?${buildDateRangeQueryParams(from, until)}`,
@@ -58,7 +59,7 @@ export function useSalesStatistics(): SalesStatisticsHook {
 
 export function useDailySalesStatistics(): DailySalesStatisticsHook {
     const { data, error, isLoading } = useSWR(
-        '/sales/statistics/daily',
+        "/sales/statistics/daily",
         getDailySalesStatistics,
         { refreshInterval: 10 * 1000 },
     )
@@ -81,48 +82,63 @@ export interface ProcurementRecommendationsHook {
 }
 
 // We use Zustand to make it easier to persist the data in localStorage.
-export const useProcurementRecommendations = create<ProcurementRecommendationsHook>()(
-    devtools(
-        persist(
-            (set): ProcurementRecommendationsHook => ({
-                isLoading: false,
-                refresh: async () => {
-                    set({ isLoading: true })
-                    try {
-                        const data: ProcurementRecommendationsResponse = await getProcurementRecommendations()
-                        const keyedData: Record<string, Procurement> = data.recommendations.reduce((acc, curr): Record<string, Procurement> => ({
-                            ...acc, [curr.drug.vmedisCode]: curr
-                        }), {})
+export const useProcurementRecommendations =
+    create<ProcurementRecommendationsHook>()(
+        devtools(
+            persist(
+                (set): ProcurementRecommendationsHook => ({
+                    isLoading: false,
+                    refresh: async () => {
+                        set({ isLoading: true })
+                        try {
+                            const data: ProcurementRecommendationsResponse =
+                                await getProcurementRecommendations()
+                            const keyedData: Record<string, Procurement> =
+                                data.recommendations.reduce(
+                                    (
+                                        acc,
+                                        curr,
+                                    ): Record<string, Procurement> => ({
+                                        ...acc,
+                                        [curr.drug.vmedisCode]: curr,
+                                    }),
+                                    {},
+                                )
 
-                        set({ data: keyedData, error: undefined })
-                    } catch (error) {
-                        if (error instanceof Error) {
-                            set({ error })
-                        } else {
-                            set({ error: new Error('Unknown error: ' + JSON.stringify(error)) })
+                            set({ data: keyedData, error: undefined })
+                        } catch (error) {
+                            if (error instanceof Error) {
+                                set({ error })
+                            } else {
+                                set({
+                                    error: new Error(
+                                        "Unknown error: " +
+                                            JSON.stringify(error),
+                                    ),
+                                })
+                            }
                         }
-                    }
 
-                    set({ isLoading: false })
+                        set({ isLoading: false })
+                    },
+                    setData: (key, value) => {
+                        set((state) => ({
+                            data: {
+                                ...state.data,
+                                [key]: value,
+                            },
+                        }))
+                    },
+                    deleteData: (key) => {
+                        set((state) => {
+                            const { [key]: _, ...rest } = state.data ?? {}
+                            return { data: rest }
+                        })
+                    },
+                }),
+                {
+                    name: "procurement-recommendations",
                 },
-                setData: (key, value) => {
-                    set(state => ({
-                        data: {
-                            ...state.data,
-                            [key]: value,
-                        }
-                    }))
-                },
-                deleteData: (key) => {
-                    set(state => {
-                        const { [key]: _, ...rest } = state.data ?? {}
-                        return { data: rest }
-                    })
-                },
-            }),
-            {
-                name: 'procurement-recommendations',
-            }
-        )
+            ),
+        ),
     )
-)

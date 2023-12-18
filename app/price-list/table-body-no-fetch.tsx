@@ -4,7 +4,16 @@ import { Role } from "@/lib/api/auth"
 import { DrugWithUnits, Unit } from "@/lib/api/drug"
 import { rupiah } from "@/lib/rupiah"
 import useSearch from "@/lib/search-hook"
-import { Bold, Flex, Grid, Subtitle, TableBody, TableCell, TableRow, Text } from "@tremor/react"
+import {
+    Bold,
+    Flex,
+    Grid,
+    Subtitle,
+    TableBody,
+    TableCell,
+    TableRow,
+    Text,
+} from "@tremor/react"
 import { Session } from "next-auth"
 import { useMemo } from "react"
 
@@ -16,12 +25,27 @@ export interface PriceListTableBodyNoFetchProps {
 const rolesAllowedToSeeDiscountedPrice = [Role.ADMIN, Role.STAFF, Role.RESELLER]
 const rolesAllowedToSeePrescriptionPrice = [Role.ADMIN, Role.STAFF]
 
-export default function PriceListTableBodyNoFetch({ session, drugs }: PriceListTableBodyNoFetchProps): React.ReactElement {
+export default function PriceListTableBodyNoFetch({
+    session,
+    drugs,
+}: PriceListTableBodyNoFetchProps): React.ReactElement {
     const { query } = useSearch()
-    const filtered = useMemo(() => drugs.filter(drug => drug.name.toLowerCase().includes(query.toLowerCase())) ?? [], [drugs, query])
+    const filtered = useMemo(
+        () =>
+            drugs.filter((drug) =>
+                drug.name.toLowerCase().includes(query.toLowerCase()),
+            ) ?? [],
+        [drugs, query],
+    )
 
-    const allowedToSeeDiscountedPrice = rolesAllowedToSeeDiscountedPrice.includes(session?.user?.role ?? Role.GUEST)
-    const allowedToSeePrescriptionPrice = rolesAllowedToSeePrescriptionPrice.includes(session?.user?.role ?? Role.GUEST)
+    const allowedToSeeDiscountedPrice =
+        rolesAllowedToSeeDiscountedPrice.includes(
+            session?.user?.role ?? Role.GUEST,
+        )
+    const allowedToSeePrescriptionPrice =
+        rolesAllowedToSeePrescriptionPrice.includes(
+            session?.user?.role ?? Role.GUEST,
+        )
 
     return (
         <TableBody>
@@ -31,7 +55,11 @@ export default function PriceListTableBodyNoFetch({ session, drugs }: PriceListT
                         <Bold>{drug.name}</Bold>
 
                         <Grid numItemsSm={1} numItemsMd={3} className="gap-4">
-                            <PriceCard title="Harga Normal" units={drug.units} priceGetter={normalPriceGetter} />
+                            <PriceCard
+                                title="Harga Normal"
+                                units={drug.units}
+                                priceGetter={normalPriceGetter}
+                            />
 
                             {allowedToSeeDiscountedPrice && (
                                 <PriceCard
@@ -56,9 +84,13 @@ export default function PriceListTableBodyNoFetch({ session, drugs }: PriceListT
     )
 }
 
-function PriceCard({ title, units, priceGetter }: {
-    title: string,
-    units: Unit[],
+function PriceCard({
+    title,
+    units,
+    priceGetter,
+}: {
+    title: string
+    units: Unit[]
     priceGetter: (unit: Unit) => number
 }): React.ReactElement {
     return (
@@ -71,9 +103,7 @@ function PriceCard({ title, units, priceGetter }: {
                     text += ` (${unit.conversionToParentUnit} ${unit.parentUnit})`
                 }
 
-                return (
-                    <Text key={index}>{text}</Text>
-                )
+                return <Text key={index}>{text}</Text>
             })}
         </Flex>
     )

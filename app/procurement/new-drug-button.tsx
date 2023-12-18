@@ -1,16 +1,16 @@
 "use client"
 
-import {Procurement} from "@/lib/api/procurement-recommendation"
-import {Button} from "@tremor/react"
-import {PlusIcon} from "@heroicons/react/24/outline"
-import {useProcurementRecommendations} from "@/lib/api/hooks"
+import { Procurement } from "@/lib/api/procurement-recommendation"
+import { Button } from "@tremor/react"
+import { PlusIcon } from "@heroicons/react/24/outline"
+import { useProcurementRecommendations } from "@/lib/api/hooks"
 import useSearch from "@/lib/search-hook"
-import {usePrintMode} from "@/lib/print-mode"
+import { usePrintMode } from "@/lib/print-mode"
 
 export default function NewDrugButton(): React.ReactElement {
-    const {isLoading, setData} = useProcurementRecommendations()
-    const {query} = useSearch()
-    const {isPrintMode} = usePrintMode()
+    const { isLoading, setData } = useProcurementRecommendations()
+    const { query } = useSearch()
+    const { isPrintMode } = usePrintMode()
 
     if (isPrintMode) {
         return <></>

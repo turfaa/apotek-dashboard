@@ -8,7 +8,11 @@ export const metadata: Metadata = {
     title: "Obat Terjual",
 }
 
-export default function SoldDrugs({ searchParams }: { searchParams?: { [key: string]: string | undefined } }): React.ReactElement {
+export default function SoldDrugs({
+    searchParams,
+}: {
+    searchParams?: { [key: string]: string | undefined }
+}): React.ReactElement {
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <Flex flexDirection="row" justifyContent="start" className="gap-2">
@@ -18,7 +22,10 @@ export default function SoldDrugs({ searchParams }: { searchParams?: { [key: str
 
             <Card className="mt-4">
                 <Suspense fallback={<Text>Loading...</Text>}>
-                    <SoldDrugsTable from={searchParams?.from} until={searchParams?.until} />
+                    <SoldDrugsTable
+                        from={searchParams?.from}
+                        until={searchParams?.until}
+                    />
                 </Suspense>
             </Card>
         </main>

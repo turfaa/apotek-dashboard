@@ -1,42 +1,47 @@
 {
-  "name": "apotek-dashboard",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "experimental-compile": "next experimental-compile"
-  },
-  "dependencies": {
-    "@heroicons/react": "^2.0.18",
-    "@maskito/kit": "^1.8.1",
-    "@maskito/react": "^1.8.1",
-    "@tremor/react": "^3.10.1",
-    "@types/react": "18.2.31",
-    "autoprefixer": "^10.4.16",
-    "chart.js": "^4.4.0",
-    "chartjs-adapter-moment": "^1.0.1",
-    "chartjs-plugin-datalabels": "^2.2.0",
-    "date-fns": "^2.30.0",
-    "eslint": "8.52.0",
-    "eslint-config-next": "13.5.6",
-    "geist": "^1.0.0",
-    "moment": "^2.29.4",
-    "next": "^13.5.6",
-    "next-auth": "^4.24.4",
-    "next-usequerystate": "^1.10.2",
-    "react": "18.2.0",
-    "react-chartjs-2": "^5.2.0",
-    "react-dom": "18.2.0",
-    "sharp": "^0.32.6",
-    "swr": "^2.2.4",
-    "tailwindcss": "3.3.4",
-    "typescript": "5.2.2",
-    "zustand": "^4.4.4"
-  },
-  "devDependencies": {
-    "@types/node": "20.8.8"
-  }
+    "name": "apotek-dashboard",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint",
+        "experimental-compile": "next experimental-compile",
+        "format": "prettier-eslint --write \"{,!(node_modules)/**/}*.{js,jsx,ts,tsx,json}\""
+    },
+    "dependencies": {
+        "@heroicons/react": "^2.0.18",
+        "@maskito/kit": "^1.8.1",
+        "@maskito/react": "^1.8.1",
+        "@tremor/react": "^3.10.1",
+        "@types/react": "18.2.31",
+        "autoprefixer": "^10.4.16",
+        "chart.js": "^4.4.0",
+        "chartjs-adapter-moment": "^1.0.1",
+        "chartjs-plugin-datalabels": "^2.2.0",
+        "date-fns": "^2.30.0",
+        "eslint-config-next": "13.5.6",
+        "geist": "^1.0.0",
+        "moment": "^2.29.4",
+        "next": "^13.5.6",
+        "next-auth": "^4.24.4",
+        "next-usequerystate": "^1.10.2",
+        "react": "18.2.0",
+        "react-chartjs-2": "^5.2.0",
+        "react-dom": "18.2.0",
+        "sharp": "^0.32.6",
+        "swr": "^2.2.4",
+        "tailwindcss": "3.3.4",
+        "zustand": "^4.4.4"
+    },
+    "devDependencies": {
+        "@types/node": "20.8.8",
+        "@typescript-eslint/parser": "^6.15.0",
+        "eslint": "^8.56.0",
+        "prettier": "^3.1.1",
+        "prettier-eslint": "^16.1.2",
+        "prettier-eslint-cli": "^8.0.1",
+        "typescript": "^5.3.3"
+    }
 }

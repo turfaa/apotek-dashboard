@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { usePrintMode } from "@/lib/print-mode"
 import useSearch from "@/lib/search-hook"
@@ -13,7 +13,10 @@ export default function ProcurementTitle() {
     return (
         <Flex flexDirection="row">
             <Flex flexDirection="col" alignItems="start">
-                <Title>Pesanan Apotek Aulia Farma ({new Date().toLocaleDateString("id-ID")})</Title>
+                <Title>
+                    Pesanan Apotek Aulia Farma (
+                    {new Date().toLocaleDateString("id-ID")})
+                </Title>
                 {showQuery && <Subtitle>Kepada: {query}</Subtitle>}
             </Flex>
         </Flex>
