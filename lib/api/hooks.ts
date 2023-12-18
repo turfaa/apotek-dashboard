@@ -7,7 +7,6 @@ import {
 } from "@/lib/api/procurement-recommendation"
 import {
     SalesStatisticsResponse,
-    getDailySalesStatistics,
     getSalesStatistics,
 } from "@/lib/api/sale-statistics"
 import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation"
@@ -27,12 +26,6 @@ export function useDrugs(): DrugsHook {
     return { data, isLoading, error }
 }
 
-export interface DailySalesStatisticsHook {
-    data?: SalesStatisticsResponse
-    isLoading: boolean
-    error?: Error
-}
-
 export interface SalesStatisticsHook {
     data?: SalesStatisticsResponse
     isLoading: boolean
@@ -47,20 +40,6 @@ export function useSalesStatistics(): SalesStatisticsHook {
     const { data, error, isLoading } = useSWR(
         `/sales/statistics?${buildDateRangeQueryParams(from, until)}`,
         () => getSalesStatistics(from, until),
-        { refreshInterval: 10 * 1000 },
-    )
-
-    return {
-        data,
-        isLoading,
-        error,
-    }
-}
-
-export function useDailySalesStatistics(): DailySalesStatisticsHook {
-    const { data, error, isLoading } = useSWR(
-        "/sales/statistics/daily",
-        getDailySalesStatistics,
         { refreshInterval: 10 * 1000 },
     )
 

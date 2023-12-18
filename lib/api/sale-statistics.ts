@@ -3,6 +3,7 @@ import { buildDateRangeQueryParams } from "@/lib/api/common"
 
 export interface SalesStatisticsResponse {
     history: SalesStatistics[]
+    dailyHistory: SalesStatistics[]
 }
 
 export interface SalesStatistics {
@@ -13,6 +14,7 @@ export interface SalesStatistics {
 
 interface UnderlyingSalesStatisticsResponse {
     history: UnderlyingSalesStatistics[]
+    dailyHistory: UnderlyingSalesStatistics[]
 }
 
 interface UnderlyingSalesStatistics {
@@ -43,6 +45,14 @@ export async function getSalesStatistics(
                 }
             },
         ),
+        dailyHistory: underlying.dailyHistory.map(
+            (item: UnderlyingSalesStatistics): SalesStatistics => {
+                return {
+                    ...item,
+                    pulledAt: new Date(item.pulledAt),
+                }
+            },
+        ),
     }
 }
 
@@ -59,6 +69,14 @@ export async function getDailySalesStatistics(): Promise<SalesStatisticsResponse
 
     return {
         history: underlying.history.map(
+            (item: UnderlyingSalesStatistics): SalesStatistics => {
+                return {
+                    ...item,
+                    pulledAt: new Date(item.pulledAt),
+                }
+            },
+        ),
+        dailyHistory: underlying.dailyHistory.map(
             (item: UnderlyingSalesStatistics): SalesStatistics => {
                 return {
                     ...item,

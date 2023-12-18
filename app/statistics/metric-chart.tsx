@@ -22,21 +22,34 @@ export default function MetricChart(
         props.valueFormatter ??
         ((value: number) => value.toLocaleString("id-ID"))
 
-    const data = props.data.map((datum, index, self) =>
-        // Convert the datum to a chart.js data point.
-        // The y value is the difference between the current datum and the previous datum.
-        ({
-            x: datum.timestamp,
-            y: Math.max(
-                0,
-                datum.value - (index == 0 ? 0 : self[index - 1].value),
-            ),
-        }),
-    )
-    // .filter((datum, index, self) =>
-    //     // Filter out a datum if it's the same as the next datum.
-    //     index == self.length - 1 || datum.y != self[index + 1].y
-    // )
+    const data = props.data
+        .map((datum, index, self) =>
+            // Convert the datum to a chart.js data point.
+            // The y value is the difference between the current datum and the previous datum if they're in the same date.
+            ({
+                x: datum.timestamp,
+                y: Math.max(
+                    0,
+                    index == 0 ||
+                        datum.timestamp.toDateString() !=
+                            self[index - 1].timestamp.toDateString()
+                        ? datum.value
+                        : datum.value - self[index - 1].value,
+                ),
+            }),
+        )
+        .filter(
+            (datum, index, self) =>
+                // Filter out a datum if it's the same as the next datum.
+                index == self.length - 1 || datum.y != self[index + 1].y,
+        )
+
+    const timeUnit =
+        data.length < 2
+            ? "hour"
+            : data[1].x.toDateString() === data[0].x.toDateString()
+                ? "hour"
+                : "day"
 
     return (
         <Card>
@@ -49,7 +62,7 @@ export default function MetricChart(
                         x: {
                             type: "time",
                             time: {
-                                unit: "hour",
+                                unit: timeUnit,
                             },
                         },
                         y: { beginAtZero: true },
