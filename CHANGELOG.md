@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.11.0] - 2023-12-18
+### :sparkles: New Features
+- [`b8f7182`](https://github.com/turfaa/apotek-dashboard/commit/b8f71828250c9ce19d62c41c8960c04b15fafe48) - Support daily history and daily total sales table *(commit by [@turfaa](https://github.com/turfaa))*
+
+### :wrench: Chores
+- [`8dda368`](https://github.com/turfaa/apotek-dashboard/commit/8dda3685efead385497a5ece1f09835c4e32d9b4) - Format whole project with prettier-eslint *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.10.8] - 2023-11-15
 ### :bug: Bug Fixes
 - [`556dea3`](https://github.com/turfaa/apotek-dashboard/commit/556dea3c405bc4ccd770202f36802bd5eb040c72) - Use sonar on main branch *(commit by [@turfaa](https://github.com/turfaa))*
@@ -252,3 +260,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.10.6]: https://github.com/turfaa/apotek-dashboard/compare/v0.10.5...v0.10.6
 [v0.10.7]: https://github.com/turfaa/apotek-dashboard/compare/v0.10.6...v0.10.7
 [v0.10.8]: https://github.com/turfaa/apotek-dashboard/compare/v0.10.7...v0.10.8
+[v0.11.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.10.8...v0.11.0
