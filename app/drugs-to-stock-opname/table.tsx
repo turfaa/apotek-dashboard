@@ -28,7 +28,7 @@ export default async function DrugsTable({
                 <TableRow>
                     <TableHeaderCell>No</TableHeaderCell>
                     <TableHeaderCell>Nama Obat</TableHeaderCell>
-                    <TableHeaderCell>Pabrik</TableHeaderCell>
+                    {/* <TableHeaderCell>Pabrik</TableHeaderCell> */}
                 </TableRow>
             </TableHead>
 
@@ -37,7 +37,7 @@ export default async function DrugsTable({
                     <TableRow key={index}>
                         <TableHeaderCell>{index + 1}</TableHeaderCell>
                         <TableCell>{drug.name}</TableCell>
-                        <TableCell>{drug.manufacturer}</TableCell>
+                        {/* <TableCell>{drug.manufacturer}</TableCell> */}
                     </TableRow>
                 ))}
             </TableBody>
