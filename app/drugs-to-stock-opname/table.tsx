@@ -36,7 +36,13 @@ export default async function DrugsTable({
                 {drugs.map((drug, index) => (
                     <TableRow key={index}>
                         <TableHeaderCell>{index + 1}</TableHeaderCell>
-                        <TableCell>{drug.name}</TableCell>
+                        <TableCell>
+                            <b>{drug.name}</b> (
+                            {drug.stocks.length == 0
+                                ? "-"
+                                : drug.stocks.join(" ")}
+                            )
+                        </TableCell>
                         {/* <TableCell>{drug.manufacturer}</TableCell> */}
                     </TableRow>
                 ))}

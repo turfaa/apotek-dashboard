@@ -1,7 +1,7 @@
 "use client"
 
 import { Role } from "@/lib/api/auth"
-import { DrugWithUnits, Unit } from "@/lib/api/drug"
+import { Drug, Unit } from "@/lib/api/drug"
 import { rupiah } from "@/lib/rupiah"
 import useSearch from "@/lib/search-hook"
 import {
@@ -19,11 +19,12 @@ import { useMemo } from "react"
 
 export interface PriceListTableBodyNoFetchProps {
     session: Session | null
-    drugs: DrugWithUnits[]
+    drugs: Drug[]
 }
 
 const rolesAllowedToSeeDiscountedPrice = [Role.ADMIN, Role.STAFF, Role.RESELLER]
 const rolesAllowedToSeePrescriptionPrice = [Role.ADMIN, Role.STAFF]
+const rolesAllowedToSeeStock = [Role.ADMIN, Role.STAFF]
 
 export default function PriceListTableBodyNoFetch({
     session,
@@ -42,10 +43,15 @@ export default function PriceListTableBodyNoFetch({
         rolesAllowedToSeeDiscountedPrice.includes(
             session?.user?.role ?? Role.GUEST,
         )
+
     const allowedToSeePrescriptionPrice =
         rolesAllowedToSeePrescriptionPrice.includes(
             session?.user?.role ?? Role.GUEST,
         )
+
+    const allowedToSeeStock = rolesAllowedToSeeStock.includes(
+        session?.user?.role ?? Role.GUEST,
+    )
 
     return (
         <TableBody>
@@ -75,6 +81,10 @@ export default function PriceListTableBodyNoFetch({
                                     units={drug.units}
                                     priceGetter={prescriptionPriceGetter}
                                 />
+                            )}
+
+                            {allowedToSeeStock && (
+                                <StockCard stocks={drug.stocks} />
                             )}
                         </Grid>
                     </TableCell>
@@ -119,4 +129,15 @@ function discountPriceGetter(unit: Unit): number {
 
 function prescriptionPriceGetter(unit: Unit): number {
     return unit.priceThree
+}
+
+function StockCard({ stocks }: { stocks: string[] }): React.ReactElement {
+    return (
+        <Flex flexDirection="col" alignItems="start" className="mr-4">
+            <Subtitle>Sisa Stok</Subtitle>
+            <Text>
+                {stocks.length === 0 ? "Tidak ada stok" : stocks.join(" ")}
+            </Text>
+        </Flex>
+    )
 }

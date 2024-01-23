@@ -1,11 +1,7 @@
 import { fetchAPI } from "@/lib/api/base"
 
 export interface DrugsResponse {
-    drugs: DrugWithUnits[]
-}
-
-export interface DrugWithUnits extends Drug {
-    units: Unit[]
+    drugs: Drug[]
 }
 
 export interface Drug {
@@ -14,6 +10,8 @@ export interface Drug {
     manufacturer: string
     supplier: string
     minimumStock: string
+    units: Unit[]
+    stocks: string[]
 }
 
 export interface Unit {
