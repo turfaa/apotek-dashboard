@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.12.3] - 2024-01-28
+### :bug: Bug Fixes
+- [`e8bc1d9`](https://github.com/turfaa/apotek-dashboard/commit/e8bc1d900cd029ff42a281b22e955afc8460455e) - Revalidate drugs every minute *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.12.2] - 2024-01-28
 ### :bug: Bug Fixes
 - [`cd9435d`](https://github.com/turfaa/apotek-dashboard/commit/cd9435db94300dd67fe836e3d6f18d07e19cd8cc) - Allow resellers and guests to see drug stocks *(commit by [@turfaa](https://github.com/turfaa))*
@@ -285,3 +290,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.12.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.11.1...v0.12.0
 [v0.12.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.12.0...v0.12.1
 [v0.12.2]: https://github.com/turfaa/apotek-dashboard/compare/v0.12.1...v0.12.2
+[v0.12.3]: https://github.com/turfaa/apotek-dashboard/compare/v0.12.2...v0.12.3
