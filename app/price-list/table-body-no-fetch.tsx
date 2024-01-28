@@ -24,7 +24,12 @@ export interface PriceListTableBodyNoFetchProps {
 
 const rolesAllowedToSeeDiscountedPrice = [Role.ADMIN, Role.STAFF, Role.RESELLER]
 const rolesAllowedToSeePrescriptionPrice = [Role.ADMIN, Role.STAFF]
-const rolesAllowedToSeeStock = [Role.ADMIN, Role.STAFF]
+const rolesAllowedToSeeStock = [
+    Role.ADMIN,
+    Role.STAFF,
+    Role.RESELLER,
+    Role.GUEST,
+]
 
 export default function PriceListTableBodyNoFetch({
     session,
