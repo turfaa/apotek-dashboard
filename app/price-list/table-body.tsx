@@ -1,9 +1,8 @@
 "use client"
 
 import PriceListTableBodyFallback from "@/app/price-list/table-body-fallback"
-import { getDrugs, Unit } from "@/lib/api/drug"
+import { getDrugs } from "@/lib/api/drug"
 import { useDrugs } from "@/lib/api/hooks"
-import { rupiah } from "@/lib/rupiah"
 import useSearch from "@/lib/search-hook"
 import { ExclamationTriangleIcon } from "@heroicons/react/24/solid"
 import {
@@ -11,7 +10,6 @@ import {
     Col,
     Flex,
     Grid,
-    Subtitle,
     TableBody,
     TableCell,
     TableRow,
@@ -19,6 +17,13 @@ import {
 } from "@tremor/react"
 import { useEffect, useState } from "react"
 import { preload } from "swr"
+
+import {
+    PriceCard,
+    discountPriceGetter,
+    normalPriceGetter,
+    prescriptionPriceGetter,
+} from "./price-card"
 
 preload("/drugs", getDrugs)
 
@@ -98,44 +103,4 @@ export default function PriceListTableBody(): React.ReactElement {
             ))}
         </TableBody>
     )
-}
-
-function PriceCard({
-    title,
-    units,
-    priceGetter,
-}: {
-    title: string
-    units: Unit[]
-    priceGetter: (unit: Unit) => number
-}): React.ReactElement {
-    return (
-        <Flex flexDirection="col" alignItems="start" className="mr-4">
-            <Subtitle>{title}</Subtitle>
-
-            {units.map((unit, index) => (
-                <Text key={index}>
-                    {rupiah.format(priceGetter(unit))} / {unit.unit}
-                    {!!unit.parentUnit && (
-                        <>
-                            {" "}
-                            ({unit.conversionToParentUnit} {unit.parentUnit})
-                        </>
-                    )}
-                </Text>
-            ))}
-        </Flex>
-    )
-}
-
-function normalPriceGetter(unit: Unit): number {
-    return unit.priceOne
-}
-
-function discountPriceGetter(unit: Unit): number {
-    return unit.priceTwo
-}
-
-function prescriptionPriceGetter(unit: Unit): number {
-    return unit.priceThree
 }

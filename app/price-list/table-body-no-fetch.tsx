@@ -1,21 +1,19 @@
 "use client"
 
 import { Role } from "@/lib/api/auth"
-import { Drug, Unit } from "@/lib/api/drug"
-import { rupiah } from "@/lib/rupiah"
+import { Drug } from "@/lib/api/drug"
 import useSearch from "@/lib/search-hook"
-import {
-    Bold,
-    Flex,
-    Grid,
-    Subtitle,
-    TableBody,
-    TableCell,
-    TableRow,
-    Text,
-} from "@tremor/react"
+import { Bold, Grid, TableBody, TableCell, TableRow } from "@tremor/react"
 import { Session } from "next-auth"
 import { useMemo } from "react"
+
+import {
+    PriceCard,
+    discountPriceGetter,
+    normalPriceGetter,
+    prescriptionPriceGetter,
+} from "./price-card"
+import { StockCard } from "./stock-card"
 
 export interface PriceListTableBodyNoFetchProps {
     session: Session | null
@@ -96,53 +94,5 @@ export default function PriceListTableBodyNoFetch({
                 </TableRow>
             ))}
         </TableBody>
-    )
-}
-
-function PriceCard({
-    title,
-    units,
-    priceGetter,
-}: {
-    title: string
-    units: Unit[]
-    priceGetter: (unit: Unit) => number
-}): React.ReactElement {
-    return (
-        <Flex flexDirection="col" alignItems="start" className="mr-4">
-            <Subtitle>{title}</Subtitle>
-
-            {units.map((unit, index) => {
-                let text = `${rupiah.format(priceGetter(unit))} / ${unit.unit}`
-                if (unit.conversionToParentUnit) {
-                    text += ` (${unit.conversionToParentUnit} ${unit.parentUnit})`
-                }
-
-                return <Text key={index}>{text}</Text>
-            })}
-        </Flex>
-    )
-}
-
-function normalPriceGetter(unit: Unit): number {
-    return unit.priceOne
-}
-
-function discountPriceGetter(unit: Unit): number {
-    return unit.priceTwo
-}
-
-function prescriptionPriceGetter(unit: Unit): number {
-    return unit.priceThree
-}
-
-function StockCard({ stocks }: { stocks: string[] }): React.ReactElement {
-    return (
-        <Flex flexDirection="col" alignItems="start" className="mr-4">
-            <Subtitle>Sisa Stok</Subtitle>
-            <Text>
-                {stocks.length === 0 ? "Tidak ada stok" : stocks.join(" ")}
-            </Text>
-        </Flex>
     )
 }
