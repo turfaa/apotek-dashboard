@@ -1,21 +1,21 @@
-import NewDrugButton from "@/app/procurement/new-drug-button"
-import RefreshButton from "@/app/procurement/refresh-button"
-import ProcurementTable from "@/app/procurement/table"
-import ProcurementTitle from "@/app/procurement/title"
+import NewDrugButton from "@/app/procurements/purchase-order/new-drug-button"
+import RefreshButton from "@/app/procurements/purchase-order/refresh-button"
+import PurchaseOrderTable from "@/app/procurements/purchase-order/table"
+import PurchaseOrderTitle from "@/app/procurements/purchase-order/title"
 import SearchButton from "@/shared-components/search-button"
 import { Card, Col, Flex, Grid } from "@tremor/react"
 import moment from "moment/moment"
 import { Metadata } from "next"
 import { Suspense } from "react"
 
-interface ProcurementProps {
+interface PurchaseOrderProps {
     searchParams: {
         [key: string]: string | string[] | undefined
     }
 }
 
 export async function generateMetadata(
-    props: ProcurementProps,
+    props: PurchaseOrderProps,
 ): Promise<Metadata> {
     const { query, print } = props.searchParams
 
@@ -36,12 +36,12 @@ export async function generateMetadata(
     }
 }
 
-export default function Procurement() {
+export default function PurchaseOrder() {
     return (
         <main className="p-4 md:p-10 mx-auto">
             <Flex className="pb-4">
                 <Suspense>
-                    <ProcurementTitle />
+                    <PurchaseOrderTitle />
                 </Suspense>
             </Flex>
 
@@ -62,7 +62,7 @@ export default function Procurement() {
 
             <Card className="mt-4">
                 <Suspense>
-                    <ProcurementTable />
+                    <PurchaseOrderTable />
                 </Suspense>
             </Card>
         </main>

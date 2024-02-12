@@ -16,7 +16,7 @@ const availablePages: Page[] = [
     { name: "Daftar Harga", href: "/price-list" },
     {
         name: "Pesanan",
-        href: "/procurement",
+        href: "/procurements/purchase-order",
         allowedRoles: [Role.ADMIN, Role.STAFF],
     },
     { name: "Obat Terjual", href: "/sold-drugs", allowedRoles: [Role.ADMIN] },

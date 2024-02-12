@@ -18,7 +18,7 @@ export interface InvoiceComponent {
 export async function GetInvoiceCalculators(): Promise<InvoiceCalculatorsResponse> {
     return await fetchAPI<InvoiceCalculatorsResponse>(
         "GET",
-        "/procurement/invoice-calculators",
+        "/procurements/invoice-calculators",
         null,
         {
             cache: "no-cache",

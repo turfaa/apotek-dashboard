@@ -1,12 +1,12 @@
 "use client"
 
-import { Button } from "@tremor/react"
-import { ArrowPathIcon } from "@heroicons/react/24/outline"
-import { useProcurementRecommendations } from "@/lib/api/hooks"
+import { usePurchaseOrders } from "@/lib/api/hooks"
 import { usePrintMode } from "@/lib/print-mode"
+import { ArrowPathIcon } from "@heroicons/react/24/outline"
+import { Button } from "@tremor/react"
 
 export default function RefreshButton(): React.ReactElement {
-    const { isLoading, refresh } = useProcurementRecommendations()
+    const { isLoading, refresh } = usePurchaseOrders()
     const { isPrintMode } = usePrintMode()
 
     if (isPrintMode) {

@@ -1,7 +1,7 @@
 import { buildDateRangeQueryParams } from "@/lib/api/common"
 import { DrugsResponse, getDrugs } from "@/lib/api/drug"
 import {
-    Procurement,
+    ProcurementRecommendation,
     ProcurementRecommendationsResponse,
     getProcurementRecommendations,
 } from "@/lib/api/procurement-recommendation"
@@ -50,74 +50,74 @@ export function useSalesStatistics(): SalesStatisticsHook {
     }
 }
 
-export interface ProcurementRecommendationsHook {
-    data?: Record<string, Procurement>
+export interface PurchaseOrdersHook {
+    data?: Record<string, ProcurementRecommendation>
     isLoading: boolean
     error?: Error
 
     refresh: () => Promise<void>
-    setData: (key: string, value: Procurement) => void
+    setData: (key: string, value: ProcurementRecommendation) => void
     deleteData: (key: string) => void
 }
 
 // We use Zustand to make it easier to persist the data in localStorage.
-export const useProcurementRecommendations =
-    create<ProcurementRecommendationsHook>()(
-        devtools(
-            persist(
-                (set): ProcurementRecommendationsHook => ({
-                    isLoading: false,
-                    refresh: async () => {
-                        set({ isLoading: true })
-                        try {
-                            const data: ProcurementRecommendationsResponse =
-                                await getProcurementRecommendations()
-                            const keyedData: Record<string, Procurement> =
-                                data.recommendations.reduce(
-                                    (
-                                        acc,
-                                        curr,
-                                    ): Record<string, Procurement> => ({
-                                        ...acc,
-                                        [curr.drug.vmedisCode]: curr,
-                                    }),
-                                    {},
-                                )
+export const usePurchaseOrders = create<PurchaseOrdersHook>()(
+    devtools(
+        persist(
+            (set): PurchaseOrdersHook => ({
+                isLoading: false,
+                refresh: async () => {
+                    set({ isLoading: true })
+                    try {
+                        const data: ProcurementRecommendationsResponse =
+                            await getProcurementRecommendations()
+                        const keyedData: Record<
+                            string,
+                            ProcurementRecommendation
+                        > = data.recommendations.reduce(
+                            (
+                                acc,
+                                curr,
+                            ): Record<string, ProcurementRecommendation> => ({
+                                ...acc,
+                                [curr.drug.vmedisCode]: curr,
+                            }),
+                            {},
+                        )
 
-                            set({ data: keyedData, error: undefined })
-                        } catch (error) {
-                            if (error instanceof Error) {
-                                set({ error })
-                            } else {
-                                set({
-                                    error: new Error(
-                                        "Unknown error: " +
-                                            JSON.stringify(error),
-                                    ),
-                                })
-                            }
+                        set({ data: keyedData, error: undefined })
+                    } catch (error) {
+                        if (error instanceof Error) {
+                            set({ error })
+                        } else {
+                            set({
+                                error: new Error(
+                                    "Unknown error: " + JSON.stringify(error),
+                                ),
+                            })
                         }
+                    }
 
-                        set({ isLoading: false })
-                    },
-                    setData: (key, value) => {
-                        set((state) => ({
-                            data: {
-                                ...state.data,
-                                [key]: value,
-                            },
-                        }))
-                    },
-                    deleteData: (key) => {
-                        set((state) => {
-                            const { [key]: _, ...rest } = state.data ?? {}
-                            return { data: rest }
-                        })
-                    },
-                }),
-                {
-                    name: "procurement-recommendations",
+                    set({ isLoading: false })
                 },
-            ),
+                setData: (key, value) => {
+                    set((state) => ({
+                        data: {
+                            ...state.data,
+                            [key]: value,
+                        },
+                    }))
+                },
+                deleteData: (key) => {
+                    set((state) => {
+                        const { [key]: _, ...rest } = state.data ?? {}
+                        return { data: rest }
+                    })
+                },
+            }),
+            {
+                name: "procurement-recommendations",
+            },
         ),
-    )
+    ),
+)

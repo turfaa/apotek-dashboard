@@ -4,7 +4,7 @@ import { usePrintMode } from "@/lib/print-mode"
 import useSearch from "@/lib/search-hook"
 import { Flex, Subtitle, Title } from "@tremor/react"
 
-export default function ProcurementTitle() {
+export default function PurchaseOrderTitle() {
     const { isPrintMode } = usePrintMode()
     const { query } = useSearch()
 

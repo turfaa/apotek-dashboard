@@ -1,5 +1,10 @@
 "use client"
 
+import { usePurchaseOrders } from "@/lib/api/hooks"
+import { ProcurementRecommendation } from "@/lib/api/procurement-recommendation"
+import { usePrintMode } from "@/lib/print-mode"
+import useSearch from "@/lib/search-hook"
+import { ExclamationTriangleIcon } from "@heroicons/react/24/solid"
 import {
     Button,
     Callout,
@@ -12,12 +17,7 @@ import {
     Text,
     TextInput,
 } from "@tremor/react"
-import { useProcurementRecommendations } from "@/lib/api/hooks"
-import { Procurement } from "@/lib/api/procurement-recommendation"
 import { useEffect, useState } from "react"
-import useSearch from "@/lib/search-hook"
-import { ExclamationTriangleIcon } from "@heroicons/react/24/solid"
-import { usePrintMode } from "@/lib/print-mode"
 
 export interface Row {
     vmedisCode: string
@@ -29,7 +29,7 @@ export interface Row {
     procurement: string
     supplier: string
 
-    raw: Procurement
+    raw: ProcurementRecommendation
 }
 
 const columns: Column[] = [
@@ -48,7 +48,10 @@ interface ColumnConfig {
     displayName: string
     displayInPrint?: boolean
     formatter?: (value: any) => string
-    onEdit?: (procurement: Procurement, value: string) => Procurement
+    onEdit?: (
+        procurement: ProcurementRecommendation,
+        value: string,
+    ) => ProcurementRecommendation
 }
 
 const columnConfig: Record<Column, ColumnConfig> = {
@@ -62,7 +65,7 @@ const columnConfig: Record<Column, ColumnConfig> = {
     name: {
         displayName: "Nama Obat",
         displayInPrint: true,
-        onEdit: (procurement: Procurement, value: string) => ({
+        onEdit: (procurement: ProcurementRecommendation, value: string) => ({
             ...procurement,
             drug: { ...procurement.drug, name: value },
         }),
@@ -83,14 +86,14 @@ const columnConfig: Record<Column, ColumnConfig> = {
     procurement: {
         displayName: "Jumlah",
         displayInPrint: true,
-        onEdit: (procurement: Procurement, value: string) => ({
+        onEdit: (procurement: ProcurementRecommendation, value: string) => ({
             ...procurement,
             procurement: value,
         }),
     },
     supplier: {
         displayName: "Supplier",
-        onEdit: (procurement: Procurement, value: string) => ({
+        onEdit: (procurement: ProcurementRecommendation, value: string) => ({
             ...procurement,
             fromSupplier: value,
         }),
@@ -118,8 +121,7 @@ export default function ProcurementTable(): React.ReactElement {
         "supplier",
     ])
 
-    const { data, isLoading, error, setData, deleteData } =
-        useProcurementRecommendations()
+    const { data, isLoading, error, setData, deleteData } = usePurchaseOrders()
     const { query } = useSearch()
     const { isPrintMode } = usePrintMode()
 
@@ -136,7 +138,7 @@ export default function ProcurementTable(): React.ReactElement {
         )
 
     const rows: Row[] = Object.values(data || {})
-        .map((procurement: Procurement) => ({
+        .map((procurement: ProcurementRecommendation) => ({
             vmedisCode: procurement.drug.vmedisCode,
             name: procurement.drug.name,
             manufacturer: procurement.drug.manufacturer,

@@ -1,14 +1,14 @@
 "use client"
 
-import { useProcurementRecommendations } from "@/lib/api/hooks"
-import { Procurement } from "@/lib/api/procurement-recommendation"
+import { usePurchaseOrders } from "@/lib/api/hooks"
+import { ProcurementRecommendation } from "@/lib/api/procurement-recommendation"
 import { usePrintMode } from "@/lib/print-mode"
 import useSearch from "@/lib/search-hook"
 import { PlusIcon } from "@heroicons/react/24/outline"
 import { Button } from "@tremor/react"
 
 export default function NewDrugButton(): React.ReactElement {
-    const { isLoading, setData } = useProcurementRecommendations()
+    const { isLoading, setData } = usePurchaseOrders()
     const { query } = useSearch()
     const { isPrintMode } = usePrintMode()
 
@@ -31,7 +31,7 @@ export default function NewDrugButton(): React.ReactElement {
     )
 }
 
-function newProcurement(query: string): Procurement {
+function newProcurement(query: string): ProcurementRecommendation {
     return {
         drug: {
             vmedisCode: Math.random().toString(36).substring(7),
