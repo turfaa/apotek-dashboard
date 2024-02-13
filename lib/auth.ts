@@ -33,6 +33,8 @@ export const authConfig: NextAuthConfig = {
         },
     },
 
+    trustHost: true,
+
     experimental: {
         enableWebAuthn: true,
     },
