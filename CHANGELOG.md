@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.12.4] - 2024-02-13
+### :bug: Bug Fixes
+- [`5281a60`](https://github.com/turfaa/apotek-dashboard/commit/5281a60eaf694e8002633ff14bb6bc428e14f200) - Add authorization on API rewrites *(commit by [@turfaa](https://github.com/turfaa))*
+
+### :recycle: Refactors
+- [`3bb747c`](https://github.com/turfaa/apotek-dashboard/commit/3bb747c58ccc3d645e3745b4daf4475791cb7428) - Move /procurement to /procurements/purchase-ordr *(commit by [@turfaa](https://github.com/turfaa))*
+- [`56cb58f`](https://github.com/turfaa/apotek-dashboard/commit/56cb58ff4d3a71d1456f0025edc196c16fda09f7) - Move price card and stock card to new files *(commit by [@turfaa](https://github.com/turfaa))*
+
+### :wrench: Chores
+- [`68f57e0`](https://github.com/turfaa/apotek-dashboard/commit/68f57e04e210ad2a006819918585f28df9c8cadf) - Upgrade to next@14 *(commit by [@turfaa](https://github.com/turfaa))*
+- [`00fc408`](https://github.com/turfaa/apotek-dashboard/commit/00fc408a5cf380697e66cb22378cb65b20407812) - Upgrade to next-auth@v5 *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.12.3] - 2024-01-28
 ### :bug: Bug Fixes
 - [`e8bc1d9`](https://github.com/turfaa/apotek-dashboard/commit/e8bc1d900cd029ff42a281b22e955afc8460455e) - Revalidate drugs every minute *(commit by [@turfaa](https://github.com/turfaa))*
@@ -291,3 +304,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.12.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.12.0...v0.12.1
 [v0.12.2]: https://github.com/turfaa/apotek-dashboard/compare/v0.12.1...v0.12.2
 [v0.12.3]: https://github.com/turfaa/apotek-dashboard/compare/v0.12.2...v0.12.3
+[v0.12.4]: https://github.com/turfaa/apotek-dashboard/compare/v0.12.3...v0.12.4
