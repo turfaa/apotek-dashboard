@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.12.5] - 2024-02-13
+### :bug: Bug Fixes
+- [`258e0fc`](https://github.com/turfaa/apotek-dashboard/commit/258e0fc19b1424d34d482f77907211286773573a) - Set trustHost: true *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.12.4] - 2024-02-13
 ### :bug: Bug Fixes
 - [`5281a60`](https://github.com/turfaa/apotek-dashboard/commit/5281a60eaf694e8002633ff14bb6bc428e14f200) - Add authorization on API rewrites *(commit by [@turfaa](https://github.com/turfaa))*
@@ -305,3 +310,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.12.2]: https://github.com/turfaa/apotek-dashboard/compare/v0.12.1...v0.12.2
 [v0.12.3]: https://github.com/turfaa/apotek-dashboard/compare/v0.12.2...v0.12.3
 [v0.12.4]: https://github.com/turfaa/apotek-dashboard/compare/v0.12.3...v0.12.4
+[v0.12.5]: https://github.com/turfaa/apotek-dashboard/compare/v0.12.4...v0.12.5
