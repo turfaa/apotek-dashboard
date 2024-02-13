@@ -1,15 +1,10 @@
-import GoogleProvider from "next-auth/providers/google"
 import { postLogin, Role } from "@/lib/api/auth"
-import NextAuth, { AuthOptions, Session } from "next-auth"
+import NextAuth, { NextAuthConfig, Session } from "next-auth"
 import { JWT } from "next-auth/jwt"
+import google from "next-auth/providers/google"
 
-export const authOptions: AuthOptions = {
-    providers: [
-        GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID as string,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-        }),
-    ],
+export const authConfig: NextAuthConfig = {
+    providers: [google],
 
     callbacks: {
         async jwt({ token, user, trigger }): Promise<JWT> {
@@ -32,7 +27,18 @@ export const authOptions: AuthOptions = {
 
             return session
         },
+
+        authorized({ auth }): boolean {
+            return true
+        },
+    },
+
+    experimental: {
+        enableWebAuthn: true,
     },
 }
 
-export const nextAuth = NextAuth(authOptions)
+export const {
+    auth,
+    handlers: { GET, POST },
+} = NextAuth(authConfig)

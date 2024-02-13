@@ -1,6 +1,7 @@
 import { Role } from "@/lib/api/auth"
+import { auth } from "@/lib/auth"
 import { isPageAllowed } from "@/lib/navigation"
-import { NextRequestWithAuth, withAuth } from "next-auth/middleware"
+import { NextAuthRequest } from "next-auth"
 import { NextResponse } from "next/server"
 
 interface RewriteRule {
@@ -27,42 +28,33 @@ const rewrites = [
     },
 ] satisfies RewriteRule[]
 
-export default withAuth(
-    async function middleware(
-        request: NextRequestWithAuth,
-    ): Promise<NextResponse> {
-        const { pathname, search } = request.nextUrl
-        const { token } = request.nextauth
+export default auth(async function middleware(
+    request: NextAuthRequest,
+): Promise<NextResponse> {
+    const { pathname, search } = request.nextUrl
+    const role = request.auth?.user?.role ?? Role.GUEST
 
-        for (const rule of rewrites) {
-            if (pathname.includes(rule.source)) {
-                if (!rule.allowedRoles.includes(token?.role as Role)) {
-                    return NextResponse.json(
-                        { message: "Unauthorized" },
-                        { status: 401 },
-                    )
-                }
-
-                const url = `${rule.destination}${search}`
-                return NextResponse.rewrite(url)
+    for (const rule of rewrites) {
+        if (pathname.includes(rule.source)) {
+            if (!rule.allowedRoles.includes(role)) {
+                return NextResponse.json(
+                    { message: "Unauthorized" },
+                    { status: 401 },
+                )
             }
-        }
 
-        const firstPathSegment = `/${pathname.split("/")[1]}`
-        if (!isPageAllowed(firstPathSegment, token?.role as Role)) {
-            const url = request.nextUrl.clone()
-            url.pathname = "/"
-            url.search = ""
-            return NextResponse.redirect(url)
+            const url = `${rule.destination}${search}`
+            return NextResponse.rewrite(url)
         }
+    }
 
-        return NextResponse.next()
-    },
-    {
-        callbacks: {
-            authorized(): boolean {
-                return true
-            },
-        },
-    },
-)
+    const firstPathSegment = `/${pathname.split("/")[1]}`
+    if (!isPageAllowed(firstPathSegment, role)) {
+        const url = request.nextUrl.clone()
+        url.pathname = "/"
+        url.search = ""
+        return NextResponse.redirect(url)
+    }
+
+    return NextResponse.next()
+})

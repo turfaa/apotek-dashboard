@@ -1,8 +1,7 @@
 import Navbar from "@/app/navbar"
-import { authOptions } from "@/lib/auth"
-import { getServerSession } from "next-auth/next"
+import { auth } from "@/lib/auth"
 
 export default async function Nav(): Promise<React.ReactElement> {
-    const session = await getServerSession(authOptions)
+    const session = await auth()
     return <Navbar session={session} />
 }

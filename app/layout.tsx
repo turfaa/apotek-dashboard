@@ -1,7 +1,7 @@
 import "@/app/globals.css"
 import Nav from "@/app/nav"
 import NavbarFallback from "@/app/navbar-fallback"
-import { GeistSans } from "geist/font"
+import { GeistSans } from "geist/font/sans"
 import type { Metadata } from "next"
 import React, { Suspense } from "react"
 
