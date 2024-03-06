@@ -55,34 +55,3 @@ export async function getSalesStatistics(
         ),
     }
 }
-
-export async function getDailySalesStatistics(): Promise<SalesStatisticsResponse> {
-    const underlying: UnderlyingSalesStatisticsResponse =
-        await fetchAPI<UnderlyingSalesStatisticsResponse>(
-            "GET",
-            "/sales/statistics/daily",
-            null,
-            {
-                cache: "no-cache",
-            },
-        )
-
-    return {
-        history: underlying.history.map(
-            (item: UnderlyingSalesStatistics): SalesStatistics => {
-                return {
-                    ...item,
-                    pulledAt: new Date(item.pulledAt),
-                }
-            },
-        ),
-        dailyHistory: underlying.dailyHistory.map(
-            (item: UnderlyingSalesStatistics): SalesStatistics => {
-                return {
-                    ...item,
-                    pulledAt: new Date(item.pulledAt),
-                }
-            },
-        ),
-    }
-}
