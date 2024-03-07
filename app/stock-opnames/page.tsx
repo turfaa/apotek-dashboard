@@ -1,5 +1,5 @@
+import CompactedStockOpnameTable from "@/app/stock-opnames/compacted-so-table"
 import StockOpnamesReportTable from "@/app/stock-opnames/report-table"
-import StockOpnameSummaryTable from "@/app/stock-opnames/summary-table"
 import StockOpnameTabList from "@/app/stock-opnames/tab-list"
 import { DateRangePicker } from "@/shared-components/date-range-picker"
 import TabGroup from "@/shared-components/tab-group"
@@ -23,14 +23,14 @@ export default async function StockOpnames({
                 <DateRangePicker className="max-w-min" />
             </Flex>
 
-            <TabGroup className="mt-4" tabLabels={["summary", "details"]}>
+            <TabGroup className="mt-4" tabLabels={["compacted", "details"]}>
                 <StockOpnameTabList />
 
                 <TabPanels className="mt-4">
                     <TabPanel>
                         <Card>
                             <Suspense fallback={<Text>Loading...</Text>}>
-                                <StockOpnameSummaryTable
+                                <CompactedStockOpnameTable
                                     from={searchParams?.from}
                                     until={searchParams?.until}
                                 />

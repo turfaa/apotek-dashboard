@@ -14,7 +14,7 @@ export default function StockOpnameTabList(): React.ReactElement {
 
     return (
         <TabList>
-            <Tab icon={BookOpenIcon}>Ringkasan</Tab>
+            <Tab icon={BookOpenIcon}>Compact</Tab>
             <Tab icon={CircleStackIcon}>Detail</Tab>
         </TabList>
     )

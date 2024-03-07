@@ -1,4 +1,4 @@
-import { getStockOpnameSummaries } from "@/lib/api/stock-opname"
+import { getCompactedStockOpnames } from "@/lib/api/stock-opname"
 import { rupiah } from "@/lib/rupiah"
 import {
     Flex,
@@ -12,22 +12,22 @@ import {
     Text,
 } from "@tremor/react"
 
-export interface StockOpnameSummaryTableProps {
+export interface CompactedStockOpnameTableProps {
     from?: string
     until?: string
 }
 
-export default async function StockOpnameSummaryTable({
+export default async function CompactedStockOpnameTable({
     from,
     until,
-}: StockOpnameSummaryTableProps): Promise<React.ReactElement> {
-    const { summaries } = await getStockOpnameSummaries(from, until)
-    const totalHppDifference = summaries.reduce(
-        (total, summary) => total + summary.hppDifference,
+}: CompactedStockOpnameTableProps): Promise<React.ReactElement> {
+    const { stockOpnames } = await getCompactedStockOpnames(from, until)
+    const totalHppDifference = stockOpnames.reduce(
+        (total, stockOpname) => total + stockOpname.hppDifference,
         0,
     )
-    const totalSalePriceDifference = summaries.reduce(
-        (total, summary) => total + summary.salePriceDifference,
+    const totalSalePriceDifference = stockOpnames.reduce(
+        (total, stockOpname) => total + stockOpname.salePriceDifference,
         0,
     )
 
@@ -46,7 +46,7 @@ export default async function StockOpnameSummaryTable({
             </TableHead>
 
             <TableBody>
-                {summaries.map((row, index) => (
+                {stockOpnames.map((row, index) => (
                     <TableRow key={index}>
                         <TableCell>{index + 1}</TableCell>
                         <TableCell>

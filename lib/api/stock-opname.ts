@@ -5,12 +5,12 @@ export interface StockOpnamesResponse {
     stockOpnames: StockOpname[]
 }
 
-export interface StockOpnameSummariesResponse {
-    summaries: StockOpnameSummary[]
+export interface CompactedStockOpnamesResponse {
+    stockOpnames: CompactedStockOpname[]
 }
 
-interface UnderlyingStockOpnameSummariesResponse {
-    summaries: UnderlyingStockOpnameSummary[]
+interface UnderlyingCompactedStockOpnamesResponse {
+    stockOpnames: UnderlyingCompactedStockOpnames[]
 }
 
 export interface StockOpname {
@@ -27,7 +27,7 @@ export interface StockOpname {
     notes: string
 }
 
-export interface StockOpnameSummary {
+export interface CompactedStockOpname {
     date: Date
     drugCode: string
     drugName: string
@@ -38,7 +38,7 @@ export interface StockOpnameSummary {
     salePriceDifference: number
 }
 
-interface UnderlyingStockOpnameSummary {
+interface UnderlyingCompactedStockOpnames {
     date: string
     drugCode: string
     drugName: string
@@ -71,13 +71,13 @@ export async function getStockOpnames(
     )
 }
 
-export async function getStockOpnameSummaries(
+export async function getCompactedStockOpnames(
     from?: string,
     until?: string,
-): Promise<StockOpnameSummariesResponse> {
-    const res = await fetchAPI<UnderlyingStockOpnameSummariesResponse>(
+): Promise<CompactedStockOpnamesResponse> {
+    const res = await fetchAPI<UnderlyingCompactedStockOpnamesResponse>(
         "GET",
-        `/stock-opnames/summaries?${buildDateRangeQueryParams(from, until)}`,
+        `/stock-opnames/compacted?${buildDateRangeQueryParams(from, until)}`,
         null,
         {
             next: {
@@ -87,8 +87,8 @@ export async function getStockOpnameSummaries(
     )
 
     return {
-        summaries: res.summaries.map(
-            (item: UnderlyingStockOpnameSummary): StockOpnameSummary => {
+        stockOpnames: res.stockOpnames.map(
+            (item: UnderlyingCompactedStockOpnames): CompactedStockOpname => {
                 return {
                     ...item,
                     date: new Date(item.date),
