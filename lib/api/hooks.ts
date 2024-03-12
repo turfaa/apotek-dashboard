@@ -10,9 +10,10 @@ import {
     getSalesStatistics,
 } from "@/lib/api/sale-statistics"
 import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation"
+import superjson from "superjson"
 import useSWR from "swr"
 import { create } from "zustand"
-import { devtools, persist } from "zustand/middleware"
+import { StorageValue, devtools, persist } from "zustand/middleware"
 
 export interface DrugsHook {
     data?: DrugsResponse
@@ -52,6 +53,7 @@ export function useSalesStatistics(): SalesStatisticsHook {
 
 export interface PurchaseOrdersHook {
     data?: Record<string, ProcurementRecommendation>
+    computedAt?: Date
     isLoading: boolean
     error?: Error
 
@@ -85,7 +87,11 @@ export const usePurchaseOrders = create<PurchaseOrdersHook>()(
                             {},
                         )
 
-                        set({ data: keyedData, error: undefined })
+                        set({
+                            data: keyedData,
+                            computedAt: data.computedAt,
+                            error: undefined,
+                        })
                     } catch (error) {
                         if (error instanceof Error) {
                             set({ error })
@@ -117,6 +123,20 @@ export const usePurchaseOrders = create<PurchaseOrdersHook>()(
             }),
             {
                 name: "procurement-recommendations",
+                storage: {
+                    getItem: (key) => {
+                        const item = localStorage.getItem(key)
+                        if (item === null) return null
+
+                        return superjson.parse<
+                            StorageValue<PurchaseOrdersHook>
+                        >(item)
+                    },
+                    setItem: (key, value) => {
+                        localStorage.setItem(key, superjson.stringify(value))
+                    },
+                    removeItem: (key) => localStorage.removeItem(key),
+                },
             },
         ),
     ),
