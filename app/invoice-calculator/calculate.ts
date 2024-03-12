@@ -21,3 +21,16 @@ export function calculateInvoice(
     )
     return shouldRound ? Math.ceil(total) : total
 }
+
+export function calculateInvoicesWithoutMultiplier(
+    invoices: Invoice[],
+): number {
+    return invoices.reduce(
+        (acc, invoice) => acc + calculateInvoiceWithoutMultiplier(invoice),
+        0,
+    )
+}
+
+export function calculateInvoiceWithoutMultiplier(invoice: Invoice): number {
+    return invoice.components.reduce((acc, c) => acc + c.amount, 0)
+}

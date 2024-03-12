@@ -1,11 +1,14 @@
 "use client"
 
-import { calculateInvoices } from "@/app/invoice-calculator/calculate"
+import {
+    calculateInvoices,
+    calculateInvoicesWithoutMultiplier,
+} from "@/app/invoice-calculator/calculate"
 import { useCalculator } from "@/app/invoice-calculator/calculator-hook"
 import InvoiceCard from "@/app/invoice-calculator/invoice-card"
 import { rupiah } from "@/lib/rupiah"
 import { PlusIcon } from "@heroicons/react/24/outline"
-import { Bold, Button, Divider, Flex, Metric, Text } from "@tremor/react"
+import { Bold, Button, Divider, Flex, Metric, Text, Title } from "@tremor/react"
 import { useEffect, useMemo, useState } from "react"
 
 export default function Calculator(): React.ReactElement {
@@ -19,6 +22,13 @@ export default function Calculator(): React.ReactElement {
         () => calculateInvoices(invoices, calculator?.shouldRound ?? false),
         [invoices, calculator],
     )
+
+    const totalDiscount = useMemo(
+        () => calculateInvoicesWithoutMultiplier(invoices) - totalPrice,
+        [invoices, totalPrice],
+    )
+
+    const hasDiscount = totalDiscount != 0
 
     const [hasHydrated, setHasHydrated] = useState(false)
     useEffect(() => {
@@ -60,6 +70,13 @@ export default function Calculator(): React.ReactElement {
             </Button>
 
             <Divider />
+
+            {hasDiscount && (
+                <Flex flexDirection="row" justifyContent="between">
+                    <Bold>Total Diskon</Bold>
+                    <Title>{rupiah.format(totalDiscount)}</Title>
+                </Flex>
+            )}
 
             <Flex flexDirection="row" justifyContent="between">
                 <Bold>Total Bayar</Bold>

@@ -1,4 +1,7 @@
-import { calculateInvoice } from "@/app/invoice-calculator/calculate"
+import {
+    calculateInvoice,
+    calculateInvoiceWithoutMultiplier,
+} from "@/app/invoice-calculator/calculate"
 import { Invoice } from "@/app/invoice-calculator/calculator-hook"
 import { rupiah } from "@/lib/rupiah"
 import { TrashIcon } from "@heroicons/react/24/outline"
@@ -44,6 +47,12 @@ export default function InvoiceCard({
         () => calculateInvoice(invoice, shouldRound),
         [invoice, shouldRound],
     )
+
+    const totalDiscount = useMemo(
+        () => calculateInvoiceWithoutMultiplier(invoice) - totalPrice,
+        [totalPrice, invoice],
+    )
+
     const hasDiscount = useMemo(
         () => invoice.components.some((c) => c.multiplier < 1),
         [invoice],
@@ -111,6 +120,13 @@ export default function InvoiceCard({
                             })
                         }}
                     />
+                </Flex>
+            )}
+
+            {hasDiscount && !invoice.ignoreMultiplier && (
+                <Flex>
+                    <Text>Total Diskon</Text>
+                    <Text>{rupiah.format(totalDiscount)}</Text>
                 </Flex>
             )}
 
