@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.14.0] - 2024-03-13
+### :sparkles: New Features
+- [`6300fa0`](https://github.com/turfaa/apotek-dashboard/commit/6300fa0242153574f154261155261153f93ab5b5) - Add computed at information in purchase order page *(commit by [@turfaa](https://github.com/turfaa))*
+- [`57ad268`](https://github.com/turfaa/apotek-dashboard/commit/57ad2684a4c29a545024c7b48dee2ad75de52705) - Add discount total in invoice calculator *(commit by [@turfaa](https://github.com/turfaa))*
+
+### :bug: Bug Fixes
+- [`75b0466`](https://github.com/turfaa/apotek-dashboard/commit/75b0466da8b6409a6d09a67ba8ec37023ef840b3) - remove sonar *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.13.1] - 2024-03-07
 ### :bug: Bug Fixes
 - [`8aa5957`](https://github.com/turfaa/apotek-dashboard/commit/8aa5957557d038ed4c07a800f34029643e99d6af) - apotek-api.ed.id is currently temporarily running at :85 *(commit by [@turfaa](https://github.com/turfaa))*
@@ -326,3 +335,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.12.5]: https://github.com/turfaa/apotek-dashboard/compare/v0.12.4...v0.12.5
 [v0.13.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.12.5...v0.13.0
 [v0.13.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.13.0...v0.13.1
+[v0.14.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.13.1...v0.14.0
