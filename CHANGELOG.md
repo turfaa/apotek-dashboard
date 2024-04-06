@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.14.1] - 2024-04-06
+### :bug: Bug Fixes
+- [`839de81`](https://github.com/turfaa/apotek-dashboard/commit/839de8100195f488cc4adf672c997286d2071a54) - do not render price list components at server *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.14.0] - 2024-03-13
 ### :sparkles: New Features
 - [`6300fa0`](https://github.com/turfaa/apotek-dashboard/commit/6300fa0242153574f154261155261153f93ab5b5) - Add computed at information in purchase order page *(commit by [@turfaa](https://github.com/turfaa))*
@@ -336,3 +341,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.13.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.12.5...v0.13.0
 [v0.13.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.13.0...v0.13.1
 [v0.14.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.13.1...v0.14.0
+[v0.14.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.14.0...v0.14.1
