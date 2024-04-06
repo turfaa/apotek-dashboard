@@ -5,7 +5,7 @@ import { Drug } from "@/lib/api/drug"
 import useSearch from "@/lib/search-hook"
 import { Bold, Grid, TableBody, TableCell, TableRow } from "@tremor/react"
 import { Session } from "next-auth"
-import { useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 import {
     PriceCard,
@@ -14,6 +14,7 @@ import {
     prescriptionPriceGetter,
 } from "./price-card"
 import { StockCard } from "./stock-card"
+import PriceListTableBodyFallback from "./table-body-fallback"
 
 export interface PriceListTableBodyNoFetchProps {
     session: Session | null
@@ -33,6 +34,9 @@ export default function PriceListTableBodyNoFetch({
     session,
     drugs,
 }: PriceListTableBodyNoFetchProps): React.ReactElement {
+    const [ssrCompleted, setSsrCompleted] = useState(false)
+    useEffect(() => setSsrCompleted(true), [])
+
     const { query } = useSearch()
     const filtered = useMemo(
         () =>
@@ -41,6 +45,10 @@ export default function PriceListTableBodyNoFetch({
             ) ?? [],
         [drugs, query],
     )
+
+    if (!ssrCompleted) {
+        return <PriceListTableBodyFallback />
+    }
 
     const allowedToSeeDiscountedPrice =
         rolesAllowedToSeeDiscountedPrice.includes(
