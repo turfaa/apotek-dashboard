@@ -1,6 +1,6 @@
 import Document from "./document"
 
-const SIMILARITY_THRESHOLDS = [1, 0.75, 0.5, 0.25, 0.125, 0.0625]
+const SIMILARITY_THRESHOLDS = [0.75, 0.5, 0.25, 0.125, 0.0625]
 
 export default class Corpus {
     documentById: Map<string, Document>
