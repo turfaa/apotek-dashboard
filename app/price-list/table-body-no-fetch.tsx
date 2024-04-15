@@ -7,6 +7,8 @@ import { Bold, Grid, TableBody, TableCell, TableRow } from "@tremor/react"
 import { Session } from "next-auth"
 import { useEffect, useMemo, useState } from "react"
 
+import { useTf } from "@/lib/tf/hook"
+import { useDebounce } from "use-debounce"
 import {
     PriceCard,
     discountPriceGetter,
@@ -38,13 +40,27 @@ export default function PriceListTableBodyNoFetch({
     useEffect(() => setSsrCompleted(true), [])
 
     const { query } = useSearch()
-    const filtered = useMemo(
-        () =>
-            drugs.filter((drug) =>
-                drug.name.toLowerCase().includes(query.toLowerCase()),
-            ) ?? [],
-        [drugs, query],
-    )
+    const [debouncedQuery] = useDebounce(query, 200)
+
+    const [drugIds, drugSearchTexts, drugById] = useMemo(() => {
+        return [
+            drugs.map((d) => d.vmedisCode),
+            drugs.map((d) => d.name),
+            new Map(drugs.map((d) => [d.vmedisCode, d])),
+        ]
+    }, [drugs])
+
+    const { search } = useTf(drugIds, drugSearchTexts)
+
+    const filtered = useMemo(() => {
+        if (debouncedQuery.length < 3) {
+            return drugs
+        }
+
+        return search(debouncedQuery).map((vmedisCode) =>
+            drugById.get(vmedisCode),
+        ) as Drug[]
+    }, [drugs, debouncedQuery])
 
     if (!ssrCompleted) {
         return <PriceListTableBodyFallback />
