@@ -31,11 +31,16 @@ export default class Document {
 function generateTokens(text: string): string[] {
     const tokens = []
 
-    for (let i = 0; i < text.length - N_GRAM + 1; i++) {
-        tokens.push(text.substring(i, i + N_GRAM))
+    const alphanumeric = filterOutNonAlphanumericCharacters(text)
+    for (let i = 0; i < alphanumeric.length - N_GRAM + 1; i++) {
+        tokens.push(alphanumeric.substring(i, i + N_GRAM))
     }
 
     return tokens
+}
+
+function filterOutNonAlphanumericCharacters(text: string): string {
+    return text.replace(/[^a-zA-Z0-9]/g, "")
 }
 
 function calculateTermFrequencies(tokens: string[]): Map<string, number> {
