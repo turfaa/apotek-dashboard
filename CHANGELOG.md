@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.14.5] - 2024-05-06
+### :bug: Bug Fixes
+- [`bba7874`](https://github.com/turfaa/apotek-dashboard/commit/bba787438a62322e64d5b27df4b7edeb4f1cbeb1) - create /app/.next/cache directory to store image and prerender cache *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.14.4] - 2024-04-17
 ### :bug: Bug Fixes
 - [`730584a`](https://github.com/turfaa/apotek-dashboard/commit/730584a3d4b8adb9f9385d52b10a36c90d521453) - use only alphanumeric chars in term-frequency lib *(commit by [@turfaa](https://github.com/turfaa))*
@@ -363,3 +368,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.14.2]: https://github.com/turfaa/apotek-dashboard/compare/v0.14.1...v0.14.2
 [v0.14.3]: https://github.com/turfaa/apotek-dashboard/compare/v0.14.2...v0.14.3
 [v0.14.4]: https://github.com/turfaa/apotek-dashboard/compare/v0.14.3...v0.14.4
+[v0.14.5]: https://github.com/turfaa/apotek-dashboard/compare/v0.14.4...v0.14.5
