@@ -42,6 +42,9 @@ ENV NODE_ENV production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
+RUN mkdir -p /app/.next/cache && chown nextjs:nodejs /app/.next/cache
+VOLUME ["/app/.next/cache"]
+
 USER nextjs
 
 # Automatically leverage output traces to reduce image size
