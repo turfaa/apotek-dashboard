@@ -9,6 +9,10 @@ export interface CompactedStockOpnamesResponse {
     stockOpnames: CompactedStockOpname[]
 }
 
+export interface StockOpnameSummariesResponse {
+    summaries: StockOpnameSummary[]
+}
+
 interface UnderlyingCompactedStockOpnamesResponse {
     stockOpnames: UnderlyingCompactedStockOpnames[]
 }
@@ -40,6 +44,16 @@ export interface CompactedStockOpname {
 
 interface UnderlyingCompactedStockOpnames {
     date: string
+    drugCode: string
+    drugName: string
+    unit: string
+    changes: StockChange[]
+    quantityDifference: number
+    hppDifference: number
+    salePriceDifference: number
+}
+
+export interface StockOpnameSummary {
     drugCode: string
     drugName: string
     unit: string
@@ -96,4 +110,22 @@ export async function getCompactedStockOpnames(
             },
         ),
     }
+}
+
+export async function getStockOpnameSummaries(
+    from?: string,
+    until?: string,
+): Promise<StockOpnameSummariesResponse> {
+    const res = await fetchAPI<StockOpnameSummariesResponse>(
+        "GET",
+        `/stock-opnames/summaries?${buildDateRangeQueryParams(from, until)}`,
+        null,
+        {
+            next: {
+                revalidate: 0, // Always revalidate.
+            },
+        },
+    )
+
+    return res
 }
