@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.15.0] - 2024-07-09
+### :sparkles: New Features
+- [`bb6b6a2`](https://github.com/turfaa/apotek-dashboard/commit/bb6b6a2612708a7e09b25c1485f43ebe3386ce43) - add stock opname summary tab *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.14.5] - 2024-05-06
 ### :bug: Bug Fixes
 - [`bba7874`](https://github.com/turfaa/apotek-dashboard/commit/bba787438a62322e64d5b27df4b7edeb4f1cbeb1) - create /app/.next/cache directory to store image and prerender cache *(commit by [@turfaa](https://github.com/turfaa))*
@@ -369,3 +374,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.14.3]: https://github.com/turfaa/apotek-dashboard/compare/v0.14.2...v0.14.3
 [v0.14.4]: https://github.com/turfaa/apotek-dashboard/compare/v0.14.3...v0.14.4
 [v0.14.5]: https://github.com/turfaa/apotek-dashboard/compare/v0.14.4...v0.14.5
+[v0.15.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.14.5...v0.15.0
