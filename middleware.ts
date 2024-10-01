@@ -43,8 +43,13 @@ export default auth(async function middleware(
                 )
             }
 
+            const requestHeaders = new Headers(request.headers)
+            requestHeaders.set("x-email", request.auth?.user?.email ?? "")
+
             const url = `${rule.destination}${search}`
-            return NextResponse.rewrite(url)
+            return NextResponse.rewrite(url, {
+                headers: requestHeaders,
+            })
         }
     }
 
@@ -56,12 +61,7 @@ export default auth(async function middleware(
         return NextResponse.redirect(url)
     }
 
-    const requestHeaders = new Headers(request.headers)
-    requestHeaders.set("x-email", request.auth?.user?.email ?? "")
 
-    return NextResponse.next({
-        request: {
-            headers: requestHeaders,
-        },
-    })
+
+    return NextResponse.next()
 })
