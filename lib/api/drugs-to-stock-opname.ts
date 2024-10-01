@@ -16,9 +16,7 @@ export async function getDrugsToStockOpname(
 ): Promise<DrugsToStockOpnameResponse> {
     return await fetchAPI<DrugsToStockOpnameResponse>(
         "GET",
-        `/drugs/to-stock-opname/?mode=${
-            mode ?? DrugsToStockOpnameMode.SalesBased
-        }${date ? `&date=${date}` : ""}`,
+        `/drugs/to-stock-opname/?mode=${mode ?? DrugsToStockOpnameMode.SalesBased}${date ? `&date=${date}` : ""}`,
         null,
         {
             next: {

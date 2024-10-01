@@ -13,7 +13,7 @@ export interface Page {
 
 const availablePages: Page[] = [
     { name: "Ringkasan", href: "/statistics", allowedRoles: [Role.ADMIN] },
-    { name: "Daftar Harga", href: "/price-list" },
+    { name: "Daftar Harga", href: "/price-list/v2" },
     {
         name: "Pesanan",
         href: "/procurements/purchase-order",

@@ -13,17 +13,17 @@ interface RewriteRule {
 const rewrites = [
     {
         source: "/api/drugs",
-        destination: `${process.env.VMEDIS_PROXY_URL}/drugs`,
+        destination: `${process.env.VMEDIS_PROXY_URL}/v2/drugs`,
         allowedRoles: [Role.ADMIN, Role.STAFF, Role.RESELLER, Role.GUEST],
     },
     {
         source: "/api/sales/statistics",
-        destination: `${process.env.VMEDIS_PROXY_URL}/sales/statistics`,
+        destination: `${process.env.VMEDIS_PROXY_URL}/v1/sales/statistics`,
         allowedRoles: [Role.ADMIN],
     },
     {
         source: "/api/procurements/recommendations",
-        destination: `${process.env.VMEDIS_PROXY_URL}/procurements/recommendations`,
+        destination: `${process.env.VMEDIS_PROXY_URL}/v1/procurements/recommendations`,
         allowedRoles: [Role.ADMIN, Role.STAFF],
     },
 ] satisfies RewriteRule[]
@@ -56,5 +56,12 @@ export default auth(async function middleware(
         return NextResponse.redirect(url)
     }
 
-    return NextResponse.next()
+    const requestHeaders = new Headers(request.headers)
+    requestHeaders.set("x-email", request.auth?.user?.email ?? "")
+
+    return NextResponse.next({
+        request: {
+            headers: requestHeaders,
+        },
+    })
 })
