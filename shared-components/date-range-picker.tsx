@@ -64,6 +64,11 @@ const options: DateRangePickerOption[] = [
         from: startOfYear(today),
         until: today,
     },
+    {
+        value: "Bulan lalu",
+        from: sub(startOfMonth(today), { months: 1 }),
+        until: sub(startOfMonth(today), { days: 1 }),
+    },
 ]
 
 export function DateRangePicker(
