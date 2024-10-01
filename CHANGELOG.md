@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.16.0] - 2024-10-01
+### :sparkles: New Features
+- [`4cbd0f2`](https://github.com/turfaa/apotek-dashboard/commit/4cbd0f28f199b0f5ce9c26d2f84ab08f5b896054) - **price-list**: use v2 api *(commit by [@turfaa](https://github.com/turfaa))*
+- [`2271edc`](https://github.com/turfaa/apotek-dashboard/commit/2271edc565d32d13ca48deeb00f5432535da3399) - **tf-idf**: update ranking to use first term first position *(commit by [@turfaa](https://github.com/turfaa))*
+- [`e075ffa`](https://github.com/turfaa/apotek-dashboard/commit/e075ffab1ba29c3895913bc0b4cbe706ef042cd0) - **statistics**: add average basket size *(commit by [@turfaa](https://github.com/turfaa))*
+- [`d097b57`](https://github.com/turfaa/apotek-dashboard/commit/d097b57192a35fa163fa235e08963191726b3a6f) - **shared**: add 'Bulan lalu' in date range picker template *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.15.0] - 2024-07-09
 ### :sparkles: New Features
 - [`bb6b6a2`](https://github.com/turfaa/apotek-dashboard/commit/bb6b6a2612708a7e09b25c1485f43ebe3386ce43) - add stock opname summary tab *(commit by [@turfaa](https://github.com/turfaa))*
@@ -375,3 +383,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.14.4]: https://github.com/turfaa/apotek-dashboard/compare/v0.14.3...v0.14.4
 [v0.14.5]: https://github.com/turfaa/apotek-dashboard/compare/v0.14.4...v0.14.5
 [v0.15.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.14.5...v0.15.0
+[v0.16.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.15.0...v0.16.0
