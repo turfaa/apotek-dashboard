@@ -17,6 +17,9 @@ export interface StatisticsTableProps {
 export default function StatisticsTable({
     statistics,
 }: StatisticsTableProps): React.ReactElement {
+    const totalSales = statistics.reduce((a, b) => a + b.totalSales, 0)
+    const numberOfSales = statistics.reduce((a, b) => a + b.numberOfSales, 0)
+
     return (
         <Table>
             <TableHead>
@@ -25,6 +28,7 @@ export default function StatisticsTable({
                     <TableHeaderCell>Tanggal</TableHeaderCell>
                     <TableHeaderCell>Banyak Penjualan</TableHeaderCell>
                     <TableHeaderCell>Total Penjualan</TableHeaderCell>
+                    <TableHeaderCell>Rata-Rata Penjualan</TableHeaderCell>
                 </TableRow>
             </TableHead>
 
@@ -38,6 +42,13 @@ export default function StatisticsTable({
                         <TableCell>{statistic.numberOfSales}</TableCell>
                         <TableCell>
                             {rupiah.format(statistic.totalSales)}
+                        </TableCell>
+                        <TableCell>
+                            {rupiah.format(
+                                statistic.numberOfSales == 0
+                                    ? statistic.totalSales
+                                    : statistic.totalSales / statistic.numberOfSales,
+                            )}
                         </TableCell>
                     </TableRow>
                 ))}
@@ -53,6 +64,9 @@ export default function StatisticsTable({
                         {rupiah.format(
                             statistics.reduce((a, b) => a + b.totalSales, 0),
                         )}
+                    </TableCell>
+                    <TableCell>
+                        {rupiah.format(numberOfSales == 0 ? totalSales : totalSales / numberOfSales)}
                     </TableCell>
                 </TableRow>
             </TableFoot>
