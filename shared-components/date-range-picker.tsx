@@ -46,12 +46,12 @@ const options: DateRangePickerOption[] = [
     },
     {
         value: "7 hari terakhir",
-        from: sub(today, { days: 7 }),
+        from: sub(today, { days: 6 }),
         until: today,
     },
     {
         value: "30 hari terakhir",
-        from: sub(today, { days: 30 }),
+        from: sub(today, { days: 29 }),
         until: today,
     },
     {
