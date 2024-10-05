@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.17.0] - 2024-10-05
+### :sparkles: New Features
+- [`99067b1`](https://github.com/turfaa/apotek-dashboard/commit/99067b1b2845da72224f054399d1e3e5190f683a) - **procurement**: Add /last-drug-procurements *(commit by [@turfaa](https://github.com/turfaa))*
+- [`449d2cd`](https://github.com/turfaa/apotek-dashboard/commit/449d2cdec7c48e42c91ab3a2593f50b8a332cd07) - **procurement**: Add 'Last Drug Procurement' page *(commit by [@turfaa](https://github.com/turfaa))*
+- [`889b07e`](https://github.com/turfaa/apotek-dashboard/commit/889b07ea4bbd4f7070fb98a04b574b402e16692a) - **price-list**: Add a link to see last drug procurements *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.16.2] - 2024-10-01
 ### :bug: Bug Fixes
 - [`dad263b`](https://github.com/turfaa/apotek-dashboard/commit/dad263b51cc73976ed134b32bcf03b401ba25aaa) - **shared**: fix date range picker's last X days *(commit by [@turfaa](https://github.com/turfaa))*
@@ -396,3 +403,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.16.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.15.0...v0.16.0
 [v0.16.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.16.0...v0.16.1
 [v0.16.2]: https://github.com/turfaa/apotek-dashboard/compare/v0.16.1...v0.16.2
+[v0.17.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.16.2...v0.17.0
