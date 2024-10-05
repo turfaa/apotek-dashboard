@@ -1,20 +1,26 @@
 "use client"
 
 import { Drug } from "@/lib/api/drugv2"
+import Link from 'next/link'
 import { TableBody, TableCell, TableRow, Text } from "@tremor/react"
 import { useMemo, useState, useEffect } from "react"
 import { useTf } from "@/lib/tf/hook"
 import { Bold, Grid } from "@tremor/react"
 import useSearch from "@/lib/search-hook"
+import { Session } from "next-auth"
 import { useDebounce } from "use-debounce"
+import { Role } from "@/lib/api/auth"
 import { PriceListTableBodyFallback } from "./table-fallback"
 import PriceListCard from "./card"
 
+const rolesAllowedToSeeDrugCost = [Role.ADMIN]
+
 export interface PriceListTableBodyProps {
+    session: Session | null
     drugs: Drug[]
 }
 
-export default function PriceListTableBody({ drugs }: PriceListTableBodyProps): React.ReactElement {
+export default function PriceListTableBody({ session, drugs }: PriceListTableBodyProps): React.ReactElement {
     const [ssrCompleted, setSsrCompleted] = useState(false)
     useEffect(() => setSsrCompleted(true), [])
 
@@ -45,6 +51,8 @@ export default function PriceListTableBody({ drugs }: PriceListTableBodyProps): 
         return <PriceListTableBodyFallback />
     }
 
+    const allowedToSeeDrugCost = rolesAllowedToSeeDrugCost.includes(session?.user?.role ?? Role.GUEST)
+
     return (
         <TableBody>
             {filtered.map((drug) => (
@@ -57,6 +65,12 @@ export default function PriceListTableBody({ drugs }: PriceListTableBodyProps): 
                                 <PriceListCard key={section.title} title={section.title} rows={section.rows} />
                             ))}
                         </Grid>
+
+                        {allowedToSeeDrugCost && (
+                            <Link href={`/last-drug-procurements?drug-code=${drug.vmedisCode}`} target="_blank">
+                                <Text>Lihat harga pembelian obat terakhir</Text>
+                            </Link>
+                        )}
                     </TableCell>
                 </TableRow>
             ))}
