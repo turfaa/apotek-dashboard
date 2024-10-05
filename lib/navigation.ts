@@ -28,7 +28,7 @@ const availablePages: Page[] = [
         allowedRoles: [Role.ADMIN, Role.STAFF],
     },
     {
-        name: "Pembelian Obat Terakhir",
+        name: "Harga Obat Terakhir",
         href: "/last-drug-procurements",
         allowedRoles: [Role.ADMIN],
     },
@@ -38,12 +38,12 @@ const availablePages: Page[] = [
         allowedRoles: [Role.ADMIN, Role.STAFF],
     },
     {
-        name: "Obat Harus Stok Opname",
+        name: "Obat Harus SO",
         href: "/drugs-to-stock-opname",
         allowedRoles: [Role.ADMIN, Role.STAFF],
     },
     {
-        name: "Laporan Stok Opname",
+        name: "Laporan SO",
         href: "/stock-opnames",
         allowedRoles: [Role.ADMIN],
     },

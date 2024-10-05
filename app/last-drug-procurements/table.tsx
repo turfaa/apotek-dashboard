@@ -17,6 +17,7 @@ export default async function LastDrugProcurementsTable({
         return <Text>Silahkan pilih obat terlebih dahulu</Text>
     }
 
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     const session = await auth()
     const data = await getLastDrugProcurements(
         drugCode,
@@ -25,4 +26,15 @@ export default async function LastDrugProcurementsTable({
     )
 
     return <Table table={data} />
+}
+
+export function LastDrugProcurementsTableFallback(): React.ReactElement {
+    return (
+        <Table
+            table={{
+                header: ["Tanggal Diinput", "Nomor Faktur", "Tanggal Faktur", "Jumlah", "Harga Satuan", "Supplier"],
+                rows: [{ id: "0", columns: ["Mohon tunggu..."] }],
+            }}
+        />
+    )
 }

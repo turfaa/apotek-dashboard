@@ -15,7 +15,6 @@ export async function getLastDrugProcurements(
             next: {
                 revalidate: 0, // Don't cache, always revalidate.
             },
-            cache: "no-cache",
         },
         {
             version: "v2",

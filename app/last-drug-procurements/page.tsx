@@ -1,27 +1,32 @@
-import { Card, Title } from "@tremor/react"
+import React, { Suspense } from "react"
+import { Card, Title, Text } from "@tremor/react"
 import { Metadata } from "next"
-import { DrugSelector } from "@/shared-components/drug-selector"
-import LastDrugProcurementsTable from "./table"
+import DrugSelector, { DrugSelectorFallback } from "@/shared-components/drug-selector"
+import LastDrugProcurementsTable, {
+    LastDrugProcurementsTableFallback,
+} from "./table"
 
 export const metadata: Metadata = {
     title: "Pembelian Obat Terakhir",
 }
 
-export default async function LastDrugProcurements({
+export default function LastDrugProcurements({
     searchParams,
 }: {
     searchParams: { [key: string]: string | undefined }
-}): Promise<React.ReactElement> {
+}): React.ReactElement {
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <Title className="mb-4">Laporan Pembelian Obat Terakhir</Title>
 
-            <DrugSelector />
+            <Suspense fallback={<DrugSelectorFallback />}>
+                <DrugSelector />
+            </Suspense>
 
             <Card className="mt-4">
-                <LastDrugProcurementsTable
-                    drugCode={searchParams?.["drug-code"]}
-                />
+                <Suspense fallback={<LastDrugProcurementsTableFallback />}>
+                    <LastDrugProcurementsTable drugCode={searchParams?.["drug-code"]} />
+                </Suspense>
             </Card>
         </main>
     )
