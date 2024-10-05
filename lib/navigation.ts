@@ -12,14 +12,31 @@ export interface Page {
 }
 
 const availablePages: Page[] = [
-    { name: "Ringkasan", href: "/statistics", allowedRoles: [Role.ADMIN] },
-    { name: "Daftar Harga", href: "/price-list/v2" },
+    {
+        name: "Ringkasan",
+        href: "/statistics",
+        allowedRoles: [Role.ADMIN],
+    },
+    {
+        name: "Daftar Harga",
+        href: "/price-list/v2",
+        allowedRoles: [Role.ADMIN, Role.STAFF],
+    },
     {
         name: "Pesanan",
         href: "/procurements/purchase-order",
         allowedRoles: [Role.ADMIN, Role.STAFF],
     },
-    { name: "Obat Terjual", href: "/sold-drugs", allowedRoles: [Role.ADMIN] },
+    {
+        name: "Pembelian Obat Terakhir",
+        href: "/last-drug-procurements",
+        allowedRoles: [Role.ADMIN],
+    },
+    {
+        name: "Obat Terjual",
+        href: "/sold-drugs",
+        allowedRoles: [Role.ADMIN, Role.STAFF],
+    },
     {
         name: "Obat Harus Stok Opname",
         href: "/drugs-to-stock-opname",

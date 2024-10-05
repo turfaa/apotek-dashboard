@@ -1,5 +1,6 @@
 import { buildDateRangeQueryParams } from "@/lib/api/common"
 import { DrugsResponse, getDrugs } from "@/lib/api/drug"
+import { DrugsResponse as DrugsResponseV2, getDrugs as getDrugsV2 } from "./drugv2"
 import {
     ProcurementRecommendation,
     ProcurementRecommendationsResponse,
@@ -22,11 +23,22 @@ export interface DrugsHook {
 }
 
 export function useDrugs(): DrugsHook {
-    const { data, error, isLoading } = useSWR("/drugs", getDrugs)
+    const { data, error, isLoading } = useSWR("/v1/drugs", getDrugs)
 
     return { data, isLoading, error }
 }
 
+export interface DrugsV2Hook {
+    data?: DrugsResponseV2
+    isLoading: boolean
+    error?: Error
+}
+
+export function useDrugsV2(): DrugsV2Hook {
+    const { data, error, isLoading } = useSWR("/v2/drugs", () => getDrugsV2())
+
+    return { data, isLoading, error }
+}
 export interface SalesStatisticsHook {
     data?: SalesStatisticsResponse
     isLoading: boolean
