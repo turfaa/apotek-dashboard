@@ -20,7 +20,7 @@ const availablePages: Page[] = [
     {
         name: "Daftar Harga",
         href: "/price-list/v2",
-        allowedRoles: [Role.ADMIN, Role.STAFF],
+        allowedRoles: [Role.ADMIN, Role.STAFF, Role.RESELLER, Role.GUEST],
     },
     {
         name: "Pesanan",
@@ -74,7 +74,7 @@ export function allowedPages(role?: Role | null): Page[] {
         }
 
         if (!role) {
-            return false
+            role = Role.GUEST
         }
 
         return page.allowedRoles.includes(role)
