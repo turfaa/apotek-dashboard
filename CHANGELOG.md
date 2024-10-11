@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.17.2] - 2024-10-11
+### :bug: Bug Fixes
+- [`78ac98e`](https://github.com/turfaa/apotek-dashboard/commit/78ac98e044ba2aef34b43dd54beb54bb30dfa45a) - Use github's runner and connect to tailscale *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.17.1] - 2024-10-07
 ### :bug: Bug Fixes
 - [`88dbd8f`](https://github.com/turfaa/apotek-dashboard/commit/88dbd8fd4f5b99ecac178a8e8b0b2f1a927793e6) - **price-list**: Allow price list page to be accessed by all users *(commit by [@turfaa](https://github.com/turfaa))*
@@ -410,3 +415,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.16.2]: https://github.com/turfaa/apotek-dashboard/compare/v0.16.1...v0.16.2
 [v0.17.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.16.2...v0.17.0
 [v0.17.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.17.0...v0.17.1
+[v0.17.2]: https://github.com/turfaa/apotek-dashboard/compare/v0.17.1...v0.17.2
