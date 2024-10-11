@@ -1,5 +1,5 @@
 import SoldDrugsTable from "@/app/sold-drugs/table"
-import { DateRangePicker } from "@/shared-components/date-range-picker"
+import DateRangePicker from "@/components/date-range-picker"
 import { Card, Flex, Text, Title } from "@tremor/react"
 import { Metadata } from "next"
 import { Suspense } from "react"

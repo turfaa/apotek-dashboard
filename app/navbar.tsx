@@ -5,7 +5,7 @@ import Logo from "@/app/icon.png"
 import { Role } from "@/lib/api/auth"
 import { useNavigation } from "@/lib/navigation"
 import { usePrintMode } from "@/lib/print-mode"
-import PrintButton from "@/shared-components/print-button"
+import PrintButton from "@/components/print-button"
 import { Disclosure, Menu, Transition } from "@headlessui/react"
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"
 import { Session } from "next-auth"
@@ -104,10 +104,9 @@ export default function Navbar({
                                                 }
                                                 height={32}
                                                 width={32}
-                                                alt={`${
-                                                    session?.user?.name ||
+                                                alt={`${session?.user?.name ||
                                                     "placeholder"
-                                                } avatar`}
+                                                    } avatar`}
                                             />
                                         </Menu.Button>
                                     </div>

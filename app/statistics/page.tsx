@@ -1,5 +1,5 @@
 import ClientSide from "@/app/statistics/client"
-import { DateRangePicker } from "@/shared-components/date-range-picker"
+import DateRangePicker from "@/components/date-range-picker"
 import { Flex, Title } from "@tremor/react"
 import { Metadata } from "next"
 

@@ -19,7 +19,7 @@ export interface TabGroupProps extends UnderlyingProps {
     tabLabels: string[]
 }
 
-export default function TabGroup({
+export function TabGroup({
     tabLabels,
     children,
     ...underlyingProps

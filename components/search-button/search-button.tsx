@@ -10,7 +10,7 @@ export interface SearchButtonProps {
     disabled?: boolean
 }
 
-export default function SearchButton({
+export function SearchButton({
     disabled,
 }: SearchButtonProps): React.ReactElement {
     const { query, setQuery } = useSearch()

@@ -2,7 +2,7 @@ import NewDrugButton from "@/app/procurements/purchase-order/new-drug-button"
 import RefreshButton from "@/app/procurements/purchase-order/refresh-button"
 import PurchaseOrderTable from "@/app/procurements/purchase-order/table"
 import PurchaseOrderTitle from "@/app/procurements/purchase-order/title"
-import SearchButton from "@/shared-components/search-button"
+import SearchButton from "@/components/search-button"
 import { Card, Col, Flex, Grid } from "@tremor/react"
 import moment from "moment/moment"
 import { Metadata } from "next"
@@ -22,9 +22,8 @@ export async function generateMetadata(
     let title
     if (print === "true") {
         title = {
-            absolute: `${moment().format("YYYY-MM-DD")}${
-                query ? ` - ${query}` : ""
-            }`,
+            absolute: `${moment().format("YYYY-MM-DD")}${query ? ` - ${query}` : ""
+                }`,
         }
     } else {
         title = "Daftar Pesanan"

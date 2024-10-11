@@ -1,7 +1,7 @@
 import React, { Suspense } from "react"
 import { Card, Title, Text } from "@tremor/react"
 import { Metadata } from "next"
-import DrugSelector, { DrugSelectorFallback } from "@/shared-components/drug-selector"
+import DrugSelector, { DrugSelectorFallback } from "@/components/drug-selector"
 import LastDrugProcurementsTable, {
     LastDrugProcurementsTableFallback,
 } from "./table"

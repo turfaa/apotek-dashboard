@@ -3,7 +3,7 @@ import DrugSelectorClient from "./drug-selector-client"
 import { auth } from "@/lib/auth"
 import { getDrugs } from "@/lib/api/drugv2"
 
-export default async function DrugSelector(): Promise<React.ReactElement> {
+export async function DrugSelector(): Promise<React.ReactElement> {
     const session = await auth()
     const { drugs } = await getDrugs(session)
 
