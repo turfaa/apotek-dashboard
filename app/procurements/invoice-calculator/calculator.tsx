@@ -3,9 +3,9 @@
 import {
     calculateInvoices,
     calculateInvoicesWithoutMultiplier,
-} from "@/app/invoice-calculator/calculate"
-import { useCalculator } from "@/app/invoice-calculator/calculator-hook"
-import InvoiceCard from "@/app/invoice-calculator/invoice-card"
+} from "./calculate"
+import { useCalculator } from "./calculator-hook"
+import InvoiceCard from "./invoice-card"
 import { rupiah } from "@/lib/rupiah"
 import { PlusIcon } from "@heroicons/react/24/outline"
 import { Bold, Button, Divider, Flex, Metric, Text, Title } from "@tremor/react"

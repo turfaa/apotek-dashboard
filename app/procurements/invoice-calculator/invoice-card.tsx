@@ -1,8 +1,8 @@
 import {
     calculateInvoice,
     calculateInvoiceWithoutMultiplier,
-} from "@/app/invoice-calculator/calculate"
-import { Invoice } from "@/app/invoice-calculator/calculator-hook"
+} from "./calculate"
+import { Invoice } from "./calculator-hook"
 import { rupiah } from "@/lib/rupiah"
 import { TrashIcon } from "@heroicons/react/24/outline"
 import { maskitoTransform } from "@maskito/core"

@@ -1,5 +1,5 @@
-import DrugsToStockOpnameTabList from "@/app/drugs-to-stock-opname/tab-list"
-import DrugsTable from "@/app/drugs-to-stock-opname/table"
+import DrugsToStockOpnameTabList from "./tab-list"
+import DrugsTable from "./table"
 import { DrugsToStockOpnameMode } from "@/lib/api/drugs-to-stock-opname"
 import DatePicker from "@/components/date-picker"
 import TabGroup from "@/components/tab-group"

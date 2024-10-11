@@ -1,21 +1,20 @@
-import { Table, TableHead, TableHeaderCell, TableRow } from "@tremor/react"
-import PriceListTableBody from "@/app/price-list/table-body"
+import { PriceListTableBodyFallback } from "./table-fallback"
+import { getDrugs } from "@/lib/api/drugv2"
+import { Table } from "@tremor/react"
 import { Suspense } from "react"
-import PriceListTableBodyFallback from "@/app/price-list/table-body-fallback"
+import PriceListTableBody from "./table-body"
+import { auth } from "@/lib/auth"
 
-export default function PriceListTable(): React.ReactElement {
+export default async function PriceListTableServerFetch(): Promise<React.ReactElement> {
+    const session = await auth()
+    const { drugs } = await getDrugs(session)
+
     return (
         <Table>
-            <TableHead>
-                <TableRow>
-                    <TableHeaderCell>No</TableHeaderCell>
-                    <TableHeaderCell>Obat</TableHeaderCell>
-                </TableRow>
-            </TableHead>
-
             <Suspense fallback={<PriceListTableBodyFallback />}>
-                <PriceListTableBody />
+                <PriceListTableBody session={session} drugs={drugs} />
             </Suspense>
         </Table>
     )
 }
+

@@ -19,7 +19,7 @@ const availablePages: Page[] = [
     },
     {
         name: "Daftar Harga",
-        href: "/price-list/v2",
+        href: "/price-list",
         allowedRoles: [Role.ADMIN, Role.STAFF, Role.RESELLER, Role.GUEST],
     },
     {
@@ -29,7 +29,7 @@ const availablePages: Page[] = [
     },
     {
         name: "Harga Obat Terakhir",
-        href: "/last-drug-procurements",
+        href: "/procurements/by-drug",
         allowedRoles: [Role.ADMIN],
     },
     {
@@ -39,7 +39,7 @@ const availablePages: Page[] = [
     },
     {
         name: "Obat Harus SO",
-        href: "/drugs-to-stock-opname",
+        href: "/stock-opnames/drugs-to-stock-opname",
         allowedRoles: [Role.ADMIN, Role.STAFF],
     },
     {
@@ -49,7 +49,7 @@ const availablePages: Page[] = [
     },
     {
         name: "Kalkulator Faktur",
-        href: "/invoice-calculator",
+        href: "/procurements/invoice-calculator",
         allowedRoles: [Role.ADMIN, Role.STAFF],
     },
 ]

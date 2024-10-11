@@ -1,103 +1,76 @@
 "use client"
 
-import PriceListTableBodyFallback from "@/app/price-list/table-body-fallback"
-import { getDrugs } from "@/lib/api/drug"
-import { useDrugs } from "@/lib/api/hooks"
+import { Drug } from "@/lib/api/drugv2"
+import Link from 'next/link'
+import { TableBody, TableCell, TableRow, Text } from "@tremor/react"
+import { useMemo, useState, useEffect } from "react"
+import { useTf } from "@/lib/tf/hook"
+import { Bold, Grid } from "@tremor/react"
 import useSearch from "@/lib/search-hook"
-import { ExclamationTriangleIcon } from "@heroicons/react/24/solid"
-import {
-    Callout,
-    Col,
-    Flex,
-    Grid,
-    TableBody,
-    TableCell,
-    TableRow,
-    Text,
-} from "@tremor/react"
-import { useEffect, useState } from "react"
-import { preload } from "swr"
+import { Session } from "next-auth"
+import { useDebounce } from "use-debounce"
+import { Role } from "@/lib/api/auth"
+import { PriceListTableBodyFallback } from "./table-fallback"
+import PriceListCard from "./card"
 
-import {
-    PriceCard,
-    discountPriceGetter,
-    normalPriceGetter,
-    prescriptionPriceGetter,
-} from "./price-card"
+const rolesAllowedToSeeDrugCost = [Role.ADMIN]
 
-preload("/drugs", getDrugs)
+export interface PriceListTableBodyProps {
+    session: Session | null
+    drugs: Drug[]
+}
 
-export default function PriceListTableBody(): React.ReactElement {
+export default function PriceListTableBody({ session, drugs }: PriceListTableBodyProps): React.ReactElement {
     const [ssrCompleted, setSsrCompleted] = useState(false)
     useEffect(() => setSsrCompleted(true), [])
 
     const { query } = useSearch()
-    const { data, isLoading, error } = useDrugs()
+    const [debouncedQuery] = useDebounce(query, 200)
 
-    if (isLoading || !ssrCompleted) {
+    const [drugIds, drugSearchTexts, drugById] = useMemo(() => {
+        return [
+            drugs.map((d) => d.vmedisCode),
+            drugs.map((d) => d.name),
+            new Map(drugs.map((d) => [d.vmedisCode, d])),
+        ]
+    }, [drugs])
+
+    const { search } = useTf(drugIds, drugSearchTexts)
+
+    const filtered = useMemo(() => {
+        if (debouncedQuery.length < 3) {
+            return drugs
+        }
+
+        return search(debouncedQuery).map((vmedisCode) =>
+            drugById.get(vmedisCode),
+        ) as Drug[]
+    }, [drugs, debouncedQuery, search, drugById])
+
+    if (!ssrCompleted) {
         return <PriceListTableBodyFallback />
     }
 
-    if (error) {
-        return (
-            <Callout
-                className="h-12 mt-4"
-                title={error.message}
-                icon={ExclamationTriangleIcon}
-                color="rose"
-            />
-        )
-    }
-
-    const drugs =
-        data?.drugs.filter((drug) =>
-            drug.name.toLowerCase().includes(query.toLowerCase()),
-        ) ?? []
+    const allowedToSeeDrugCost = rolesAllowedToSeeDrugCost.includes(session?.user?.role ?? Role.GUEST)
 
     return (
         <TableBody>
-            {drugs.map((drug, index) => (
-                <TableRow key={index}>
-                    <TableCell>{index + 1}</TableCell>
+            {filtered.map((drug) => (
+                <TableRow key={drug.vmedisCode}>
+                    <TableCell className="flex flex-col gap-4">
+                        <Bold>{drug.name}</Bold>
 
-                    <TableCell>
-                        <Flex
-                            flexDirection="col"
-                            alignItems="start"
-                            className="gap-4"
-                        >
-                            <Text>{drug.name}</Text>
+                        <Grid numItemsSm={1} numItemsMd={3} className="gap-4">
+                            {drug.sections.map((section) => (
+                                <PriceListCard key={section.title} title={section.title} rows={section.rows} />
+                            ))}
+                        </Grid>
 
-                            <Grid
-                                numItemsSm={1}
-                                numItemsMd={3}
-                                className="gap-4"
-                            >
-                                <Col>
-                                    <PriceCard
-                                        title="Harga Normal"
-                                        units={drug.units}
-                                        priceGetter={normalPriceGetter}
-                                    />
-                                </Col>
-
-                                <Col>
-                                    <PriceCard
-                                        title="Harga Diskon"
-                                        units={drug.units}
-                                        priceGetter={discountPriceGetter}
-                                    />
-                                </Col>
-
-                                <Col>
-                                    <PriceCard
-                                        title="Harga Resep"
-                                        units={drug.units}
-                                        priceGetter={prescriptionPriceGetter}
-                                    />
-                                </Col>
-                            </Grid>
-                        </Flex>
+                        {allowedToSeeDrugCost && (
+                            <Link href={`/procurements/by-drug?drug-code=${drug.vmedisCode}`} target="_blank">
+                                <Text>Lihat harga pembelian obat terakhir</Text>
+                            </Link>
+                        )}
                     </TableCell>
                 </TableRow>
             ))}

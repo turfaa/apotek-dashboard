@@ -1,5 +1,5 @@
-import Calculator from "@/app/invoice-calculator/calculator"
-import CalculatorSelector from "@/app/invoice-calculator/calculator-selector"
+import Calculator from "./calculator"
+import CalculatorSelector from "./calculator-selector"
 import { GetInvoiceCalculators } from "@/lib/api/invoice-calculator"
 import { Card, Title } from "@tremor/react"
 

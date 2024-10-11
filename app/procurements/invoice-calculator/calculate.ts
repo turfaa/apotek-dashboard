@@ -1,4 +1,4 @@
-import { Invoice } from "@/app/invoice-calculator/calculator-hook"
+import { Invoice } from "./calculator-hook"
 
 export function calculateInvoices(
     invoices: Invoice[],

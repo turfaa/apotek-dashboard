@@ -1,7 +1,7 @@
 "use client"
 
-import { useCalculator } from "@/app/invoice-calculator/calculator-hook"
-import CalculatorSelectorPlaceholder from "@/app/invoice-calculator/calculator-selector-placeholder"
+import { useCalculator } from "./calculator-hook"
+import CalculatorSelectorPlaceholder from "./calculator-selector-placeholder"
 import { InvoiceCalculator } from "@/lib/api/invoice-calculator"
 import { SearchSelect, SearchSelectItem } from "@tremor/react"
 import { useEffect, useMemo, useState } from "react"
