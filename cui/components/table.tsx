@@ -1,12 +1,12 @@
 import React from "react"
 import {
-    Table as TableTremor,
+    Table as TableComp,
     TableBody,
     TableCell,
     TableHead,
-    TableHeaderCell,
+    TableHeader,
     TableRow,
-} from "@tremor/react"
+} from "@/components/ui/table"
 import { Table as TableType } from "../types"
 
 export interface TableProps {
@@ -19,15 +19,15 @@ export default function Table({ table }: TableProps): React.ReactElement {
     }
 
     return (
-        <TableTremor>
+        <TableComp>
             {table.header.length > 0 && (
-                <TableHead>
+                <TableHeader>
                     <TableRow>
                         {table.header.map((header) => (
-                            <TableHeaderCell key={header}>{header}</TableHeaderCell>
+                            <TableHead key={header}>{header}</TableHead>
                         ))}
                     </TableRow>
-                </TableHead>
+                </TableHeader>
             )}
 
             {table.rows.length > 0 && (
@@ -41,6 +41,6 @@ export default function Table({ table }: TableProps): React.ReactElement {
                     ))}
                 </TableBody>
             )}
-        </TableTremor>
+        </TableComp>
     )
 }
