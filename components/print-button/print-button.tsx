@@ -1,8 +1,7 @@
 "use client"
 
 import { usePrintMode } from "@/lib/print-mode"
-import { PrinterIcon } from "@heroicons/react/24/solid"
-import { Button } from "@tremor/react"
+import { Button } from "@/components/ui/button"
 
 export interface PrintButtonProps {
     disabled?: boolean
@@ -19,9 +18,7 @@ export function PrintButton({
 
     return (
         <Button
-            icon={PrinterIcon}
-            color={isPrintMode ? "red" : "blue"}
-            disabled={disabled}
+            disabled={disabled || isPrintMode}
             onClick={() => setPrintMode(true)}
         >
             Print

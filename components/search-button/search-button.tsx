@@ -1,7 +1,6 @@
 "use client"
 
-import { TextInput } from "@tremor/react"
-import { MagnifyingGlassIcon } from "@heroicons/react/24/solid"
+import { Input } from "@/components/ui/input"
 import { ChangeEvent } from "react"
 import useSearch from "@/lib/search-hook"
 import { usePrintMode } from "@/lib/print-mode"
@@ -21,14 +20,14 @@ export function SearchButton({
     }
 
     return (
-        <TextInput
-            icon={MagnifyingGlassIcon}
+        <Input
             placeholder="Cari obat..."
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
                 setQuery(event.target.value)
             }
             defaultValue={query}
             disabled={disabled}
+            onFocus={(e) => e.target.select()}
         />
     )
 }

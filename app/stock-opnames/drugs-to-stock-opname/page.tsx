@@ -19,8 +19,8 @@ export default function DrugsToStockOpname({
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <Flex flexDirection="row" justifyContent="start" className="gap-2">
-                <Title>Obat yang Harus Di-Stok Opname pada</Title>
-                <DatePicker className="max-w-min" />
+                <Title>Obat yang harus stok opname pada</Title>
+                <DatePicker />
             </Flex>
 
             <TabGroup
