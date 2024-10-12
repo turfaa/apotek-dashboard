@@ -22,8 +22,7 @@ export async function generateMetadata(
     let title
     if (print === "true") {
         title = {
-            absolute: `${moment().format("YYYY-MM-DD")}${query ? ` - ${query}` : ""
-                }`,
+            absolute: `${moment().format("YYYY-MM-DD")}${query ? ` - ${query}` : ""}`,
         }
     } else {
         title = "Daftar Pesanan"

@@ -104,9 +104,7 @@ export default function Navbar({
                                                 }
                                                 height={32}
                                                 width={32}
-                                                alt={`${session?.user?.name ||
-                                                    "placeholder"
-                                                    } avatar`}
+                                                alt={`${session?.user?.name || "placeholder"} avatar`}
                                             />
                                         </Menu.Button>
                                     </div>

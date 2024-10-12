@@ -34,7 +34,7 @@ export function DatePicker(props: CalendarProps): React.ReactElement {
     const date = dateFromParams ? new Date(dateFromParams) : new Date()
     const dateString = format(date, "PPP", { locale: id })
 
-    const popOverRef = useRef<HTMLButtonElement | null>(null);
+    const popOverRef = useRef<HTMLButtonElement | null>(null)
 
     if (isPrintMode) {
         return <Title>{dateString}</Title>
