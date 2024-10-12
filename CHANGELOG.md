@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.17.4] - 2024-10-12
+### :bug: Bug Fixes
+- [`aa0515f`](https://github.com/turfaa/apotek-dashboard/commit/aa0515f8da7fe554d7977cf51ae018cdd6ab8d10) - Upgrade dependencies *(commit by [@turfaa](https://github.com/turfaa))*
+- [`0b8e6c9`](https://github.com/turfaa/apotek-dashboard/commit/0b8e6c9c110275b640b035fb3d9f17c9fdcc01c4) - re-arrange page paths *(commit by [@turfaa](https://github.com/turfaa))*
+- [`ece83e5`](https://github.com/turfaa/apotek-dashboard/commit/ece83e507161c630516d425b96fb55a457c0cb43) - use shadcn table in cui table *(commit by [@turfaa](https://github.com/turfaa))*
+- [`bbad32b`](https://github.com/turfaa/apotek-dashboard/commit/bbad32b0a4b7ff71d5c6bf3b41f7cb9cbc719997) - Migrate some components to shadcn *(commit by [@turfaa](https://github.com/turfaa))*
+
+### :recycle: Refactors
+- [`753a955`](https://github.com/turfaa/apotek-dashboard/commit/753a9553de8f7f0933a50b49a598661ac10847bd) - make shared components folder-based *(commit by [@turfaa](https://github.com/turfaa))*
+
+### :wrench: Chores
+- [`49da7e5`](https://github.com/turfaa/apotek-dashboard/commit/49da7e5d6c8547fac1ea53e166b2bea5b1de7f27) - initiate shadcn and use white background *(commit by [@turfaa](https://github.com/turfaa))*
+- [`3abaf82`](https://github.com/turfaa/apotek-dashboard/commit/3abaf8226f88fe949cbec9920c457af27347398f) - add some shadcn componenets *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.17.3] - 2024-10-11
 ### :bug: Bug Fixes
 - [`b27f0b2`](https://github.com/turfaa/apotek-dashboard/commit/b27f0b2f6f7013180a13ec2f7c92276a4e883a7b) - Setup tailscale DNS for buildx *(commit by [@turfaa](https://github.com/turfaa))*
@@ -422,3 +437,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.17.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.17.0...v0.17.1
 [v0.17.2]: https://github.com/turfaa/apotek-dashboard/compare/v0.17.1...v0.17.2
 [v0.17.3]: https://github.com/turfaa/apotek-dashboard/compare/v0.17.2...v0.17.3
+[v0.17.4]: https://github.com/turfaa/apotek-dashboard/compare/v0.17.3...v0.17.4
