@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.17.10] - 2024-10-16
+### :bug: Bug Fixes
+- [`9cbcf89`](https://github.com/turfaa/apotek-dashboard/commit/9cbcf8960eb16f2e4b6a456759493e41da14c4cf) - fix trigger-deployment workflow *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.17.9] - 2024-10-16
 ### :bug: Bug Fixes
 - [`7af812a`](https://github.com/turfaa/apotek-dashboard/commit/7af812ad1a7e3508662d7c2a024de2f69d1299e6) - deploy latest tag *(commit by [@turfaa](https://github.com/turfaa))*
@@ -471,3 +476,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.17.7]: https://github.com/turfaa/apotek-dashboard/compare/v0.17.6...v0.17.7
 [v0.17.8]: https://github.com/turfaa/apotek-dashboard/compare/v0.17.7...v0.17.8
 [v0.17.9]: https://github.com/turfaa/apotek-dashboard/compare/v0.17.8...v0.17.9
+[v0.17.10]: https://github.com/turfaa/apotek-dashboard/compare/v0.17.9...v0.17.10
