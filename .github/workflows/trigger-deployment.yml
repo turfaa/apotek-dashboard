@@ -1,0 +1,17 @@
+name: Trigger deployment
+
+on:
+    workflow_run:
+        workflows: ["Create and publish a Docker image"]
+        types: [completed]
+
+jobs:
+    trigger-deployment:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Trigger deployment
+              run: |
+                curl -X POST https://api.github.com/repos/:userName/:repoName/dispatches \
+                -H 'Accept: application/vnd.github.everest-preview+json' \
+                -u ${{ secrets.PAT }} \
+                --data '{"event_type": "deploy-apotek", "client_payload": { "backend_version": "0.17.6" }}'
