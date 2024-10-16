@@ -14,7 +14,7 @@ jobs:
               uses: actions/download-artifact@v4
               with:
                 github-token: ${{ secrets.PAT }}
-                run-id: ${{ github.event.workflow_run.workflow_id}}
+                run-id: ${{ github.event.workflow_run.id }}
                 name: tag
                     
             - name: Read tag
