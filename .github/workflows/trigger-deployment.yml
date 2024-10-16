@@ -21,12 +21,12 @@ jobs:
               id: read_tag
               run: |
                 TAG=$(cat ./tag)
-                BACKEND_VERSION=${TAG#v}
-                echo "backend_version=$BACKEND_VERSION" >> $GITHUB_OUTPUT
+                DASHBOARD_VERSION=${TAG#v}
+                echo "dashboard_version=$DASHBOARD_VERSION" >> $GITHUB_OUTPUT
 
             - name: Trigger deployment
               run: |
                 curl -X POST https://api.github.com/repos/turfaa/deployments/dispatches \
                 -H 'Accept: application/vnd.github.everest-preview+json' \
                 -u ${{ secrets.PAT }} \
-                --data '{"event_type": "deploy-apotek", "client_payload": { "dashboard_version": "${{ steps.read_tag.outputs.backend_version }}" }}'
+                --data '{"event_type": "deploy-apotek", "client_payload": { "dashboard_version": "${{ steps.read_tag.outputs.dashboard_version }}" }}'
