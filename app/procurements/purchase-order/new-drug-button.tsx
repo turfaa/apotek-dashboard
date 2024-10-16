@@ -5,7 +5,7 @@ import { ProcurementRecommendation } from "@/lib/api/procurement-recommendation"
 import { usePrintMode } from "@/lib/print-mode"
 import useSearch from "@/lib/search-hook"
 import { PlusIcon } from "@heroicons/react/24/outline"
-import { Button } from "@tremor/react"
+import { Button } from "@/components/ui/button"
 
 export default function NewDrugButton(): React.ReactElement {
     const { isLoading, setData } = usePurchaseOrders()
@@ -18,14 +18,14 @@ export default function NewDrugButton(): React.ReactElement {
 
     return (
         <Button
-            variant="secondary"
-            icon={PlusIcon}
+            variant="outline"
             disabled={isLoading}
             onClick={() => {
                 const newData = newProcurement(query)
                 setData(newData.drug.vmedisCode, newData)
             }}
         >
+            <PlusIcon className="w-4 h-4 mr-2" />
             Tambah Obat
         </Button>
     )

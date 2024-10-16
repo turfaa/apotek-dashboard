@@ -3,10 +3,10 @@ import RefreshButton from "@/app/procurements/purchase-order/refresh-button"
 import PurchaseOrderTable from "@/app/procurements/purchase-order/table"
 import PurchaseOrderTitle from "@/app/procurements/purchase-order/title"
 import SearchButton from "@/components/search-button"
-import { Card, Col, Flex, Grid } from "@tremor/react"
 import moment from "moment/moment"
 import { Metadata } from "next"
 import { Suspense } from "react"
+import { Card, CardContent } from "@/components/ui/card"
 
 interface PurchaseOrderProps {
     searchParams: {
@@ -37,31 +37,31 @@ export async function generateMetadata(
 export default function PurchaseOrder() {
     return (
         <main className="p-4 md:p-10 mx-auto">
-            <Flex className="pb-4">
+            <div className="flex pb-4">
                 <Suspense>
                     <PurchaseOrderTitle />
                 </Suspense>
-            </Flex>
+            </div>
 
-            <Grid numItemsSm={1} numItemsMd={2} className="gap-4">
-                <Col>
-                    <Suspense>
-                        <SearchButton />
-                    </Suspense>
-                </Col>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Suspense>
+                    <SearchButton />
+                </Suspense>
 
-                <Col className="justify-self-end flex gap-4">
+                <div className="justify-self-end flex gap-4">
                     <Suspense>
                         <NewDrugButton />
                         <RefreshButton />
                     </Suspense>
-                </Col>
-            </Grid>
+                </div>
+            </div>
 
             <Card className="mt-4">
-                <Suspense>
-                    <PurchaseOrderTable />
-                </Suspense>
+                <CardContent className="mt-2">
+                    <Suspense>
+                        <PurchaseOrderTable />
+                    </Suspense>
+                </CardContent>
             </Card>
         </main>
     )

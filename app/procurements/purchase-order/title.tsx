@@ -3,7 +3,6 @@
 import { usePurchaseOrders } from "@/lib/api/hooks"
 import { usePrintMode } from "@/lib/print-mode"
 import useSearch from "@/lib/search-hook"
-import { Flex, Subtitle, Title } from "@tremor/react"
 import { useEffect, useState } from "react"
 
 export default function PurchaseOrderTitle() {
@@ -23,19 +22,19 @@ export default function PurchaseOrderTitle() {
     const showQuery = isPrintMode && query.length > 0
 
     return (
-        <Flex flexDirection="row">
-            <Flex flexDirection="col" alignItems="start">
-                <Title>
+        <div className="flex flex-row">
+            <div className="flex flex-col items-start">
+                <h1 className="text-lg font-semibold">
                     Pesanan Apotek Aulia Farma (
                     {new Date().toLocaleDateString("id-ID")})
-                </Title>
+                </h1>
                 {showComputedAt && (
-                    <Subtitle>
+                    <h2 className="text-base text-gray-500">
                         Dihitung pada: {computedAt.toLocaleString("id-ID")}
-                    </Subtitle>
+                    </h2>
                 )}
-                {showQuery && <Subtitle>Kepada: {query}</Subtitle>}
-            </Flex>
-        </Flex>
+                {showQuery && <h2 className="text-base text-gray-500">Kepada: {query}</h2>}
+            </div>
+        </div>
     )
 }

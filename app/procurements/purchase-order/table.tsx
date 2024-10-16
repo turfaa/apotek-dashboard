@@ -5,19 +5,20 @@ import { ProcurementRecommendation } from "@/lib/api/procurement-recommendation"
 import { usePrintMode } from "@/lib/print-mode"
 import useSearch from "@/lib/search-hook"
 import { ExclamationTriangleIcon } from "@heroicons/react/24/solid"
+import { useEffect, useState } from "react"
 import {
-    Button,
-    Callout,
     Table,
+    TableHeader,
     TableBody,
     TableCell,
     TableHead,
-    TableHeaderCell,
     TableRow,
-    Text,
-    TextInput,
-} from "@tremor/react"
-import { useEffect, useState } from "react"
+} from "@/components/ui/table"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
+import { ReloadIcon } from "@radix-ui/react-icons"
+
 
 export interface Row {
     vmedisCode: string
@@ -125,16 +126,21 @@ export default function ProcurementTable(): React.ReactElement {
     const { query } = useSearch()
     const { isPrintMode } = usePrintMode()
 
-    if (isLoading || !ssrCompleted) return <Text>Loading...</Text>
+    if (isLoading || !ssrCompleted)
+        return (
+            <div className="flex items-center justify-center h-full">
+                <ReloadIcon className="w-4 h-4 animate-spin" />
+                <p className="ml-2">Memuat...</p>
+            </div>
+        )
 
     if (error)
         return (
-            <Callout
-                className="h-12 mt-4"
-                title={error.message}
-                icon={ExclamationTriangleIcon}
-                color="rose"
-            />
+            <Alert variant="destructive">
+                <ExclamationTriangleIcon className="w-4 h-4" />
+                <AlertTitle>Terjadi Kesalahan</AlertTitle>
+                <AlertDescription>{error.message}</AlertDescription>
+            </Alert>
         )
 
     const rows: Row[] = Object.values(data || {})
@@ -157,100 +163,88 @@ export default function ProcurementTable(): React.ReactElement {
         .sort((a, b) => a.name.localeCompare(b.name))
 
     return (
-        <>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        {columns.map((key) => (
-                            <TableHeaderCell
-                                key={key}
-                                hidden={
-                                    !enabledColumns.includes(key) ||
-                                    (isPrintMode &&
-                                        !columnConfig[key].displayInPrint)
-                                }
-                                onClick={() =>
-                                    setEnabledColumns(
-                                        enabledColumns.filter(
-                                            (column) => column != key,
-                                        ),
-                                    )
-                                }
-                            >
-                                <Text
-                                    onClick={() =>
-                                        setEnabledColumns(
-                                            enabledColumns.filter(
-                                                (column) => column != key,
-                                            ),
-                                        )
+        <Table>
+            <TableHeader>
+                <TableRow>
+                    {columns.map((key) => (
+                        <TableHead
+                            key={key}
+                            hidden={
+                                !enabledColumns.includes(key) ||
+                                (isPrintMode &&
+                                    !columnConfig[key].displayInPrint)
+                            }
+                            onClick={() =>
+                                setEnabledColumns(
+                                    enabledColumns.filter(
+                                        (column) => column != key,
+                                    ),
+                                )
+                            }
+                        >
+                            {columnConfig[key].displayName}
+                        </TableHead>
+                    ))}
+                </TableRow>
+            </TableHeader>
+
+            <TableBody>
+                {rows.map((row, index) => (
+                    <TableRow key={row.vmedisCode}>
+                        {columns.map((column) => {
+                            const value =
+                                column === "no."
+                                    ? `${index + 1}`
+                                    : columnConfig[column].formatter?.(
+                                        row[column],
+                                    ) || row[column]?.toString()
+
+                            return (
+                                <TableCell
+                                    key={column}
+                                    hidden={
+                                        !enabledColumns.includes(column) ||
+                                        (isPrintMode &&
+                                            !columnConfig[column]
+                                                .displayInPrint)
                                     }
                                 >
-                                    {columnConfig[key].displayName}
-                                </Text>
-                            </TableHeaderCell>
-                        ))}
+                                    {!!columnConfig[column].onEdit &&
+                                        !isPrintMode
+                                        ? (
+                                            <Input
+                                                value={value}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        row.vmedisCode,
+                                                        columnConfig[
+                                                            column
+                                                        ].onEdit?.(
+                                                            row.raw,
+                                                            e.target.value,
+                                                        ) || row.raw,
+                                                    )
+                                                }
+                                            />
+                                        )
+                                        : value
+                                    }
+                                </TableCell>
+                            )
+                        })}
+
+                        <TableCell hidden={isPrintMode}>
+                            <Button
+                                variant="ghost"
+                                color="rose"
+                                onClick={() => deleteData(row.vmedisCode)}
+                            >
+                                Hapus
+                            </Button>
+                        </TableCell>
                     </TableRow>
-                </TableHead>
-
-                <TableBody>
-                    {rows.map((row, index) => (
-                        <TableRow key={row.vmedisCode}>
-                            {columns.map((column) => {
-                                const value =
-                                    column === "no."
-                                        ? `${index + 1}`
-                                        : columnConfig[column].formatter?.(
-                                            row[column],
-                                        ) || row[column]?.toString()
-
-                                return (
-                                    <TableCell
-                                        key={column}
-                                        hidden={
-                                            !enabledColumns.includes(column) ||
-                                            (isPrintMode &&
-                                                !columnConfig[column]
-                                                    .displayInPrint)
-                                        }
-                                    >
-                                        {!!columnConfig[column].onEdit &&
-                                        !isPrintMode ? (
-                                                <TextInput
-                                                    value={value}
-                                                    onChange={(e) =>
-                                                        setData(
-                                                            row.vmedisCode,
-                                                            columnConfig[
-                                                                column
-                                                            ].onEdit?.(
-                                                                row.raw,
-                                                                e.target.value,
-                                                            ) || row.raw,
-                                                        )
-                                                    }
-                                                />
-                                            ) : (
-                                                value
-                                            )}
-                                    </TableCell>
-                                )
-                            })}
-
-                            <TableCell hidden={isPrintMode}>
-                                <Button
-                                    variant="light"
-                                    size="xs"
-                                    color="rose"
-                                    onClick={() => deleteData(row.vmedisCode)}
-                                >
-                                    Hapus
-                                </Button>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </>
+                ))}
+            </TableBody>
+        </Table>
     )
 }
