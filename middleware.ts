@@ -70,7 +70,5 @@ export default auth(async function middleware(
         return NextResponse.redirect(url)
     }
 
-
-
     return NextResponse.next()
 })

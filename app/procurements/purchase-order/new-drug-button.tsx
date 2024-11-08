@@ -4,7 +4,7 @@ import { usePurchaseOrders } from "@/lib/api/hooks"
 import { ProcurementRecommendation } from "@/lib/api/procurement-recommendation"
 import { usePrintMode } from "@/lib/print-mode"
 import useSearch from "@/lib/search-hook"
-import { PlusIcon } from "@heroicons/react/24/outline"
+import { PlusIcon } from "@radix-ui/react-icons"
 import { Button } from "@/components/ui/button"
 
 export default function NewDrugButton(): React.ReactElement {

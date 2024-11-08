@@ -4,7 +4,7 @@ import { usePurchaseOrders } from "@/lib/api/hooks"
 import { ProcurementRecommendation } from "@/lib/api/procurement-recommendation"
 import { usePrintMode } from "@/lib/print-mode"
 import useSearch from "@/lib/search-hook"
-import { ExclamationTriangleIcon } from "@heroicons/react/24/solid"
+import { ExclamationTriangleIcon, ReloadIcon } from "@radix-ui/react-icons"
 import { useEffect, useState } from "react"
 import {
     Table,
@@ -17,7 +17,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
-import { ReloadIcon } from "@radix-ui/react-icons"
+import Loading from "@/components/loading"
 
 
 export interface Row {
@@ -127,12 +127,7 @@ export default function ProcurementTable(): React.ReactElement {
     const { isPrintMode } = usePrintMode()
 
     if (isLoading || !ssrCompleted)
-        return (
-            <div className="flex items-center justify-center h-full">
-                <ReloadIcon className="w-4 h-4 animate-spin" />
-                <p className="ml-2">Memuat...</p>
-            </div>
-        )
+        return <Loading />
 
     if (error)
         return (
