@@ -7,15 +7,8 @@ import { SalesStatistics } from "@/lib/api/sale-statistics"
 import { usePrintMode } from "@/lib/print-mode"
 import { rupiah } from "@/lib/rupiah"
 import { ExclamationTriangleIcon } from "@heroicons/react/24/solid"
-import {
-    Callout,
-    Card,
-    Tab,
-    TabGroup,
-    TabList,
-    TabPanel,
-    TabPanels,
-} from "@tremor/react"
+import { Callout, Card } from "@tremor/react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function ClientSide(): React.ReactElement {
     const { data, error, isLoading } = useSalesStatistics()
@@ -57,38 +50,34 @@ export default function ClientSide(): React.ReactElement {
                 />
             )}
 
-            <TabGroup>
-                {!isPrintMode ? (
-                    <TabList>
-                        <Tab>Ringkasan</Tab>
-                        <Tab>Statistik Harian</Tab>
-                    </TabList>
-                ) : (
-                    <> </>
+            <Tabs defaultValue="summary" className="mt-4">
+                {!isPrintMode && (
+                    <TabsList>
+                        <TabsTrigger value="summary">Ringkasan</TabsTrigger>
+                        <TabsTrigger value="daily">Statistik Harian</TabsTrigger>
+                    </TabsList>
                 )}
 
-                <TabPanels>
-                    <TabPanel>
-                        <MetricGrid
-                            title="Nominal Penjualan"
-                            data={salesTotals}
-                            valueFormatter={rupiah.format}
-                        />
-                        <MetricGrid
-                            title="Banyak Penjualan"
-                            data={salesNumbers}
-                        />
-                    </TabPanel>
+                <TabsContent value="summary">
+                    <MetricGrid
+                        title="Nominal Penjualan"
+                        data={salesTotals}
+                        valueFormatter={rupiah.format}
+                    />
+                    <MetricGrid
+                        title="Banyak Penjualan"
+                        data={salesNumbers}
+                    />
+                </TabsContent>
 
-                    <TabPanel>
-                        <Card className="mt-6">
-                            <StatisticsTable
-                                statistics={data?.dailyHistory || []}
-                            />
-                        </Card>
-                    </TabPanel>
-                </TabPanels>
-            </TabGroup>
+                <TabsContent value="daily">
+                    <Card className="mt-6">
+                        <StatisticsTable
+                            statistics={data?.dailyHistory || []}
+                        />
+                    </Card>
+                </TabsContent>
+            </Tabs>
         </>
     )
 }

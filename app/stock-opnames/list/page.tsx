@@ -1,13 +1,14 @@
 import StockOpnameSummaryTable from "./summary-table"
 import CompactedStockOpnameTable from "./compacted-so-table"
 import StockOpnamesReportTable from "./report-table"
-import StockOpnameTabList from "./tab-list"
 import DateRangePicker from "@/components/date-range-picker"
 import TabGroup from "@/components/tab-group"
-import { Card, Flex, TabPanel, TabPanels } from "@tremor/react"
+import { Card, Flex } from "@tremor/react"
 import { Title, Text } from "@/components/typography"
 import { Metadata } from "next"
 import { Suspense } from "react"
+import { LayersIcon, LightningBoltIcon, ReaderIcon } from "@radix-ui/react-icons"
+import { TabsContent } from "@/components/ui/tabs"
 
 export const metadata: Metadata = {
     title: "Laporan Stok Opname",
@@ -27,44 +28,44 @@ export default async function StockOpnames({
 
             <TabGroup
                 className="mt-4"
-                tabLabels={["summary", "compacted", "details"]}
+                tabLabels={[
+                    { tag: "summary", label: "Ringkasan", icon: <LightningBoltIcon className="h-4 w-4" /> },
+                    { tag: "compacted", label: "Compact", icon: <ReaderIcon className="h-4 w-4" /> },
+                    { tag: "details", label: "Detail", icon: <LayersIcon className="h-4 w-4" /> },
+                ]}
             >
-                <StockOpnameTabList />
+                <TabsContent value="summary" className="mt-4">
+                    <Card>
+                        <Suspense fallback={<Text>Loading...</Text>}>
+                            <StockOpnameSummaryTable
+                                from={searchParams?.from}
+                                until={searchParams?.until}
+                            />
+                        </Suspense>
+                    </Card>
+                </TabsContent>
 
-                <TabPanels className="mt-4">
-                    <TabPanel>
-                        <Card>
-                            <Suspense fallback={<Text>Loading...</Text>}>
-                                <StockOpnameSummaryTable
-                                    from={searchParams?.from}
-                                    until={searchParams?.until}
-                                />
-                            </Suspense>
-                        </Card>
-                    </TabPanel>
+                <TabsContent value="compacted">
+                    <Card>
+                        <Suspense fallback={<Text>Loading...</Text>}>
+                            <CompactedStockOpnameTable
+                                from={searchParams?.from}
+                                until={searchParams?.until}
+                            />
+                        </Suspense>
+                    </Card>
+                </TabsContent>
 
-                    <TabPanel>
-                        <Card>
-                            <Suspense fallback={<Text>Loading...</Text>}>
-                                <CompactedStockOpnameTable
-                                    from={searchParams?.from}
-                                    until={searchParams?.until}
-                                />
-                            </Suspense>
-                        </Card>
-                    </TabPanel>
-
-                    <TabPanel>
-                        <Card>
-                            <Suspense fallback={<Text>Loading...</Text>}>
-                                <StockOpnamesReportTable
-                                    from={searchParams?.from}
-                                    until={searchParams?.until}
-                                />
-                            </Suspense>
-                        </Card>
-                    </TabPanel>
-                </TabPanels>
+                <TabsContent value="details">
+                    <Card>
+                        <Suspense fallback={<Text>Loading...</Text>}>
+                            <StockOpnamesReportTable
+                                from={searchParams?.from}
+                                until={searchParams?.until}
+                            />
+                        </Suspense>
+                    </Card>
+                </TabsContent>
             </TabGroup>
         </main>
     )

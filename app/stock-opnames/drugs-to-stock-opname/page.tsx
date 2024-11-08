@@ -1,12 +1,14 @@
-import DrugsToStockOpnameTabList from "./tab-list"
 import DrugsTable from "./table"
 import { DrugsToStockOpnameMode } from "@/lib/api/drugs-to-stock-opname"
 import DatePicker from "@/components/date-picker"
-import TabGroup from "@/components/tab-group"
-import { Card, Flex, TabPanel, TabPanels } from "@tremor/react"
+import { TabsContent } from "@/components/ui/tabs"
+import { Card } from "@/components/ui/card"
+import { Flex } from "@tremor/react"
 import { Title, Text } from "@/components/typography"
 import { Metadata } from "next"
 import { Suspense } from "react"
+import TabGroup from "@/components/tab-group"
+import { ReaderIcon, BackpackIcon } from "@radix-ui/react-icons"
 
 export const metadata: Metadata = {
     title: "Obat Harus Stok Opname",
@@ -26,33 +28,32 @@ export default function DrugsToStockOpname({
 
             <TabGroup
                 className="mt-4"
-                tabLabels={["sales-based", "conservative"]}
+                tabLabels={[
+                    { tag: "sales-based", label: "Berdasarkan Penjualan", icon: <BackpackIcon className="h-4 w-4" /> },
+                    { tag: "conservative", label: "Berdasarkan Semua Obat", icon: <ReaderIcon className="h-4 w-4" /> },
+                ]}
             >
-                <DrugsToStockOpnameTabList />
+                <TabsContent value="sales-based">
+                    <Card className="mt-4 p-6">
+                        <Suspense fallback={<Text>Loading...</Text>}>
+                            <DrugsTable
+                                mode={DrugsToStockOpnameMode.SalesBased}
+                                date={searchParams?.date}
+                            />
+                        </Suspense>
+                    </Card>
+                </TabsContent>
 
-                <TabPanels className="mt-4">
-                    <TabPanel>
-                        <Card>
-                            <Suspense fallback={<Text>Loading...</Text>}>
-                                <DrugsTable
-                                    mode={DrugsToStockOpnameMode.SalesBased}
-                                    date={searchParams?.date}
-                                />
-                            </Suspense>
-                        </Card>
-                    </TabPanel>
-
-                    <TabPanel>
-                        <Card>
-                            <Suspense fallback={<Text>Loading...</Text>}>
-                                <DrugsTable
-                                    mode={DrugsToStockOpnameMode.Conservative}
-                                    date={searchParams?.date}
-                                />
-                            </Suspense>
-                        </Card>
-                    </TabPanel>
-                </TabPanels>
+                <TabsContent value="conservative">
+                    <Card className="mt-4 p-6">
+                        <Suspense fallback={<Text>Loading...</Text>}>
+                            <DrugsTable
+                                mode={DrugsToStockOpnameMode.Conservative}
+                                date={searchParams?.date}
+                            />
+                        </Suspense>
+                    </Card>
+                </TabsContent>
             </TabGroup>
         </main>
     )
