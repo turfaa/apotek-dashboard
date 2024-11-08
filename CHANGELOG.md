@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.18.2] - 2024-11-08
+### :bug: Bug Fixes
+- [`b484787`](https://github.com/turfaa/apotek-dashboard/commit/b48478706e70a704f12ece91d49bfa4a77cc1940) - default to cache fetch() *(commit by [@turfaa](https://github.com/turfaa))*
+
+### :wrench: Chores
+- [`b2afccd`](https://github.com/turfaa/apotek-dashboard/commit/b2afccdcdc5114095a8d06c7ca68088a22748771) - Use ENV key=value format *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.18.1] - 2024-11-08
 ### :bug: Bug Fixes
 - [`eafabaa`](https://github.com/turfaa/apotek-dashboard/commit/eafabaa329ccd9b9fb063255ac8bb0944af13718) - Temporarily use npm ci --force before react 19 is fully released *(commit by [@turfaa](https://github.com/turfaa))*
@@ -517,3 +525,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.17.13]: https://github.com/turfaa/apotek-dashboard/compare/v0.17.12...v0.17.13
 [v0.18.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.17.13...v0.18.0
 [v0.18.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.18.0...v0.18.1
+[v0.18.2]: https://github.com/turfaa/apotek-dashboard/compare/v0.18.1...v0.18.2
