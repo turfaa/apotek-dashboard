@@ -1,5 +1,5 @@
 import React from "react"
-import { Text } from "@tremor/react"
+import { Text } from "@/components/typography"
 import { getLastDrugProcurements } from "@/lib/api/last-drug-procurements"
 import { Table } from "@/cui/components"
 import { auth } from "@/lib/auth"
@@ -14,7 +14,7 @@ export default async function LastDrugProcurementsTable({
     drugCode,
 }: LastDrugProcurementsTableProps): Promise<React.ReactElement> {
     if (!drugCode) {
-        return <Text>Silahkan pilih obat terlebih dahulu</Text>
+        return <Text>Silakan pilih obat terlebih dahulu</Text>
     }
 
     await new Promise((resolve) => setTimeout(resolve, 1000))

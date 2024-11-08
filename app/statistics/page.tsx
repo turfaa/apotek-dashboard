@@ -1,6 +1,7 @@
 import ClientSide from "@/app/statistics/client"
 import DateRangePicker from "@/components/date-range-picker"
-import { Flex, Title } from "@tremor/react"
+import { Flex } from "@tremor/react"
+import { Title } from "@/components/typography"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {

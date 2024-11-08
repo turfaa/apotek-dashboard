@@ -1,4 +1,5 @@
-import { Flex, Subtitle, Text } from "@tremor/react"
+import { Flex } from "@tremor/react"
+import { Text, Subtitle } from "@/components/typography"
 
 export interface PriceListCardProps {
     title: string

@@ -1,7 +1,8 @@
 import Calculator from "./calculator"
 import CalculatorSelector from "./calculator-selector"
 import { GetInvoiceCalculators } from "@/lib/api/invoice-calculator"
-import { Card, Title } from "@tremor/react"
+import { Card } from "@tremor/react"
+import { Title } from "@/components/typography"
 
 export default async function InvoiceCalculator(): Promise<React.ReactElement> {
     const { calculators } = await GetInvoiceCalculators()

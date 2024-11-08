@@ -8,7 +8,8 @@ import { useCalculator } from "./calculator-hook"
 import InvoiceCard from "./invoice-card"
 import { rupiah } from "@/lib/rupiah"
 import { PlusIcon } from "@heroicons/react/24/outline"
-import { Bold, Button, Divider, Flex, Metric, Text, Title } from "@tremor/react"
+import { Bold, Button, Divider, Flex, Metric } from "@tremor/react"
+import { Title, Text } from "@/components/typography"
 import { useEffect, useMemo, useState } from "react"
 
 export default function Calculator(): React.ReactElement {

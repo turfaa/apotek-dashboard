@@ -1,7 +1,8 @@
 "use client"
 
 import React, { useState, useMemo, useTransition } from "react"
-import { SearchSelect, SearchSelectItem, Subtitle } from "@tremor/react"
+import { SearchSelect, SearchSelectItem } from "@tremor/react"
+import { Subtitle } from "@/components/typography"
 import { Drug } from "@/lib/api/drugv2"
 import { usePrintMode } from "@/lib/print-mode"
 import { useDrugSelector } from "@/lib/drug-selector-hook"

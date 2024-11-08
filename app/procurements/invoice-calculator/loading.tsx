@@ -1,5 +1,6 @@
 import CalculatorSelectorPlaceholder from "./calculator-selector-placeholder"
-import { Card, Text, Title } from "@tremor/react"
+import { Card } from "@tremor/react"
+import { Title, Text } from "@/components/typography"
 
 export default function InvoiceCalculator(): React.ReactElement {
     return (

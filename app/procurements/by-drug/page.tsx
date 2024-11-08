@@ -1,5 +1,6 @@
 import React, { Suspense } from "react"
-import { Card, Title, Text } from "@tremor/react"
+import { Card } from "@tremor/react"
+import { Title } from "@/components/typography"
 import { Metadata } from "next"
 import DrugSelector, { DrugSelectorFallback } from "@/components/drug-selector"
 import LastDrugProcurementsTable, {

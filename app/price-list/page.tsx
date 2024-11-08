@@ -1,10 +1,12 @@
-import { Card, Col, Grid, Text, Title } from "@tremor/react"
+import { Card, Col, Grid } from "@tremor/react"
+import { Title, Text } from "@/components/typography"
 import { Suspense } from "react"
 import { SearchButtonFallback } from "@/components/search-button"
 import SearchButton from "@/components/search-button"
 import PriceListTableFallback from "./table-fallback"
 import PriceListTable from "./table"
 import { Metadata } from "next"
+import Link from "next/link"
 
 export const metadata: Metadata = {
     title: "Daftar Harga",
@@ -25,9 +27,9 @@ export default function PriceList(): React.ReactElement {
                 <Col className="justify-self-end">
                     <Text>
                         Hubungi{" "}
-                        <a href="https://wa.me/6281223556554" target="_blank">
+                        <Link href="https://wa.me/6281223556554" target="_blank">
                             081223556554
-                        </a>{" "}
+                        </Link>{" "}
                         untuk mendapatkan harga partai/medis.
                     </Text>
                 </Col>

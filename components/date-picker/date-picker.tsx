@@ -1,7 +1,7 @@
 "use client"
 
 import { usePrintMode } from "@/lib/print-mode"
-import { Title } from "@tremor/react"
+import { Title } from "@/components/typography"
 import { id } from "date-fns/locale"
 import moment from "moment/moment"
 import {

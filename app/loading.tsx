@@ -1,4 +1,4 @@
-import { Title } from "@tremor/react"
+import { Title } from "@/components/typography"
 
 export default function Loading(): React.ReactElement {
     return (

@@ -1,5 +1,6 @@
 "use client"
 
+import { Title, Subtitle, Text } from "@/components/typography"
 import { usePurchaseOrders } from "@/lib/api/hooks"
 import { usePrintMode } from "@/lib/print-mode"
 import useSearch from "@/lib/search-hook"
@@ -24,16 +25,16 @@ export default function PurchaseOrderTitle() {
     return (
         <div className="flex flex-row">
             <div className="flex flex-col items-start">
-                <h1 className="text-lg font-semibold">
+                <Title>
                     Pesanan Apotek Aulia Farma (
                     {new Date().toLocaleDateString("id-ID")})
-                </h1>
+                </Title>
                 {showComputedAt && (
-                    <h2 className="text-base text-gray-500">
+                    <Subtitle>
                         Dihitung pada: {computedAt.toLocaleString("id-ID")}
-                    </h2>
+                    </Subtitle>
                 )}
-                {showQuery && <h2 className="text-base text-gray-500">Kepada: {query}</h2>}
+                {showQuery && <Subtitle>Kepada: {query}</Subtitle>}
             </div>
         </div>
     )

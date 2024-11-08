@@ -1,4 +1,5 @@
-import { Card, Flex, Metric, Text } from "@tremor/react"
+import { Card, Flex, Metric } from "@tremor/react"
+import { Text } from "@/components/typography"
 
 export interface MetricCardProps {
     title: string

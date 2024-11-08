@@ -1,6 +1,7 @@
 import SoldDrugsTable from "@/app/sold-drugs/table"
 import DateRangePicker from "@/components/date-range-picker"
-import { Card, Flex, Text, Title } from "@tremor/react"
+import { Card, Flex } from "@tremor/react"
+import { Title, Text } from "@/components/typography"
 import { Metadata } from "next"
 import { Suspense } from "react"
 
