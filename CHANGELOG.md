@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.17.13] - 2024-11-08
+### :bug: Bug Fixes
+- [`cd2f676`](https://github.com/turfaa/apotek-dashboard/commit/cd2f6766deb604d71ba208862528a373f2425e04) - use self-defined typography *(commit by [@turfaa](https://github.com/turfaa))*
+- [`8149449`](https://github.com/turfaa/apotek-dashboard/commit/8149449874b0fb62b95bbd961bdaa52d168e2588) - use shadcn date range picker *(commit by [@turfaa](https://github.com/turfaa))*
+- [`8c8aea0`](https://github.com/turfaa/apotek-dashboard/commit/8c8aea010554afe1c408e487965aab71e80a76e9) - use shadcn components for drug selector *(commit by [@turfaa](https://github.com/turfaa))*
+- [`571afcd`](https://github.com/turfaa/apotek-dashboard/commit/571afcd4fed49f5a84df8c44cf7b0e84b8fcd43d) - use shadcn components for tabs *(commit by [@turfaa](https://github.com/turfaa))*
+- [`7e8da05`](https://github.com/turfaa/apotek-dashboard/commit/7e8da05bce3e8b7001a125b397a12beda90c29cf) - use shadcn components for tables *(commit by [@turfaa](https://github.com/turfaa))*
+- [`ce43c36`](https://github.com/turfaa/apotek-dashboard/commit/ce43c36d094d3ec35317c9e069311182b560db11) - use shadcn components in invoice calculator *(commit by [@turfaa](https://github.com/turfaa))*
+- [`5328b4f`](https://github.com/turfaa/apotek-dashboard/commit/5328b4fa0925a99bbfd3d11a6c546cc1231982a9) - remove tremor *(commit by [@turfaa](https://github.com/turfaa))*
+
+### :wrench: Chores
+- [`3337b2a`](https://github.com/turfaa/apotek-dashboard/commit/3337b2a667ba4bd20ff94a35c3a595cfecb945f6) - use DASHBOARD_VERSION instead of BACKEND_VERSION *(commit by [@turfaa](https://github.com/turfaa))*
+- [`605db88`](https://github.com/turfaa/apotek-dashboard/commit/605db88cca48b38bac308c688ad7666f85034286) - npm update *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.17.12] - 2024-10-16
 ### :bug: Bug Fixes
 - [`7c4ccc8`](https://github.com/turfaa/apotek-dashboard/commit/7c4ccc8b75e7c6906868a1aa8923c6b6970a9f6a) - should be dashboard_version *(commit by [@turfaa](https://github.com/turfaa))*
@@ -489,3 +504,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.17.10]: https://github.com/turfaa/apotek-dashboard/compare/v0.17.9...v0.17.10
 [v0.17.11]: https://github.com/turfaa/apotek-dashboard/compare/v0.17.10...v0.17.11
 [v0.17.12]: https://github.com/turfaa/apotek-dashboard/compare/v0.17.11...v0.17.12
+[v0.17.13]: https://github.com/turfaa/apotek-dashboard/compare/v0.17.12...v0.17.13
