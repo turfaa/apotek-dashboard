@@ -14,6 +14,7 @@ import {
 } from "next/navigation"
 import React, { useTransition } from "react"
 import { Card } from "@/components/ui/card"
+import Loading from "@/app/loading"
 
 export interface TabLabel {
     tag: string
@@ -71,7 +72,7 @@ export function TabGroup({
 
             {isPending ? (
                 <Card className="mt-4 p-4">
-                    <p className="text-sm text-muted-foreground">Loading...</p>
+                    <Loading />
                 </Card>
             ) : (
                 React.Children.map(children, (child) => {

@@ -1,10 +1,11 @@
+import Loading from "@/components/loading"
 import {
     Table,
     TableBody,
     TableCell,
     TableRow
 } from "@/components/ui/table"
-import { Text } from "@/components/typography"
+import { ReloadIcon } from "@radix-ui/react-icons"
 
 export default function PriceListTableFallback(): React.ReactElement {
     return (
@@ -19,7 +20,7 @@ export function PriceListTableBodyFallback(): React.ReactElement {
         <TableBody>
             <TableRow>
                 <TableCell>
-                    <Text>Tunggu sebentar...</Text>
+                    <Loading />
                 </TableCell>
             </TableRow>
         </TableBody>

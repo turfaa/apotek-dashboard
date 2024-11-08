@@ -48,8 +48,8 @@ export default async function StockOpnameSummaryTable({
                         <TableCell>{index + 1}</TableCell>
                         <TableCell>{row.drugName}</TableCell>
                         <TableCell className="flex flex-col items-start">
-                            {row.changes.map((change) => (
-                                <span key={change.batchCode}>
+                            {row.changes.map((change, changeIndex) => (
+                                <span key={changeIndex}>
                                     {change.initialQuantity} {row.unit}{" "}
                                     {"->"} {change.realQuantity} {row.unit}{" "}
                                     [{change.batchCode}]{" "}

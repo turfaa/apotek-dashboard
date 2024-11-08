@@ -11,11 +11,12 @@ export const metadata: Metadata = {
     title: "Pembelian Obat Terakhir",
 }
 
-export default function LastDrugProcurements({
-    searchParams,
-}: {
-    searchParams: { [key: string]: string | undefined }
-}): React.ReactElement {
+export default async function LastDrugProcurements(
+    props: {
+        searchParams: Promise<{ [key: string]: string | undefined }>
+    }
+): Promise<React.ReactElement> {
+    const searchParams = await props.searchParams
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <Title className="mb-4">Laporan Pembelian Obat Terakhir</Title>

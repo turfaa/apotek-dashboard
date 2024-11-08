@@ -9,15 +9,15 @@ import { Suspense } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 
 interface PurchaseOrderProps {
-    searchParams: {
+    searchParams: Promise<{
         [key: string]: string | string[] | undefined
-    }
+    }>
 }
 
 export async function generateMetadata(
     props: PurchaseOrderProps,
 ): Promise<Metadata> {
-    const { query, print } = props.searchParams
+    const { query, print } = (await props.searchParams)
 
     let title
     if (print === "true") {

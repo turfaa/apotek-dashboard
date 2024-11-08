@@ -10,12 +10,13 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/solid"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Card } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Loading from "@/components/loading"
 
 export default function ClientSide(): React.ReactElement {
     const { data, error, isLoading } = useSalesStatistics()
     const { isPrintMode } = usePrintMode()
 
-    if (isLoading) return <p>Loading...</p>
+    if (isLoading) return <Loading />
 
     let usedHistory = data?.history || []
     if (usedHistory.length > 24) {

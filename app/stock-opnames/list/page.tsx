@@ -9,16 +9,18 @@ import { Metadata } from "next"
 import { Suspense } from "react"
 import { LayersIcon, LightningBoltIcon, ReaderIcon } from "@radix-ui/react-icons"
 import { TabsContent } from "@/components/ui/tabs"
+import Loading from "@/components/loading"
 
 export const metadata: Metadata = {
     title: "Laporan Stok Opname",
 }
 
-export default async function StockOpnames({
-    searchParams,
-}: {
-    searchParams?: { [key: string]: string | undefined }
-}): Promise<React.ReactElement> {
+export default async function StockOpnames(
+    props: {
+        searchParams?: Promise<{ [key: string]: string | undefined }>
+    }
+): Promise<React.ReactElement> {
+    const searchParams = await props.searchParams
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <div className="flex flex-row justify-start gap-2">
@@ -36,7 +38,7 @@ export default async function StockOpnames({
             >
                 <TabsContent value="summary" className="mt-4">
                     <Card className="p-6">
-                        <Suspense fallback={<Text>Loading...</Text>}>
+                        <Suspense fallback={<Loading />}>
                             <StockOpnameSummaryTable
                                 from={searchParams?.from}
                                 until={searchParams?.until}
@@ -47,7 +49,7 @@ export default async function StockOpnames({
 
                 <TabsContent value="compacted" className="mt-4">
                     <Card className="p-6">
-                        <Suspense fallback={<Text>Loading...</Text>}>
+                        <Suspense fallback={<Loading />}>
                             <CompactedStockOpnameTable
                                 from={searchParams?.from}
                                 until={searchParams?.until}
@@ -58,7 +60,7 @@ export default async function StockOpnames({
 
                 <TabsContent value="details" className="mt-4">
                     <Card className="p-6">
-                        <Suspense fallback={<Text>Loading...</Text>}>
+                        <Suspense fallback={<Loading />}>
                             <StockOpnamesReportTable
                                 from={searchParams?.from}
                                 until={searchParams?.until}

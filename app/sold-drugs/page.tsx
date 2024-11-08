@@ -4,16 +4,18 @@ import { Card } from "@/components/ui/card"
 import { Title, Text } from "@/components/typography"
 import { Metadata } from "next"
 import { Suspense } from "react"
+import Loading from "../loading"
 
 export const metadata: Metadata = {
     title: "Obat Terjual",
 }
 
-export default function SoldDrugs({
-    searchParams,
-}: {
-    searchParams?: { [key: string]: string | undefined }
-}): React.ReactElement {
+export default async function SoldDrugs(
+    props: {
+        searchParams?: Promise<{ [key: string]: string | undefined }>
+    }
+): Promise<React.ReactElement> {
+    const searchParams = await props.searchParams
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <div className="flex flex-row justify-start gap-2">
@@ -22,7 +24,7 @@ export default function SoldDrugs({
             </div>
 
             <Card className="mt-4 p-6">
-                <Suspense fallback={<Text>Loading...</Text>}>
+                <Suspense fallback={<Loading />}>
                     <SoldDrugsTable
                         from={searchParams?.from}
                         until={searchParams?.until}
