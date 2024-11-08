@@ -5,6 +5,8 @@ import { GeistSans } from "geist/font/sans"
 import type { Metadata } from "next"
 import React, { Suspense } from "react"
 
+export const fetchCache = 'default-cache'
+
 export const metadata: Metadata = {
     title: {
         default: "Apotek Aulia Farma",
