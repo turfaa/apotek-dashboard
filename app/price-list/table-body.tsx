@@ -2,7 +2,7 @@
 
 import { Drug } from "@/lib/api/drugv2"
 import Link from 'next/link'
-import { TableBody, TableCell, TableRow } from "@tremor/react"
+import { TableBody, TableCell, TableRow } from "@/components/ui/table"
 import { Text } from "@/components/typography"
 import { useMemo, useState, useEffect } from "react"
 import { useTf } from "@/lib/tf/hook"

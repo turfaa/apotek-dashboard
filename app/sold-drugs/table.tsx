@@ -4,11 +4,11 @@ import {
     Table,
     TableBody,
     TableCell,
-    TableFoot,
+    TableFooter,
     TableHead,
-    TableHeaderCell,
+    TableHeader,
     TableRow,
-} from "@tremor/react"
+} from "@/components/ui/table"
 
 export interface SoldDrugsTableProps {
     from?: string
@@ -27,20 +27,20 @@ export default async function SoldDrugsTable({
 
     return (
         <Table>
-            <TableHead>
+            <TableHeader>
                 <TableRow>
-                    <TableHeaderCell>No</TableHeaderCell>
-                    <TableHeaderCell>Nama Obat</TableHeaderCell>
-                    <TableHeaderCell>Pabrik</TableHeaderCell>
-                    <TableHeaderCell>Terjual</TableHeaderCell>
-                    <TableHeaderCell>Total Harga</TableHeaderCell>
+                    <TableHead>No</TableHead>
+                    <TableHead>Nama Obat</TableHead>
+                    <TableHead>Pabrik</TableHead>
+                    <TableHead>Terjual</TableHead>
+                    <TableHead>Total Harga</TableHead>
                 </TableRow>
-            </TableHead>
+            </TableHeader>
 
             <TableBody>
                 {drugs.map((drug, index) => (
                     <TableRow key={index}>
-                        <TableHeaderCell>{index + 1}</TableHeaderCell>
+                        <TableHead>{index + 1}</TableHead>
                         <TableCell>{drug.drug.name}</TableCell>
                         <TableCell>{drug.drug.manufacturer}</TableCell>
                         <TableCell>
@@ -51,12 +51,12 @@ export default async function SoldDrugsTable({
                 ))}
             </TableBody>
 
-            <TableFoot>
+            <TableFooter>
                 <TableRow>
                     <TableCell colSpan={4}>Total</TableCell>
                     <TableCell>{rupiah.format(totalPrice)}</TableCell>
                 </TableRow>
-            </TableFoot>
+            </TableFooter>
         </Table>
     )
 }

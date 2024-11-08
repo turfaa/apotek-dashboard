@@ -7,9 +7,9 @@ import {
     TableBody,
     TableCell,
     TableHead,
-    TableHeaderCell,
+    TableHeader,
     TableRow,
-} from "@tremor/react"
+} from "@/components/ui/table"
 
 export interface DrugsTableProps {
     date?: string
@@ -24,26 +24,26 @@ export default async function DrugsTable({
 
     return (
         <Table>
-            <TableHead>
+            <TableHeader>
                 <TableRow>
-                    <TableHeaderCell>No</TableHeaderCell>
-                    <TableHeaderCell>Nama Obat</TableHeaderCell>
-                    {/* <TableHeaderCell>Pabrik</TableHeaderCell> */}
+                    <TableHead>No</TableHead>
+                    <TableHead>Nama Obat</TableHead>
+                    {/* <TableHead>Pabrik</TableHead> */}
+                    <TableHead>Stok Sistem</TableHead>
                 </TableRow>
-            </TableHead>
+            </TableHeader>
 
             <TableBody>
                 {drugs.map((drug, index) => (
                     <TableRow key={index}>
-                        <TableHeaderCell>{index + 1}</TableHeaderCell>
+                        <TableHead>{index + 1}</TableHead>
+                        <TableCell>{drug.name}</TableCell>
+                        {/* <TableCell>{drug.manufacturer}</TableCell> */}
                         <TableCell>
-                            <b>{drug.name}</b> (
                             {drug.stocks.length == 0
                                 ? "-"
                                 : drug.stocks.join(" ")}
-                            )
                         </TableCell>
-                        {/* <TableCell>{drug.manufacturer}</TableCell> */}
                     </TableRow>
                 ))}
             </TableBody>

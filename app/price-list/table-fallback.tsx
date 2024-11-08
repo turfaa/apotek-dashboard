@@ -1,4 +1,9 @@
-import { Table, TableBody, TableCell, TableRow } from "@tremor/react"
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableRow
+} from "@/components/ui/table"
 import { Text } from "@/components/typography"
 
 export default function PriceListTableFallback(): React.ReactElement {

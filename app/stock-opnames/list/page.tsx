@@ -45,7 +45,7 @@ export default async function StockOpnames({
                     </Card>
                 </TabsContent>
 
-                <TabsContent value="compacted">
+                <TabsContent value="compacted" className="mt-4">
                     <Card>
                         <Suspense fallback={<Text>Loading...</Text>}>
                             <CompactedStockOpnameTable
@@ -56,7 +56,7 @@ export default async function StockOpnames({
                     </Card>
                 </TabsContent>
 
-                <TabsContent value="details">
+                <TabsContent value="details" className="mt-4">
                     <Card>
                         <Suspense fallback={<Text>Loading...</Text>}>
                             <StockOpnamesReportTable

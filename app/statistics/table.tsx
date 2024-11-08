@@ -4,11 +4,11 @@ import {
     Table,
     TableBody,
     TableCell,
-    TableFoot,
+    TableFooter,
     TableHead,
-    TableHeaderCell,
+    TableHeader,
     TableRow,
-} from "@tremor/react"
+} from "@/components/ui/table"
 
 export interface StatisticsTableProps {
     statistics: SalesStatistics[]
@@ -22,20 +22,20 @@ export default function StatisticsTable({
 
     return (
         <Table>
-            <TableHead>
+            <TableHeader>
                 <TableRow>
-                    <TableHeaderCell>No</TableHeaderCell>
-                    <TableHeaderCell>Tanggal</TableHeaderCell>
-                    <TableHeaderCell>Banyak Penjualan</TableHeaderCell>
-                    <TableHeaderCell>Total Penjualan</TableHeaderCell>
-                    <TableHeaderCell>Rata-Rata Penjualan</TableHeaderCell>
+                    <TableHead>No</TableHead>
+                    <TableHead>Tanggal</TableHead>
+                    <TableHead>Banyak Penjualan</TableHead>
+                    <TableHead>Total Penjualan</TableHead>
+                    <TableHead>Rata-Rata Penjualan</TableHead>
                 </TableRow>
-            </TableHead>
+            </TableHeader>
 
             <TableBody>
                 {statistics.map((statistic, index) => (
                     <TableRow key={index}>
-                        <TableHeaderCell>{index + 1}</TableHeaderCell>
+                        <TableHead>{index + 1}</TableHead>
                         <TableCell>
                             {statistic.pulledAt.toLocaleDateString("id-ID")}
                         </TableCell>
@@ -54,7 +54,7 @@ export default function StatisticsTable({
                 ))}
             </TableBody>
 
-            <TableFoot>
+            <TableFooter>
                 <TableRow>
                     <TableCell colSpan={2}>Total</TableCell>
                     <TableCell>
@@ -69,7 +69,7 @@ export default function StatisticsTable({
                         {rupiah.format(numberOfSales == 0 ? totalSales : totalSales / numberOfSales)}
                     </TableCell>
                 </TableRow>
-            </TableFoot>
+            </TableFooter>
         </Table>
     )
 }

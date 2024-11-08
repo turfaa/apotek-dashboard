@@ -1,16 +1,14 @@
 import { getCompactedStockOpnames } from "@/lib/api/stock-opname"
 import { rupiah } from "@/lib/rupiah"
 import {
-    Flex,
     Table,
     TableBody,
     TableCell,
-    TableFoot,
+    TableFooter,
     TableHead,
-    TableHeaderCell,
+    TableHeader,
     TableRow,
-    Text,
-} from "@tremor/react"
+} from "@/components/ui/table"
 
 export interface CompactedStockOpnameTableProps {
     from?: string
@@ -33,17 +31,17 @@ export default async function CompactedStockOpnameTable({
 
     return (
         <Table>
-            <TableHead>
+            <TableHeader>
                 <TableRow>
-                    <TableHeaderCell>No</TableHeaderCell>
-                    <TableHeaderCell>Tanggal</TableHeaderCell>
-                    <TableHeaderCell>Nama Obat</TableHeaderCell>
-                    <TableHeaderCell>Perubahan Stok</TableHeaderCell>
-                    <TableHeaderCell>Selisih Stok</TableHeaderCell>
-                    <TableHeaderCell>Selisih HPP</TableHeaderCell>
-                    <TableHeaderCell>Selisih Harga Jual</TableHeaderCell>
+                    <TableHead>No</TableHead>
+                    <TableHead>Tanggal</TableHead>
+                    <TableHead>Nama Obat</TableHead>
+                    <TableHead>Perubahan Stok</TableHead>
+                    <TableHead>Selisih Stok</TableHead>
+                    <TableHead>Selisih HPP</TableHead>
+                    <TableHead>Selisih Harga Jual</TableHead>
                 </TableRow>
-            </TableHead>
+            </TableHeader>
 
             <TableBody>
                 {stockOpnames.map((row, index) => (
@@ -53,16 +51,14 @@ export default async function CompactedStockOpnameTable({
                             {row.date.toLocaleDateString("id-ID")}
                         </TableCell>
                         <TableCell>{row.drugName}</TableCell>
-                        <TableCell>
-                            <Flex flexDirection="col" alignItems="start">
-                                {row.changes.map((change) => (
-                                    <Text key={change.batchCode}>
-                                        {change.initialQuantity} {row.unit}{" "}
-                                        {"->"} {change.realQuantity} {row.unit}{" "}
-                                        [{change.batchCode}]{" "}
-                                    </Text>
-                                ))}
-                            </Flex>
+                        <TableCell className="flex flex-col items-start">
+                            {row.changes.map((change) => (
+                                <span key={change.batchCode}>
+                                    {change.initialQuantity} {row.unit}{" "}
+                                    {"->"} {change.realQuantity} {row.unit}{" "}
+                                    [{change.batchCode}]{" "}
+                                </span>
+                            ))}
                         </TableCell>
                         <TableCell>
                             {row.quantityDifference} {row.unit}
@@ -77,7 +73,7 @@ export default async function CompactedStockOpnameTable({
                 ))}
             </TableBody>
 
-            <TableFoot>
+            <TableFooter>
                 <TableRow>
                     <TableCell colSpan={5}>Total</TableCell>
                     <TableCell>{rupiah.format(totalHppDifference)}</TableCell>
@@ -85,7 +81,7 @@ export default async function CompactedStockOpnameTable({
                         {rupiah.format(totalSalePriceDifference)}
                     </TableCell>
                 </TableRow>
-            </TableFoot>
+            </TableFooter>
         </Table>
     )
 }

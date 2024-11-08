@@ -3,9 +3,9 @@ import {
     TableBody,
     TableCell,
     TableHead,
-    TableHeaderCell,
+    TableHeader,
     TableRow,
-} from "@tremor/react"
+} from "@/components/ui/table"
 
 import { getStockOpnames } from "@/lib/api/stock-opname"
 import { rupiah } from "@/lib/rupiah"
@@ -23,21 +23,21 @@ export default async function StockOpnamesReportTable({
 
     return (
         <Table>
-            <TableHead>
+            <TableHeader>
                 <TableRow>
-                    <TableHeaderCell>No</TableHeaderCell>
-                    <TableHeaderCell>Nomor SO</TableHeaderCell>
-                    <TableHeaderCell>Nama Obat</TableHeaderCell>
-                    <TableHeaderCell>Batch</TableHeaderCell>
-                    <TableHeaderCell>Satuan</TableHeaderCell>
-                    <TableHeaderCell>Stok Sistem</TableHeaderCell>
-                    <TableHeaderCell>Stok Fisik</TableHeaderCell>
-                    <TableHeaderCell>Selisih Stok</TableHeaderCell>
-                    <TableHeaderCell>Selisih HPP</TableHeaderCell>
-                    <TableHeaderCell>Selisih Harga Jual</TableHeaderCell>
-                    <TableHeaderCell>Keterangan</TableHeaderCell>
+                    <TableHead>No</TableHead>
+                    <TableHead>Nomor SO</TableHead>
+                    <TableHead>Nama Obat</TableHead>
+                    <TableHead>Batch</TableHead>
+                    <TableHead>Satuan</TableHead>
+                    <TableHead>Stok Sistem</TableHead>
+                    <TableHead>Stok Fisik</TableHead>
+                    <TableHead>Selisih Stok</TableHead>
+                    <TableHead>Selisih HPP</TableHead>
+                    <TableHead>Selisih Harga Jual</TableHead>
+                    <TableHead>Keterangan</TableHead>
                 </TableRow>
-            </TableHead>
+            </TableHeader>
 
             <TableBody>
                 {stockOpnames.map((row, index) => (
