@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.18.1] - 2024-11-08
+### :bug: Bug Fixes
+- [`eafabaa`](https://github.com/turfaa/apotek-dashboard/commit/eafabaa329ccd9b9fb063255ac8bb0944af13718) - Temporarily use npm ci --force before react 19 is fully released *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.18.0] - 2024-11-08
 ### :sparkles: New Features
 - [`34cc835`](https://github.com/turfaa/apotek-dashboard/commit/34cc835ab20d26aaabda7db4d58713c4ff27c7d2) - Upgrade to Next15 / React19 *(commit by [@turfaa](https://github.com/turfaa))*
@@ -511,3 +516,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.17.12]: https://github.com/turfaa/apotek-dashboard/compare/v0.17.11...v0.17.12
 [v0.17.13]: https://github.com/turfaa/apotek-dashboard/compare/v0.17.12...v0.17.13
 [v0.18.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.17.13...v0.18.0
+[v0.18.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.18.0...v0.18.1
