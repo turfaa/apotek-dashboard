@@ -62,8 +62,8 @@ export default auth(async function middleware(
         }
     }
 
-    const firstPathSegment = `/${pathname.split("/")[1]}`
-    if (!isPageAllowed(firstPathSegment, role)) {
+    const path = pathname.endsWith("/") ? pathname.slice(0, -1) : pathname
+    if (!isPageAllowed(path, role)) {
         const url = request.nextUrl.clone()
         url.pathname = "/"
         url.search = ""
