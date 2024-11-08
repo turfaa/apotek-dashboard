@@ -1,9 +1,20 @@
-import { SearchSelect, SearchSelectItem } from "@tremor/react"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 
 export default function CalculatorSelectorPlaceholder(): React.ReactElement {
     return (
-        <SearchSelect placeholder="Pilih supplier..." disabled>
-            <SearchSelectItem value="">Fake Supplier</SearchSelectItem>
-        </SearchSelect>
+        <Select disabled>
+            <SelectTrigger>
+                <SelectValue placeholder="Pilih supplier..." />
+            </SelectTrigger>
+            <SelectContent>
+                <SelectItem value="fake">Fake Supplier</SelectItem>
+            </SelectContent>
+        </Select>
     )
 }

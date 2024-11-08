@@ -7,9 +7,10 @@ import {
 import { useCalculator } from "./calculator-hook"
 import InvoiceCard from "./invoice-card"
 import { rupiah } from "@/lib/rupiah"
-import { PlusIcon } from "@heroicons/react/24/outline"
-import { Bold, Button, Divider, Flex, Metric } from "@tremor/react"
-import { Title, Text } from "@/components/typography"
+import { PlusIcon } from "@radix-ui/react-icons"
+import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
+import { Title, Text, Bold, Metric } from "@/components/typography"
 import { useEffect, useMemo, useState } from "react"
 
 export default function Calculator(): React.ReactElement {
@@ -45,7 +46,7 @@ export default function Calculator(): React.ReactElement {
     }
 
     return (
-        <Flex flexDirection="col" alignItems="start">
+        <div className="flex w-full flex-col items-start">
             {invoices.map((invoice, index) => (
                 <div key={index} className="w-full">
                     <InvoiceCard
@@ -56,33 +57,32 @@ export default function Calculator(): React.ReactElement {
                         removeInvoice={() => removeInvoice(index)}
                     />
 
-                    <Divider />
+                    <Separator className="my-4" />
                 </div>
             ))}
 
             <Button
-                icon={PlusIcon}
-                size="xs"
-                variant="light"
+                variant="link"
                 onClick={addInvoice}
-                className="self-end"
+                className="self-end px-0"
             >
+                <PlusIcon className="mr-2 h-4 w-4" />
                 Tambah Faktur
             </Button>
 
-            <Divider />
+            <Separator className="my-4" />
 
             {hasDiscount && (
-                <Flex flexDirection="row" justifyContent="between">
+                <div className="flex w-full flex-row justify-between">
                     <Bold>Total Diskon</Bold>
                     <Title>{rupiah.format(totalDiscount)}</Title>
-                </Flex>
+                </div>
             )}
 
-            <Flex flexDirection="row" justifyContent="between">
+            <div className="flex w-full flex-row justify-between">
                 <Bold>Total Bayar</Bold>
                 <Metric>{rupiah.format(totalPrice)}</Metric>
-            </Flex>
-        </Flex>
+            </div>
+        </div>
     )
 }

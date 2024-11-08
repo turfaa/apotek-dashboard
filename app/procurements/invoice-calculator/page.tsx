@@ -1,7 +1,7 @@
 import Calculator from "./calculator"
 import CalculatorSelector from "./calculator-selector"
 import { GetInvoiceCalculators } from "@/lib/api/invoice-calculator"
-import { Card } from "@tremor/react"
+import { Card } from "@/components/ui/card"
 import { Title } from "@/components/typography"
 
 export default async function InvoiceCalculator(): Promise<React.ReactElement> {
@@ -13,7 +13,7 @@ export default async function InvoiceCalculator(): Promise<React.ReactElement> {
 
             <CalculatorSelector calculators={calculators} />
 
-            <Card className="mt-4">
+            <Card className="mt-4 p-6">
                 <Calculator />
             </Card>
         </main>

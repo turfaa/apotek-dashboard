@@ -4,20 +4,14 @@ import {
 } from "./calculate"
 import { Invoice } from "./calculator-hook"
 import { rupiah } from "@/lib/rupiah"
-import { TrashIcon } from "@heroicons/react/24/outline"
+import { TrashIcon } from "@radix-ui/react-icons"
 import { maskitoTransform } from "@maskito/core"
 import { maskitoNumberOptionsGenerator, maskitoParseNumber } from "@maskito/kit"
 import { useMaskito } from "@maskito/react"
-import {
-    Bold,
-    Button,
-    Flex,
-    Switch,
-    Text,
-    TextInputProps,
-    Title,
-    TextInput as UnderlyingTextInput,
-} from "@tremor/react"
+import { Switch } from "@/components/ui/switch"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Title, Text, Bold } from "@/components/typography"
 import { useMemo } from "react"
 
 export interface InvoiceCardProps {
@@ -59,25 +53,24 @@ export default function InvoiceCard({
     )
 
     return (
-        <Flex flexDirection="col" alignItems="start" className="gap-2">
-            <Flex>
+        <div className="flex flex-col items-start gap-2">
+            <div className="flex justify-between w-full">
                 <Title>{title}</Title>
                 <Button
-                    icon={TrashIcon}
-                    variant="light"
-                    size="xs"
+                    variant="destructive"
+                    size="sm"
                     onClick={removeInvoice}
-                    color="red"
                 >
+                    <TrashIcon className="h-4 w-4 mr-2" />
                     Hapus
                 </Button>
-            </Flex>
+            </div>
 
             {invoice.components.map((component, index) => (
-                <Flex key={index}>
+                <div key={index} className="flex justify-between w-full items-center">
                     <Text>{component.name}</Text>
 
-                    <TextInput
+                    <RupiahInput
                         className="max-w-xs"
                         value={maskitoTransform(
                             component.amount.toString().replace(".", ","),
@@ -104,42 +97,41 @@ export default function InvoiceCard({
                             })
                         }}
                     />
-                </Flex>
+                </div>
             ))}
 
             {hasDiscount && (
-                <Flex>
+                <div className="flex justify-between w-full items-center">
                     <Text>Pakai Diskon</Text>
 
                     <Switch
                         checked={!invoice.ignoreMultiplier}
-                        onChange={(selected) => {
+                        onCheckedChange={(checked) => {
                             updateInvoice({
                                 ...invoice,
-                                ignoreMultiplier: !selected,
+                                ignoreMultiplier: !checked,
                             })
                         }}
                     />
-                </Flex>
+                </div>
             )}
 
             {hasDiscount && !invoice.ignoreMultiplier && (
-                <Flex>
+                <div className="flex justify-between w-full">
                     <Text>Total Diskon</Text>
                     <Text>{rupiah.format(totalDiscount)}</Text>
-                </Flex>
+                </div>
             )}
 
-            <Flex className="mt-4">
+            <div className="flex justify-between w-full mt-4">
                 <Bold>Total Input di Vmedis</Bold>
                 <Bold>{rupiah.format(totalPrice)}</Bold>
-            </Flex>
-        </Flex>
+            </div>
+        </div>
     )
 }
 
-function TextInput(props: TextInputProps): React.ReactElement {
+function RupiahInput(props: React.ComponentProps<typeof Input>): React.ReactElement {
     const rupiahMask = useMaskito({ options: maskitoOptions })
-
-    return <UnderlyingTextInput {...props} ref={rupiahMask} />
+    return <Input {...props} ref={rupiahMask} />
 }

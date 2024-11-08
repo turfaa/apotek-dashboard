@@ -3,7 +3,21 @@
 import { useCalculator } from "./calculator-hook"
 import CalculatorSelectorPlaceholder from "./calculator-selector-placeholder"
 import { InvoiceCalculator } from "@/lib/api/invoice-calculator"
-import { SearchSelect, SearchSelectItem } from "@tremor/react"
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+} from "@/components/ui/command"
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+import { Button } from "@/components/ui/button"
+import { Check, ChevronsUpDown } from "lucide-react"
+import { cn } from "@/lib/utils"
 import { useEffect, useMemo, useState } from "react"
 
 export interface CalculatorSelectorProps {
@@ -15,6 +29,7 @@ export default function CalculatorSelector({
 }: CalculatorSelectorProps): React.ReactElement {
     const calculator = useCalculator((state) => state.calculator)
     const setCalculator = useCalculator((state) => state.setCalculator)
+    const [open, setOpen] = useState(false)
 
     const calculatorBySupplier: Record<string, InvoiceCalculator> =
         useMemo(() => {
@@ -37,21 +52,44 @@ export default function CalculatorSelector({
     }
 
     return (
-        <SearchSelect
-            value={calculator?.supplier ?? ""}
-            onValueChange={(supplier) =>
-                setCalculator(calculatorBySupplier[supplier])
-            }
-            placeholder="Pilih supplier..."
-        >
-            {calculators.map((calculator) => (
-                <SearchSelectItem
-                    key={calculator.supplier}
-                    value={calculator.supplier}
+        <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+                <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={open}
+                    className="w-full justify-between"
                 >
-                    {calculator.supplier}
-                </SearchSelectItem>
-            ))}
-        </SearchSelect>
+                    {calculator?.supplier ?? "Pilih supplier..."}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
+                <Command className="w-full">
+                    <CommandInput placeholder="Cari supplier..." />
+                    <CommandEmpty>Supplier tidak ditemukan.</CommandEmpty>
+                    <CommandGroup className="max-h-[200px] overflow-y-auto">
+                        {calculators.map((calc) => (
+                            <CommandItem
+                                key={calc.supplier}
+                                value={calc.supplier}
+                                onSelect={(supplier) => {
+                                    setCalculator(calculatorBySupplier[supplier])
+                                    setOpen(false)
+                                }}
+                            >
+                                <Check
+                                    className={cn(
+                                        "mr-2 h-4 w-4",
+                                        calculator?.supplier === calc.supplier ? "opacity-100" : "opacity-0"
+                                    )}
+                                />
+                                {calc.supplier}
+                            </CommandItem>
+                        ))}
+                    </CommandGroup>
+                </Command>
+            </PopoverContent>
+        </Popover>
     )
 }
