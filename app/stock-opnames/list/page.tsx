@@ -3,7 +3,7 @@ import CompactedStockOpnameTable from "./compacted-so-table"
 import StockOpnamesReportTable from "./report-table"
 import DateRangePicker from "@/components/date-range-picker"
 import TabGroup from "@/components/tab-group"
-import { Card, Flex } from "@tremor/react"
+import { Card } from "@/components/ui/card"
 import { Title, Text } from "@/components/typography"
 import { Metadata } from "next"
 import { Suspense } from "react"
@@ -21,10 +21,10 @@ export default async function StockOpnames({
 }): Promise<React.ReactElement> {
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
-            <Flex flexDirection="row" justifyContent="start" className="gap-2">
+            <div className="flex flex-row justify-start gap-2">
                 <Title>Laporan Stok Opname pada</Title>
                 <DateRangePicker className="max-w-min" />
-            </Flex>
+            </div>
 
             <TabGroup
                 className="mt-4"
@@ -35,7 +35,7 @@ export default async function StockOpnames({
                 ]}
             >
                 <TabsContent value="summary" className="mt-4">
-                    <Card>
+                    <Card className="p-6">
                         <Suspense fallback={<Text>Loading...</Text>}>
                             <StockOpnameSummaryTable
                                 from={searchParams?.from}
@@ -46,7 +46,7 @@ export default async function StockOpnames({
                 </TabsContent>
 
                 <TabsContent value="compacted" className="mt-4">
-                    <Card>
+                    <Card className="p-6">
                         <Suspense fallback={<Text>Loading...</Text>}>
                             <CompactedStockOpnameTable
                                 from={searchParams?.from}
@@ -57,7 +57,7 @@ export default async function StockOpnames({
                 </TabsContent>
 
                 <TabsContent value="details" className="mt-4">
-                    <Card>
+                    <Card className="p-6">
                         <Suspense fallback={<Text>Loading...</Text>}>
                             <StockOpnamesReportTable
                                 from={searchParams?.from}

@@ -3,10 +3,9 @@
 import { Drug } from "@/lib/api/drugv2"
 import Link from 'next/link'
 import { TableBody, TableCell, TableRow } from "@/components/ui/table"
-import { Text } from "@/components/typography"
+import { Text, Bold } from "@/components/typography"
 import { useMemo, useState, useEffect } from "react"
 import { useTf } from "@/lib/tf/hook"
-import { Bold, Grid } from "@tremor/react"
 import useSearch from "@/lib/search-hook"
 import { Session } from "next-auth"
 import { useDebounce } from "use-debounce"
@@ -58,14 +57,14 @@ export default function PriceListTableBody({ session, drugs }: PriceListTableBod
         <TableBody>
             {filtered.map((drug) => (
                 <TableRow key={drug.vmedisCode}>
-                    <TableCell className="flex flex-col gap-4">
-                        <Bold>{drug.name}</Bold>
+                    <TableCell className="flex flex-col gap-4 py-4">
+                        <Bold className="text-sm">{drug.name}</Bold>
 
-                        <Grid numItemsSm={1} numItemsMd={3} className="gap-4">
+                        <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-4">
                             {drug.sections.map((section) => (
                                 <PriceListCard key={section.title} title={section.title} rows={section.rows} />
                             ))}
-                        </Grid>
+                        </div>
 
                         {allowedToSeeDrugCost && (
                             <Link href={`/procurements/by-drug?drug-code=${drug.vmedisCode}`} target="_blank">

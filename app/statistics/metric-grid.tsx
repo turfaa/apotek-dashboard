@@ -1,6 +1,5 @@
 import MetricCard from "@/app/statistics/metric-card"
 import MetricChart from "@/app/statistics/metric-chart"
-import { Grid } from "@tremor/react"
 
 export interface MetricGridProps {
     title: string
@@ -24,14 +23,14 @@ export default function MetricGrid(props: MetricGridProps): React.ReactElement {
         if (
             i == props.data.length - 1 ||
             props.data[i].timestamp.getDate() !=
-                props.data[i + 1].timestamp.getDate()
+            props.data[i + 1].timestamp.getDate()
         ) {
             sum += props.data[i].value
         }
     }
 
     return (
-        <Grid numItemsSm={1} numItemsLg={2} className="gap-6 mt-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
             <MetricCard
                 title={props.title}
                 value={sum}
@@ -44,6 +43,6 @@ export default function MetricGrid(props: MetricGridProps): React.ReactElement {
                 data={props.data}
                 valueFormatter={props.valueFormatter}
             />
-        </Grid>
+        </div>
     )
 }

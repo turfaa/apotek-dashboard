@@ -1,4 +1,4 @@
-import { Card, Col, Grid } from "@tremor/react"
+import { Card } from "@/components/ui/card"
 import { Title, Text } from "@/components/typography"
 import { Suspense } from "react"
 import { SearchButtonFallback } from "@/components/search-button"
@@ -17,14 +17,14 @@ export default function PriceList(): React.ReactElement {
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <Title className="mb-4">Daftar Harga Obat</Title>
 
-            <Grid numItemsSm={1} numItemsMd={2} className="gap-4">
-                <Col>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
                     <Suspense fallback={<SearchButtonFallback />}>
                         <SearchButton />
                     </Suspense>
-                </Col>
+                </div>
 
-                <Col className="justify-self-end">
+                <div className="justify-self-end">
                     <Text>
                         Hubungi{" "}
                         <Link href="https://wa.me/6281223556554" target="_blank">
@@ -32,10 +32,10 @@ export default function PriceList(): React.ReactElement {
                         </Link>{" "}
                         untuk mendapatkan harga partai/medis.
                     </Text>
-                </Col>
-            </Grid>
+                </div>
+            </div>
 
-            <Card className="mt-4">
+            <Card className="mt-4 p-6">
                 <Suspense fallback={<PriceListTableFallback />}>
                     <PriceListTable />
                 </Suspense>

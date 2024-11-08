@@ -1,5 +1,5 @@
 import { DatePicker } from "./date-picker"
-import type { DatePickerProps } from "@tremor/react"
+import type { CalendarProps } from "@/components/ui/calendar"
 
 export default DatePicker
-export type { DatePickerProps }
+export type { CalendarProps as DatePickerProps }

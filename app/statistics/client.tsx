@@ -7,7 +7,8 @@ import { SalesStatistics } from "@/lib/api/sale-statistics"
 import { usePrintMode } from "@/lib/print-mode"
 import { rupiah } from "@/lib/rupiah"
 import { ExclamationTriangleIcon } from "@heroicons/react/24/solid"
-import { Callout, Card } from "@tremor/react"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Card } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function ClientSide(): React.ReactElement {
@@ -42,12 +43,11 @@ export default function ClientSide(): React.ReactElement {
     return (
         <>
             {error && (
-                <Callout
-                    className="h-12 mt-4"
-                    title={error.message}
-                    icon={ExclamationTriangleIcon}
-                    color="rose"
-                />
+                <Alert variant="destructive" className="mt-4">
+                    <ExclamationTriangleIcon className="h-4 w-4" />
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>{error.message}</AlertDescription>
+                </Alert>
             )}
 
             <Tabs defaultValue="summary" className="mt-4">
@@ -71,7 +71,7 @@ export default function ClientSide(): React.ReactElement {
                 </TabsContent>
 
                 <TabsContent value="daily">
-                    <Card className="mt-6">
+                    <Card className="mt-6 p-6">
                         <StatisticsTable
                             statistics={data?.dailyHistory || []}
                         />

@@ -1,4 +1,4 @@
-import { Card } from "@tremor/react"
+import { Card } from "@/components/ui/card"
 import { Chart, registerables } from "chart.js"
 import "chartjs-adapter-moment"
 import ChartDataLabels from "chartjs-plugin-datalabels"
@@ -24,19 +24,19 @@ export default function MetricChart(
 
     const data = props.data
         .map((datum, index, self) =>
-            // Convert the datum to a chart.js data point.
-            // The y value is the difference between the current datum and the previous datum if they're in the same date.
-            ({
-                x: datum.timestamp,
-                y: Math.max(
-                    0,
-                    index == 0 ||
-                        datum.timestamp.toDateString() !=
-                            self[index - 1].timestamp.toDateString()
-                        ? datum.value
-                        : datum.value - self[index - 1].value,
-                ),
-            }),
+        // Convert the datum to a chart.js data point.
+        // The y value is the difference between the current datum and the previous datum if they're in the same date.
+        ({
+            x: datum.timestamp,
+            y: Math.max(
+                0,
+                index == 0 ||
+                    datum.timestamp.toDateString() !=
+                    self[index - 1].timestamp.toDateString()
+                    ? datum.value
+                    : datum.value - self[index - 1].value,
+            ),
+        }),
         )
         .filter(
             (datum, index, self) =>
@@ -52,7 +52,7 @@ export default function MetricChart(
                 : "day"
 
     return (
-        <Card>
+        <Card className="p-6">
             <Line
                 data={{ datasets: [{ data }] }}
                 options={{

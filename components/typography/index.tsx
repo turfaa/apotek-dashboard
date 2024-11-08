@@ -23,7 +23,7 @@ export function Subtitle({ children, className }: TypographyProps) {
     return (
         <p
             className={cn(
-                "text-base text-muted-foreground",
+                "text-base text-foreground",
                 className
             )}
         >

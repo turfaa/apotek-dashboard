@@ -3,7 +3,6 @@ import { DrugsToStockOpnameMode } from "@/lib/api/drugs-to-stock-opname"
 import DatePicker from "@/components/date-picker"
 import { TabsContent } from "@/components/ui/tabs"
 import { Card } from "@/components/ui/card"
-import { Flex } from "@tremor/react"
 import { Title, Text } from "@/components/typography"
 import { Metadata } from "next"
 import { Suspense } from "react"
@@ -21,10 +20,10 @@ export default function DrugsToStockOpname({
 }): React.ReactElement {
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
-            <Flex flexDirection="row" justifyContent="start" className="gap-2">
+            <div className="flex flex-row justify-start gap-2">
                 <Title>Obat yang harus stok opname pada</Title>
                 <DatePicker />
-            </Flex>
+            </div>
 
             <TabGroup
                 className="mt-4"

@@ -1,6 +1,6 @@
 import SoldDrugsTable from "@/app/sold-drugs/table"
 import DateRangePicker from "@/components/date-range-picker"
-import { Card, Flex } from "@tremor/react"
+import { Card } from "@/components/ui/card"
 import { Title, Text } from "@/components/typography"
 import { Metadata } from "next"
 import { Suspense } from "react"
@@ -16,12 +16,12 @@ export default function SoldDrugs({
 }): React.ReactElement {
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
-            <Flex flexDirection="row" justifyContent="start" className="gap-2">
+            <div className="flex flex-row justify-start gap-2">
                 <Title>Obat Terjual pada</Title>
                 <DateRangePicker className="max-w-min" />
-            </Flex>
+            </div>
 
-            <Card className="mt-4">
+            <Card className="mt-4 p-6">
                 <Suspense fallback={<Text>Loading...</Text>}>
                     <SoldDrugsTable
                         from={searchParams?.from}

@@ -1,4 +1,3 @@
-import { Flex } from "@tremor/react"
 import { Text, Subtitle } from "@/components/typography"
 
 export interface PriceListCardProps {
@@ -8,11 +7,12 @@ export interface PriceListCardProps {
 
 export default function PriceListCard({ title, rows }: PriceListCardProps): React.ReactElement {
     return (
-        <Flex flexDirection="col" alignItems="start" className="mr-4">
-            <Subtitle>{title}</Subtitle>
+        <div className="flex flex-col items-start mr-4 space-y-1.5">
+            <Subtitle className="text-sm text-gray-800">{title}</Subtitle>
             {rows.map((text) => (
-                <Text key={text}>{text}</Text>
-            ))}
-        </Flex>
+                <Text key={text} className="leading-none">{text}</Text>
+            ))
+            }
+        </div >
     )
 }

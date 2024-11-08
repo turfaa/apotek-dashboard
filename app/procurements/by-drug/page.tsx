@@ -1,5 +1,5 @@
 import React, { Suspense } from "react"
-import { Card } from "@tremor/react"
+import { Card } from "@/components/ui/card"
 import { Title } from "@/components/typography"
 import { Metadata } from "next"
 import DrugSelector, { DrugSelectorFallback } from "@/components/drug-selector"
@@ -24,7 +24,7 @@ export default function LastDrugProcurements({
                 <DrugSelector />
             </Suspense>
 
-            <Card className="mt-4">
+            <Card className="mt-4 p-6">
                 <Suspense fallback={<LastDrugProcurementsTableFallback />}>
                     <LastDrugProcurementsTable drugCode={searchParams?.["drug-code"]} />
                 </Suspense>
