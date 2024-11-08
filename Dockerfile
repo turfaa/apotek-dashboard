@@ -35,7 +35,7 @@ RUN npm run build
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
@@ -54,8 +54,8 @@ COPY --from=builder /app/.next/static ./.next/static
 
 EXPOSE 3000
 
-ENV PORT 3000
-ENV HOSTNAME 0.0.0.0
-ENV TZ Asia/Jakarta
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+ENV TZ=Asia/Jakarta
 
 CMD ["node", "server.js"]
