@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.18.4] - 2024-11-09
+### :bug: Bug Fixes
+- [`985e02d`](https://github.com/turfaa/apotek-dashboard/commit/985e02dad7cf149967a8b886ecd09106e753ff51) - remove headlessui and heroicons *(commit by [@turfaa](https://github.com/turfaa))*
+- [`70de6ad`](https://github.com/turfaa/apotek-dashboard/commit/70de6adad19c15b1c90ef493623a0588f2a42712) - fix page permission checker *(commit by [@turfaa](https://github.com/turfaa))*
+- [`379eb71`](https://github.com/turfaa/apotek-dashboard/commit/379eb71f419f911b8166e65265c26e57c86314a3) - declutter navbar *(commit by [@turfaa](https://github.com/turfaa))*
+- [`4deb23c`](https://github.com/turfaa/apotek-dashboard/commit/4deb23cf7d29c1abf2bd48a6066eac469605b07e) - Do not show tab list when printing *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.18.3] - 2024-11-08
 ### :bug: Bug Fixes
 - [`725b3f4`](https://github.com/turfaa/apotek-dashboard/commit/725b3f4cb69a1fd589c183bf2637c6acc9227df1) - default to do not cache fetch() *(commit by [@turfaa](https://github.com/turfaa))*
@@ -532,3 +540,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.18.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.18.0...v0.18.1
 [v0.18.2]: https://github.com/turfaa/apotek-dashboard/compare/v0.18.1...v0.18.2
 [v0.18.3]: https://github.com/turfaa/apotek-dashboard/compare/v0.18.2...v0.18.3
+[v0.18.4]: https://github.com/turfaa/apotek-dashboard/compare/v0.18.3...v0.18.4
