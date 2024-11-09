@@ -83,7 +83,7 @@ export function useNavigation(role?: Role | null): NavigationHook {
 
     return {
         homepage: homepage(navigations),
-        navigations: navigations,
+        navigations: flattenSingleNavigations(navigations),
     }
 }
 
@@ -100,13 +100,15 @@ export function allowedNavigations(role?: Role | null): NavigationItem[] {
         role = Role.GUEST
     }
 
-    return availableNavigations
+    const navigations = availableNavigations
         .filter((navigation) => !navigation.allowedRoles || navigation.allowedRoles.includes(role))
         .map((navigation) => ({
             ...navigation,
             target: typeof navigation.target === "string" ? navigation.target : navigation.target.filter((page) => !page.allowedRoles || page.allowedRoles.includes(role)),
         }))
         .filter((navigation) => navigation.target.length > 0)
+
+    return flattenSingleNavigations(navigations)
 }
 
 export function isPageAllowed(href: string, role?: Role | null): boolean {
@@ -124,4 +126,23 @@ export function isPageAllowed(href: string, role?: Role | null): boolean {
         matchedNavigations.some((navigation) => !navigation.allowedRoles || navigation.allowedRoles.includes(role ?? Role.GUEST)) ||
         matchedPages.some((page) => !page.allowedRoles || page.allowedRoles.includes(role ?? Role.GUEST))
     )
+}
+
+function flattenSingleNavigations(navigations: NavigationItem[]): NavigationItem[] {
+    return navigations.map((navigation) => {
+        if (typeof navigation.target === "string") {
+            return navigation
+        }
+
+        if (navigation.target.length > 1) {
+            return navigation
+        }
+
+        const page = navigation.target[0]
+        return {
+            name: page.name,
+            target: page.href,
+            allowedRoles: page.allowedRoles,
+        }
+    })
 }
