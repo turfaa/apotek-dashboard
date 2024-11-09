@@ -2,7 +2,6 @@
 
 import {
     Tabs,
-    TabsContent,
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
@@ -15,6 +14,7 @@ import {
 import React, { useTransition } from "react"
 import { Card } from "@/components/ui/card"
 import Loading from "@/app/loading"
+import { usePrintMode } from "@/lib/print-mode"
 
 export interface TabLabel {
     tag: string
@@ -37,6 +37,7 @@ export function TabGroup({
     const { push } = useRouter()
     const pathname: string = usePathname()
     const searchParams: ReadonlyURLSearchParams = useSearchParams()
+    const { isPrintMode } = usePrintMode()
 
     const currentTab = searchParams.get("tab")?.toLowerCase()
     const defaultValue = currentTab && tabLabels.map(t => t.tag.toLowerCase()).includes(currentTab)
@@ -56,19 +57,21 @@ export function TabGroup({
                 })
             }}
         >
-            <TabsList>
-                {tabLabels.map((label) => (
-                    <TabsTrigger
-                        key={label.tag}
-                        value={label.tag}
-                    >
-                        <span className="flex gap-2">
-                            {label.icon}
-                            {label.label}
-                        </span>
-                    </TabsTrigger>
-                ))}
-            </TabsList>
+            {!isPrintMode && (
+                <TabsList>
+                    {tabLabels.map((label) => (
+                        <TabsTrigger
+                            key={label.tag}
+                            value={label.tag}
+                        >
+                            <span className="flex gap-2">
+                                {label.icon}
+                                {label.label}
+                            </span>
+                        </TabsTrigger>
+                    ))}
+                </TabsList>
+            )}
 
             {isPending ? (
                 <Card className="mt-4 p-4">
