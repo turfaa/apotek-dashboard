@@ -17,7 +17,6 @@ export default async function LastDrugProcurementsTable({
         return <Text>Silakan pilih obat terlebih dahulu</Text>
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 1000))
     const session = await auth()
     const data = await getLastDrugProcurements(
         drugCode,

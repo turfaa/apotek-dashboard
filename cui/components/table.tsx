@@ -34,8 +34,8 @@ export default function Table({ table }: TableProps): React.ReactElement {
                 <TableBody>
                     {table.rows.map((row) => (
                         <TableRow key={row.id}>
-                            {row.columns.map((column) => (
-                                <TableCell key={column}>{column}</TableCell>
+                            {row.columns.map((column, index) => (
+                                <TableCell key={index}>{column}</TableCell>
                             ))}
                         </TableRow>
                     ))}

@@ -34,6 +34,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { DateRange } from "react-day-picker"
+import Loading from "@/components/loading"
 
 interface DateRangePickerOption {
     value: string
@@ -174,6 +175,7 @@ export function DateRangePicker(
                 </Popover>
 
                 <Select
+                    disabled={isPending}
                     onValueChange={(value) => {
                         const option = options.find(opt => opt.value === value)
                         if (!option) return
@@ -210,6 +212,8 @@ export function DateRangePicker(
                         ))}
                     </SelectContent>
                 </Select>
+
+                {isPending && <Loading />}
             </div>
         </div>
     )

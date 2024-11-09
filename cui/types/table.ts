@@ -5,5 +5,5 @@ export interface Table {
 
 export interface Row {
     id: string
-    columns: string[]
+    columns: React.ReactNode[]
 }
