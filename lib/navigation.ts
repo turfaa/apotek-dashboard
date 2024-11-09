@@ -2,7 +2,13 @@ import { Role } from "@/lib/api/auth"
 
 export interface NavigationHook {
     homepage: string
-    pages: Page[]
+    navigations: NavigationItem[]
+}
+
+export interface NavigationItem {
+    name: string
+    target: string | Page[]
+    allowedRoles?: Role[]
 }
 
 export interface Page {
@@ -11,81 +17,111 @@ export interface Page {
     allowedRoles?: Role[]
 }
 
-const availablePages: Page[] = [
+const availableNavigations: NavigationItem[] = [
     {
         name: "Ringkasan",
-        href: "/statistics",
+        target: "/statistics",
         allowedRoles: [Role.ADMIN],
     },
     {
-        name: "Daftar Harga",
-        href: "/price-list",
+        name: "Penjualan",
+        target: [
+            {
+                name: "Daftar Harga",
+                href: "/price-list",
+                allowedRoles: [Role.ADMIN, Role.STAFF, Role.RESELLER, Role.GUEST],
+            },
+            {
+                name: "Obat Terjual",
+                href: "/sold-drugs",
+                allowedRoles: [Role.ADMIN, Role.STAFF],
+            },
+        ],
         allowedRoles: [Role.ADMIN, Role.STAFF, Role.RESELLER, Role.GUEST],
     },
     {
-        name: "Pesanan",
-        href: "/procurements/purchase-order",
+        name: "Pembelian",
+        target: [
+            {
+                name: "Buat Pesanan",
+                href: "/procurements/purchase-order",
+                allowedRoles: [Role.ADMIN, Role.STAFF],
+            },
+            {
+                name: "Harga Obat Terakhir",
+                href: "/procurements/by-drug",
+                allowedRoles: [Role.ADMIN],
+            },
+            {
+                name: "Kalkulator Faktur",
+                href: "/procurements/invoice-calculator",
+                allowedRoles: [Role.ADMIN, Role.STAFF],
+            },
+        ],
         allowedRoles: [Role.ADMIN, Role.STAFF],
     },
     {
-        name: "Harga Obat Terakhir",
-        href: "/procurements/by-drug",
-        allowedRoles: [Role.ADMIN],
-    },
-    {
-        name: "Obat Terjual",
-        href: "/sold-drugs",
-        allowedRoles: [Role.ADMIN, Role.STAFF],
-    },
-    {
-        name: "Obat Harus SO",
-        href: "/stock-opnames/drugs-to-stock-opname",
-        allowedRoles: [Role.ADMIN, Role.STAFF],
-    },
-    {
-        name: "Laporan SO",
-        href: "/stock-opnames",
-        allowedRoles: [Role.ADMIN],
-    },
-    {
-        name: "Kalkulator Faktur",
-        href: "/procurements/invoice-calculator",
+        name: "Stock Opname",
+        target: [
+            {
+                name: "Obat Harus SO",
+                href: "/stock-opnames/drugs-to-stock-opname",
+                allowedRoles: [Role.ADMIN, Role.STAFF],
+            },
+            {
+                name: "Laporan SO",
+                href: "/stock-opnames",
+                allowedRoles: [Role.ADMIN, Role.STAFF],
+            },
+        ],
         allowedRoles: [Role.ADMIN, Role.STAFF],
     },
 ]
 
 export function useNavigation(role?: Role | null): NavigationHook {
-    const pages = allowedPages(role)
+    const navigations = allowedNavigations(role)
 
     return {
-        homepage: homepage(pages),
-        pages: pages,
+        homepage: homepage(navigations),
+        navigations: navigations,
     }
 }
 
-export function homepage(pages: Page[]): string {
-    return pages[0].href.substring(1)
+export function homepage(items: NavigationItem[]): string {
+    if (typeof items[0].target === "string") {
+        return items[0].target.substring(1)
+    }
+
+    return items[0].target[0].href.substring(1)
 }
 
-export function allowedPages(role?: Role | null): Page[] {
-    return availablePages.filter((page) => {
-        if (!page.allowedRoles) {
-            return true
-        }
+export function allowedNavigations(role?: Role | null): NavigationItem[] {
+    if (!role) {
+        role = Role.GUEST
+    }
 
-        if (!role) {
-            role = Role.GUEST
-        }
-
-        return page.allowedRoles.includes(role)
-    })
+    return availableNavigations
+        .filter((navigation) => !navigation.allowedRoles || navigation.allowedRoles.includes(role))
+        .map((navigation) => ({
+            ...navigation,
+            target: typeof navigation.target === "string" ? navigation.target : navigation.target.filter((page) => !page.allowedRoles || page.allowedRoles.includes(role)),
+        }))
+        .filter((navigation) => navigation.target.length > 0)
 }
 
 export function isPageAllowed(href: string, role?: Role | null): boolean {
-    const page = availablePages.find((page) => page.href === href)
-    if (!page || !page.allowedRoles) {
+    const matchedNavigations = availableNavigations.filter((navigation) => navigation.target === href)
+
+    const matchedPages = availableNavigations
+        .flatMap((navigation) => Array.isArray(navigation.target) ? navigation.target : [])
+        .filter((page) => page.href === href)
+
+    if (matchedNavigations.length === 0 && matchedPages.length === 0) {
         return true
     }
 
-    return page.allowedRoles.includes(role ?? Role.GUEST)
+    return (
+        matchedNavigations.some((navigation) => !navigation.allowedRoles || navigation.allowedRoles.includes(role ?? Role.GUEST)) ||
+        matchedPages.some((page) => !page.allowedRoles || page.allowedRoles.includes(role ?? Role.GUEST))
+    )
 }

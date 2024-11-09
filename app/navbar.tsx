@@ -6,7 +6,7 @@ import { Role } from "@/lib/api/auth"
 import { useNavigation } from "@/lib/navigation"
 import { usePrintMode } from "@/lib/print-mode"
 import PrintButton from "@/components/print-button"
-import { HamburgerMenuIcon, Cross1Icon } from "@radix-ui/react-icons"
+import { HamburgerMenuIcon, Cross1Icon, ChevronDownIcon } from "@radix-ui/react-icons"
 import { Session } from "next-auth"
 import { signIn, signOut } from "next-auth/react"
 import Image from "next/image"
@@ -28,6 +28,8 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import Link from "next/link"
 
 const rolesAllowedToPrint = [Role.ADMIN, Role.STAFF]
 
@@ -40,7 +42,7 @@ export default function Navbar({
 }: {
     session?: Session | null
 }): React.ReactElement {
-    const { homepage, pages } = useNavigation(session?.user?.role)
+    const { homepage, navigations } = useNavigation(session?.user?.role)
 
     let pathname = usePathname()
     if (pathname === "/") pathname = `/${homepage}`
@@ -78,25 +80,52 @@ export default function Navbar({
                             />
                         </div>
                         <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
-                            {pages.map((item) => (
-                                <a
-                                    key={item.name}
-                                    href={item.href}
-                                    className={classNames(
-                                        pathname === item.href
-                                            ? "border-slate-500 text-gray-900"
-                                            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
-                                        "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium",
-                                    )}
-                                    aria-current={
-                                        pathname === item.href
-                                            ? "page"
-                                            : undefined
-                                    }
-                                >
-                                    {item.name}
-                                </a>
-                            ))}
+                            {navigations.map((item) => {
+                                if (typeof item.target === "string" || (Array.isArray(item.target) && item.target.length === 1)) {
+                                    const name = typeof item.target === "string" ? item.name : item.target[0].name
+                                    const target = typeof item.target === "string" ? item.target : item.target[0].href
+
+                                    return (
+                                        <Link
+                                            key={name}
+                                            href={target}
+                                            className={classNames(
+                                                pathname === target
+                                                    ? "border-slate-500 text-gray-900"
+                                                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
+                                                "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium",
+                                            )}
+                                            aria-current={
+                                                pathname === target
+                                                    ? "page"
+                                                    : undefined
+                                            }
+                                        >
+                                            {name}
+                                        </Link>
+                                    )
+                                }
+
+                                return (
+                                    <DropdownMenu key={item.name}>
+                                        <DropdownMenuTrigger className={classNames(
+                                            item.target.some(page => page.href === pathname)
+                                                ? "border-slate-500 text-gray-900"
+                                                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
+                                            "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium",
+                                        )}>
+                                            {item.name}
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent>
+                                            {item.target.map(page => (
+                                                <DropdownMenuItem key={page.href} asChild>
+                                                    <a href={page.href}>{page.name}</a>
+                                                </DropdownMenuItem>
+                                            ))}
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                )
+                            })}
                         </div>
                     </div>
                     <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
@@ -150,21 +179,51 @@ export default function Navbar({
                                 <SheetTitle>Menu</SheetTitle>
                                 <SheetHeader>
                                     <div className="space-y-1 pt-2 pb-3">
-                                        {pages.map((item) => (
-                                            <a
-                                                key={item.name}
-                                                href={item.href}
-                                                className={classNames(
-                                                    pathname === item.href
-                                                        ? "bg-slate-50 border-slate-500 text-slate-700"
-                                                        : "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800",
-                                                    "block pl-3 pr-4 py-2 border-l-4 text-base font-medium",
-                                                )}
-                                                onClick={() => setIsSheetOpen(false)}
-                                            >
-                                                {item.name}
-                                            </a>
-                                        ))}
+                                        {navigations.map((item) => {
+                                            if (typeof item.target === "string") {
+                                                return (
+                                                    <Link
+                                                        key={item.name}
+                                                        href={item.target}
+                                                        className={classNames(
+                                                            pathname === item.target
+                                                                ? "bg-slate-50 border-slate-500 text-slate-700"
+                                                                : "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800",
+                                                            "block pl-3 pr-4 py-2 border-l-4 text-base font-medium",
+                                                        )}
+                                                        onClick={() => setIsSheetOpen(false)}
+                                                    >
+                                                        {item.name}
+                                                    </Link>
+                                                )
+                                            }
+
+                                            return (
+                                                <Collapsible key={item.name}>
+                                                    <CollapsibleTrigger className="flex w-full items-center pl-3 pr-4 py-2 text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-800 border-l-4 border-transparent">
+                                                        <span className="flex-grow">{item.name}</span>
+                                                        <ChevronDownIcon className="h-4 w-4" />
+                                                    </CollapsibleTrigger>
+                                                    <CollapsibleContent>
+                                                        {item.target.map((page) => (
+                                                            <Link
+                                                                key={page.name}
+                                                                href={page.href}
+                                                                className={classNames(
+                                                                    pathname === page.href
+                                                                        ? "bg-slate-50 border-slate-500 text-slate-700"
+                                                                        : "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800",
+                                                                    "block pl-8 pr-4 py-2 border-l-4 text-base font-medium",
+                                                                )}
+                                                                onClick={() => setIsSheetOpen(false)}
+                                                            >
+                                                                {page.name}
+                                                            </Link>
+                                                        ))}
+                                                    </CollapsibleContent>
+                                                </Collapsible>
+                                            )
+                                        })}
                                     </div>
                                     <div className="border-t border-gray-200 pt-4 pb-3">
                                         {session?.user ? (
