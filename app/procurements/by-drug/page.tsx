@@ -6,19 +6,15 @@ import DrugSelector, { DrugSelectorFallback } from "@/components/drug-selector"
 import LastDrugProcurementsTable, {
     LastDrugProcurementsTableFallback,
 } from "./table"
+import { SearchParams } from "@/types/search-params"
 
 export const metadata: Metadata = {
     title: "Pembelian Obat Terakhir",
 }
 
-export default async function LastDrugProcurements(
-    props: {
-        searchParams: Promise<{ [key: string]: string | undefined }>
-    }
-): Promise<React.ReactElement> {
-    const searchParams = await props.searchParams
+export default async function LastDrugProcurements(props: { searchParams: SearchParams }): Promise<React.ReactElement> {
     return (
-        <main className="p-4 md:p-10 mx-auto max-w-7xl">
+        <main className="p-4 md:p-10 mx-auto max-w-7xl" >
             <Title className="mb-4">Laporan Pembelian Obat Terakhir</Title>
 
             <Suspense fallback={<DrugSelectorFallback />}>
@@ -27,7 +23,7 @@ export default async function LastDrugProcurements(
 
             <Card className="mt-4 p-6">
                 <Suspense fallback={<LastDrugProcurementsTableFallback />}>
-                    <LastDrugProcurementsTable drugCode={searchParams?.["drug-code"]} />
+                    <LastDrugProcurementsTable searchParams={props.searchParams} />
                 </Suspense>
             </Card>
         </main>

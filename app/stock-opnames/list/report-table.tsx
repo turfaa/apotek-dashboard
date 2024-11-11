@@ -9,17 +9,12 @@ import {
 
 import { getStockOpnames } from "@/lib/api/stock-opname"
 import { rupiah } from "@/lib/rupiah"
+import { SearchParams } from "@/types/search-params"
+import { use } from "react"
 
-export interface StockOpnamesTableProps {
-    from?: string
-    until?: string
-}
-
-export default async function StockOpnamesReportTable({
-    from,
-    until,
-}: StockOpnamesTableProps): Promise<React.ReactElement> {
-    const { stockOpnames } = await getStockOpnames(from, until)
+export default function StockOpnamesReportTable({ searchParams }: { searchParams: SearchParams }): React.ReactElement {
+    const { from, until } = use(searchParams)
+    const { stockOpnames } = use(getStockOpnames(from, until))
 
     return (
         <Table>

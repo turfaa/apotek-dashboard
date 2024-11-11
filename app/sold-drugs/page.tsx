@@ -5,6 +5,7 @@ import { Title, Text } from "@/components/typography"
 import { Metadata } from "next"
 import { Suspense } from "react"
 import Loading from "../loading"
+import { SearchParams } from "@/types/search-params"
 
 export const metadata: Metadata = {
     title: "Obat Terjual",
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 
 export default async function SoldDrugs(
     props: {
-        searchParams?: Promise<{ [key: string]: string | undefined }>
+        searchParams: SearchParams
     }
 ): Promise<React.ReactElement> {
     const searchParams = await props.searchParams
@@ -25,10 +26,7 @@ export default async function SoldDrugs(
 
             <Card className="mt-4 p-6">
                 <Suspense fallback={<Loading />}>
-                    <SoldDrugsTable
-                        from={searchParams?.from}
-                        until={searchParams?.until}
-                    />
+                    <SoldDrugsTable searchParams={props.searchParams} />
                 </Suspense>
             </Card>
         </main>

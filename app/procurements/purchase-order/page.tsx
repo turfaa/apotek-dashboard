@@ -7,17 +7,16 @@ import moment from "moment/moment"
 import { Metadata } from "next"
 import { Suspense } from "react"
 import { Card, CardContent } from "@/components/ui/card"
+import { SearchParams } from "@/types/search-params"
 
 interface PurchaseOrderProps {
-    searchParams: Promise<{
-        [key: string]: string | string[] | undefined
-    }>
+    searchParams: SearchParams
 }
 
 export async function generateMetadata(
     props: PurchaseOrderProps,
 ): Promise<Metadata> {
-    const { query, print } = (await props.searchParams)
+    const { query, print } = await props.searchParams
 
     let title
     if (print === "true") {

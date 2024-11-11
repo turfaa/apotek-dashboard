@@ -1,28 +1,39 @@
-import React from "react"
+import React, { use } from "react"
 import { Text } from "@/components/typography"
 import { getLastDrugProcurements } from "@/lib/api/last-drug-procurements"
 import { Table } from "@/cui/components"
 import { auth } from "@/lib/auth"
+import { SearchParams } from "@/types/search-params"
 
-const LAST_DRUG_PROCUREMENTS_LIMIT = 5
+const DEFAULT_DRUG_PROCUREMENTS_LIMIT = 5
 
 export interface LastDrugProcurementsTableProps {
-    drugCode?: string
+    searchParams: SearchParams
 }
 
-export default async function LastDrugProcurementsTable({
-    drugCode,
-}: LastDrugProcurementsTableProps): Promise<React.ReactElement> {
+export default function LastDrugProcurementsTable({
+    searchParams,
+}: LastDrugProcurementsTableProps): React.ReactElement {
+    const { "drug-code": drugCode, limit } = use(searchParams)
+
     if (!drugCode) {
         return <Text>Silakan pilih obat terlebih dahulu</Text>
     }
 
-    const session = await auth()
-    const data = await getLastDrugProcurements(
+    let limitNumber = DEFAULT_DRUG_PROCUREMENTS_LIMIT
+    if (limit) {
+        limitNumber = parseInt(limit)
+        if (isNaN(limitNumber)) {
+            limitNumber = DEFAULT_DRUG_PROCUREMENTS_LIMIT
+        }
+    }
+
+    const session = use(auth())
+    const data = use(getLastDrugProcurements(
         drugCode,
-        LAST_DRUG_PROCUREMENTS_LIMIT,
+        limitNumber,
         session,
-    )
+    ))
 
     return <Table table={data} />
 }

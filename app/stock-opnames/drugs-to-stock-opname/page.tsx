@@ -9,17 +9,13 @@ import { Suspense } from "react"
 import TabGroup from "@/components/tab-group"
 import { ReaderIcon, BackpackIcon } from "@radix-ui/react-icons"
 import Loading from "@/components/loading"
+import { SearchParams } from "@/types/search-params"
 
 export const metadata: Metadata = {
     title: "Obat Harus Stok Opname",
 }
 
-export default async function DrugsToStockOpname(
-    props: {
-        searchParams?: Promise<{ [key: string]: string | undefined }>
-    }
-): Promise<React.ReactElement> {
-    const searchParams = await props.searchParams
+export default function DrugsToStockOpname({ searchParams }: { searchParams: SearchParams }): React.ReactElement {
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <div className="flex flex-row justify-start gap-2">
@@ -39,7 +35,7 @@ export default async function DrugsToStockOpname(
                         <Suspense fallback={<Loading />}>
                             <DrugsTable
                                 mode={DrugsToStockOpnameMode.SalesBased}
-                                date={searchParams?.date}
+                                searchParams={searchParams}
                             />
                         </Suspense>
                     </Card>
@@ -50,7 +46,7 @@ export default async function DrugsToStockOpname(
                         <Suspense fallback={<Loading />}>
                             <DrugsTable
                                 mode={DrugsToStockOpnameMode.Conservative}
-                                date={searchParams?.date}
+                                searchParams={searchParams}
                             />
                         </Suspense>
                     </Card>

@@ -9,17 +9,16 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import { SearchParams } from "@/types/search-params"
+import { use } from "react"
 
 export interface SoldDrugsTableProps {
-    from?: string
-    until?: string
+    searchParams: SearchParams
 }
 
-export default async function SoldDrugsTable({
-    from,
-    until,
-}: SoldDrugsTableProps): Promise<React.ReactElement> {
-    const { drugs } = await getSoldDrugs(from, until)
+export default function SoldDrugsTable({ searchParams }: SoldDrugsTableProps): React.ReactElement {
+    const { from, until } = use(searchParams)
+    const { drugs } = use(getSoldDrugs(from, until))
     const totalPrice = drugs.reduce(
         (total, drug) => total + drug.totalAmount,
         0,
