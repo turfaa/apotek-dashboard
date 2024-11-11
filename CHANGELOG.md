@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.19.1] - 2024-11-11
+### :bug: Bug Fixes
+- [`8490c58`](https://github.com/turfaa/apotek-dashboard/commit/8490c58810fd5f931c953ffd1c10eb894b56f12d) - Disable PPR because it's still buggy when doing navigation *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.19.0] - 2024-11-11
 ### :sparkles: New Features
 - [`a9fe565`](https://github.com/turfaa/apotek-dashboard/commit/a9fe565c88431d48ef5571cb6c740c93e51be62d) - Add shifts report page *(commit by [@turfaa](https://github.com/turfaa))*
@@ -551,3 +556,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.18.3]: https://github.com/turfaa/apotek-dashboard/compare/v0.18.2...v0.18.3
 [v0.18.4]: https://github.com/turfaa/apotek-dashboard/compare/v0.18.3...v0.18.4
 [v0.19.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.18.4...v0.19.0
+[v0.19.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.19.0...v0.19.1
