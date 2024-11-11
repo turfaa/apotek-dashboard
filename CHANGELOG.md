@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.19.0] - 2024-11-11
+### :sparkles: New Features
+- [`a9fe565`](https://github.com/turfaa/apotek-dashboard/commit/a9fe565c88431d48ef5571cb6c740c93e51be62d) - Add shifts report page *(commit by [@turfaa](https://github.com/turfaa))*
+
+### :bug: Bug Fixes
+- [`7f1b7da`](https://github.com/turfaa/apotek-dashboard/commit/7f1b7da2973fd44a5f77c5a27aa781f5d7c8188e) - flatten single navigation from navigation lib *(commit by [@turfaa](https://github.com/turfaa))*
+- [`683e73b`](https://github.com/turfaa/apotek-dashboard/commit/683e73b6f4bf38936a1945aa8129ed12c9f991c2) - Enable partial pre-rendering (PPR) *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.18.4] - 2024-11-09
 ### :bug: Bug Fixes
 - [`985e02d`](https://github.com/turfaa/apotek-dashboard/commit/985e02dad7cf149967a8b886ecd09106e753ff51) - remove headlessui and heroicons *(commit by [@turfaa](https://github.com/turfaa))*
@@ -541,3 +550,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.18.2]: https://github.com/turfaa/apotek-dashboard/compare/v0.18.1...v0.18.2
 [v0.18.3]: https://github.com/turfaa/apotek-dashboard/compare/v0.18.2...v0.18.3
 [v0.18.4]: https://github.com/turfaa/apotek-dashboard/compare/v0.18.3...v0.18.4
+[v0.19.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.18.4...v0.19.0
