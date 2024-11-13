@@ -1,4 +1,4 @@
-import React from "react"
+import React, { act } from "react"
 import {
     Table as TableComp,
     TableBody,
@@ -11,12 +11,17 @@ import { Table as TableType } from "../types"
 
 export interface TableProps {
     table: TableType
+    rowActions?: RowAction[]
 }
 
-export default function Table({ table }: TableProps): React.ReactElement {
+export type RowAction = (id: string) => React.ReactElement
+
+export default function Table({ table, rowActions }: TableProps): React.ReactElement {
     if (table.header.length == 0 && table.rows.length == 0) {
         return <></>
     }
+
+    console.log("length", rowActions?.length)
 
     return (
         <TableComp>
@@ -37,6 +42,11 @@ export default function Table({ table }: TableProps): React.ReactElement {
                             {row.columns.map((column, index) => (
                                 <TableCell key={index}>{column}</TableCell>
                             ))}
+                            {rowActions && rowActions.length > 0 && (
+                                <TableCell>
+                                    {rowActions.map((action) => action(row.id))}
+                                </TableCell>
+                            )}
                         </TableRow>
                     ))}
                 </TableBody>

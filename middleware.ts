@@ -33,6 +33,11 @@ const rewrites = [
         destination: `${process.env.VMEDIS_PROXY_URL}/v2/procurements/drugs`,
         allowedRoles: [Role.ADMIN, Role.STAFF, Role.RESELLER, Role.GUEST],
     },
+    {
+        source: "/api/shifts",
+        destination: `${process.env.VMEDIS_PROXY_URL}/v2/shifts`,
+        allowedRoles: [Role.ADMIN, Role.STAFF],
+    },
 ] satisfies RewriteRule[]
 
 export default auth(async function middleware(
