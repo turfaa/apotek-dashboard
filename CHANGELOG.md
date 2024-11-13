@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.20.0] - 2024-11-13
+### :sparkles: New Features
+- [`b648a15`](https://github.com/turfaa/apotek-dashboard/commit/b648a151711ce64813116ad4ab3b1d6de17b0534) - **shift**: Support printing shift report *(commit by [@turfaa](https://github.com/turfaa))*
+
+### :bug: Bug Fixes
+- [`c96840b`](https://github.com/turfaa/apotek-dashboard/commit/c96840b4b4351520ea0aa284f9deb7c77f3eb551) - Change base color to zinc *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.19.2] - 2024-11-11
 ### :bug: Bug Fixes
 - [`cd250e3`](https://github.com/turfaa/apotek-dashboard/commit/cd250e32c26e7d2eb7e1becd69c1a14a9971393c) - use latest node version *(commit by [@turfaa](https://github.com/turfaa))*
@@ -563,3 +571,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.19.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.18.4...v0.19.0
 [v0.19.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.19.0...v0.19.1
 [v0.19.2]: https://github.com/turfaa/apotek-dashboard/compare/v0.19.1...v0.19.2
+[v0.20.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.19.2...v0.20.0
