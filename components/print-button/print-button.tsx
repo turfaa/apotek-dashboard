@@ -2,7 +2,7 @@
 
 import { usePrintMode } from "@/lib/print-mode"
 import { Button } from "@/components/ui/button"
-import { DownloadIcon } from "@radix-ui/react-icons"
+import { Printer } from "lucide-react"
 
 export interface PrintButtonProps {
     disabled?: boolean
@@ -22,7 +22,7 @@ export function PrintButton({
             disabled={disabled || isPrintMode}
             onClick={() => setPrintMode(true)}
         >
-            <DownloadIcon className="mr-2 h-4 w-4" />
+            <Printer className="mr-2 h-4 w-4" />
             Print
         </Button>
     )
