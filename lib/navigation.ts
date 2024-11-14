@@ -50,7 +50,7 @@ const availableNavigations: NavigationItem[] = [
             {
                 name: "Harga Obat Terakhir",
                 href: "/procurements/by-drug",
-                allowedRoles: [Role.ADMIN],
+                allowedRoles: [Role.ADMIN, Role.STAFF],
             },
             {
                 name: "Kalkulator Faktur",

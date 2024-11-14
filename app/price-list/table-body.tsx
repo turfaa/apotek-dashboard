@@ -13,7 +13,7 @@ import { Role } from "@/lib/api/auth"
 import { PriceListTableBodyFallback } from "./table-fallback"
 import PriceListCard from "./card"
 
-const rolesAllowedToSeeDrugCost = [Role.ADMIN]
+const rolesAllowedToSeeDrugCost = [Role.ADMIN, Role.STAFF]
 
 export interface PriceListTableBodyProps {
     session: Session | null

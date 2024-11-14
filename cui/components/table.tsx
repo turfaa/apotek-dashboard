@@ -21,8 +21,6 @@ export default function Table({ table, rowActions }: TableProps): React.ReactEle
         return <></>
     }
 
-    console.log("length", rowActions?.length)
-
     return (
         <TableComp>
             {table.header.length > 0 && (
