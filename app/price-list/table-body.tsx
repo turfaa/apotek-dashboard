@@ -1,6 +1,6 @@
 "use client"
 
-import { Drug } from "@/lib/api/drugv2"
+import { Drug, getDrugs } from "@/lib/api/drugv2"
 import Link from 'next/link'
 import { TableBody, TableCell, TableRow } from "@/components/ui/table"
 import { Text, Bold } from "@/components/typography"
@@ -14,15 +14,31 @@ import { PriceListTableBodyFallback } from "./table-fallback"
 import PriceListCard from "./card"
 
 const rolesAllowedToSeeDrugCost = [Role.ADMIN, Role.STAFF]
+const refreshInterval = 10000 // 10 seconds
 
 export interface PriceListTableBodyProps {
     session: Session | null
-    drugs: Drug[]
+    initialDrugs: Drug[]
 }
 
-export default function PriceListTableBody({ session, drugs }: PriceListTableBodyProps): React.ReactElement {
+export default function PriceListTableBody({ session, initialDrugs }: PriceListTableBodyProps): React.ReactElement {
     const [ssrCompleted, setSsrCompleted] = useState(false)
+    const [drugs, setDrugs] = useState(initialDrugs)
+
     useEffect(() => setSsrCompleted(true), [])
+
+    useEffect(() => {
+        const interval = setInterval(async () => {
+            try {
+                const response = await getDrugs(session)
+                setDrugs(response.drugs)
+            } catch (error) {
+                console.error("Failed to fetch updated drugs:", error)
+            }
+        }, refreshInterval)
+
+        return () => clearInterval(interval)
+    }, [session])
 
     const { query } = useSearch()
     const [debouncedQuery] = useDebounce(query, 200)

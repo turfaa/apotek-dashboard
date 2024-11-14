@@ -12,7 +12,7 @@ export default async function PriceListTableServerFetch(): Promise<React.ReactEl
     return (
         <Table>
             <Suspense fallback={<PriceListTableBodyFallback />}>
-                <PriceListTableBody session={session} drugs={drugs} />
+                <PriceListTableBody session={session} initialDrugs={drugs} />
             </Suspense>
         </Table>
     )
