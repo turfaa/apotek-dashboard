@@ -58,19 +58,22 @@ export function TabGroup({
             }}
         >
             {!isPrintMode && (
-                <TabsList>
-                    {tabLabels.map((label) => (
-                        <TabsTrigger
-                            key={label.tag}
-                            value={label.tag}
-                        >
-                            <span className="flex gap-2">
-                                {label.icon}
-                                {label.label}
-                            </span>
-                        </TabsTrigger>
-                    ))}
-                </TabsList>
+                <div className="overflow-x-auto">
+                    <TabsList className="w-max">
+                        {tabLabels.map((label) => (
+                            <TabsTrigger
+                                key={label.tag}
+                                value={label.tag}
+                                className="whitespace-nowrap"
+                            >
+                                <span className="flex gap-2">
+                                    {label.icon}
+                                    {label.label}
+                                </span>
+                            </TabsTrigger>
+                        ))}
+                    </TabsList>
+                </div>
             )}
 
             {isPending ? (

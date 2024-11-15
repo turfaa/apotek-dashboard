@@ -114,28 +114,30 @@ export function DateRangePicker(
 
     return (
         <div className="grid gap-2">
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
                 <Popover>
                     <PopoverTrigger asChild>
                         <Button
                             id="date"
                             variant={"outline"}
-                            className="w-[300px] justify-start text-left font-normal"
+                            className="w-full sm:w-[300px] justify-start text-left font-normal"
                             disabled={isPending}
                         >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {date?.from ? (
-                                date.to && date.to.toDateString() !== date.from.toDateString() ? (
-                                    <>
-                                        {format(date.from, "PPP", { locale: id })} -{" "}
-                                        {format(date.to, "PPP", { locale: id })}
-                                    </>
+                            <CalendarIcon className="mr-2 h-4 w-4 flex-shrink-0" />
+                            <span className="truncate">
+                                {date?.from ? (
+                                    date.to && date.to.toDateString() !== date.from.toDateString() ? (
+                                        <>
+                                            {format(date.from, "PPP", { locale: id })} -{" "}
+                                            {format(date.to, "PPP", { locale: id })}
+                                        </>
+                                    ) : (
+                                        format(date.from, "PPP", { locale: id })
+                                    )
                                 ) : (
-                                    format(date.from, "PPP", { locale: id })
-                                )
-                            ) : (
-                                <span>Pick a date range</span>
-                            )}
+                                    <span>Pick a date range</span>
+                                )}
+                            </span>
                         </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
@@ -174,46 +176,48 @@ export function DateRangePicker(
                     </PopoverContent>
                 </Popover>
 
-                <Select
-                    disabled={isPending}
-                    onValueChange={(value) => {
-                        const option = options.find(opt => opt.value === value)
-                        if (!option) return
+                <div className="flex gap-2 items-center">
+                    <Select
+                        disabled={isPending}
+                        onValueChange={(value) => {
+                            const option = options.find(opt => opt.value === value)
+                            if (!option) return
 
-                        const newDate = {
-                            from: option.from,
-                            to: option.until,
-                        }
-                        setDate(newDate)
+                            const newDate = {
+                                from: option.from,
+                                to: option.until,
+                            }
+                            setDate(newDate)
 
-                        const params = new URLSearchParams(window.location.search)
-                        params.set(
-                            "from",
-                            format(option.from, "yyyy-MM-dd")
-                        )
-                        params.set(
-                            "until",
-                            format(option.until, "yyyy-MM-dd")
-                        )
+                            const params = new URLSearchParams(window.location.search)
+                            params.set(
+                                "from",
+                                format(option.from, "yyyy-MM-dd")
+                            )
+                            params.set(
+                                "until",
+                                format(option.until, "yyyy-MM-dd")
+                            )
 
-                        startTransition(() => {
-                            push(`${pathname}?${params.toString()}`)
-                        })
-                    }}
-                >
-                    <SelectTrigger className="w-[200px]">
-                        <SelectValue placeholder="Pilih rentang waktu" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {options.map((option) => (
-                            <SelectItem key={option.value} value={option.value}>
-                                {option.value}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
+                            startTransition(() => {
+                                push(`${pathname}?${params.toString()}`)
+                            })
+                        }}
+                    >
+                        <SelectTrigger className="w-full sm:w-[200px]">
+                            <SelectValue placeholder="Pilih rentang waktu" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {options.map((option) => (
+                                <SelectItem key={option.value} value={option.value}>
+                                    {option.value}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
 
-                {isPending && <Loading />}
+                    {isPending && <Loading />}
+                </div>
             </div>
         </div>
     )
