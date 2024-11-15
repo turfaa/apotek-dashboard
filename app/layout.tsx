@@ -3,7 +3,7 @@ import Nav from "@/app/nav"
 import NavbarFallback from "@/app/navbar-fallback"
 import Loading from "@/components/loading"
 import { GeistSans } from "geist/font/sans"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import React, { Suspense } from "react"
 
 // export const fetchCache = 'default-cache'
@@ -27,6 +27,7 @@ export const metadata: Metadata = {
         url: true,
     },
     metadataBase: new URL("https://auliafarma.co.id"),
+    manifest: "/manifest.json",
     twitter: {
         card: "summary_large_image",
         title: "Apotek Aulia Farma",
@@ -36,6 +37,15 @@ export const metadata: Metadata = {
         images: ["/icon.png"],
     },
 }
+
+export const viewport: Viewport = {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+    themeColor: "#ffffff",
+}
+
 
 export default function RootLayout({
     children,
