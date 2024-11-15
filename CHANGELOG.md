@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.21.0] - 2024-11-15
+### :sparkles: New Features
+- [`712fa00`](https://github.com/turfaa/apotek-dashboard/commit/712fa005b788710fcd313cb903e78dff60f5f1cb) - Support PWA *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.20.2] - 2024-11-14
 ### :bug: Bug Fixes
 - [`712fa00`](https://github.com/turfaa/apotek-dashboard/commit/712fa009e89eb5879295c7c5fbdf09cb479c88b1) - Allow staffs to see last drug's procurements *(commit by [@turfaa](https://github.com/turfaa))*
@@ -585,3 +590,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.20.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.19.2...v0.20.0
 [v0.20.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.20.0...v0.20.1
 [v0.20.2]: https://github.com/turfaa/apotek-dashboard/compare/v0.20.1...v0.20.2
+[v0.21.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.20.2...v0.21.0
