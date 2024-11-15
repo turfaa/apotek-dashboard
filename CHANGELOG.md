@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.21.3] - 2024-11-15
+### :bug: Bug Fixes
+- [`712fa00`](https://github.com/turfaa/apotek-dashboard/commit/712fa0015e5b69ad35b46f156afb7cf6b836d06a) - Improve mobile view
+
+
 ## [v0.21.2] - 2024-11-15
 ### :bug: Bug Fixes
 - [`712fa00`](https://github.com/turfaa/apotek-dashboard/commit/712fa00993c151ac4dd4410920502294b2caa93b) - Copy public files
@@ -603,3 +608,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.21.0]: https://github.com/turfaa/apotek-dashboard/compare/v0.20.2...v0.21.0
 [v0.21.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.21.0...v0.21.1
 [v0.21.2]: https://github.com/turfaa/apotek-dashboard/compare/v0.21.1...v0.21.2
+[v0.21.3]: https://github.com/turfaa/apotek-dashboard/compare/v0.21.2...v0.21.3
