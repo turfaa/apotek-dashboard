@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.21.4] - 2024-11-16
+### :bug: Bug Fixes
+- [`712fa00`](https://github.com/turfaa/apotek-dashboard/commit/712fa00974ddb96e37f5657cf7621a5a73fe1246) - Reduce the number of suspense
+- [`712fa00`](https://github.com/turfaa/apotek-dashboard/commit/712fa0054d356f9973502badbeaa625c22d93733) - Make the logo link to home
+- [`712fa00`](https://github.com/turfaa/apotek-dashboard/commit/712fa007088c5cffcb9b4eb421a7a459175b2598) - Nurut Cursor untuk optimize
+- [`712fa00`](https://github.com/turfaa/apotek-dashboard/commit/712fa00f7085c83788249870d847467c19372277) - upgrade next and react canary
+
+
 ## [v0.21.3] - 2024-11-15
 ### :bug: Bug Fixes
 - [`712fa00`](https://github.com/turfaa/apotek-dashboard/commit/712fa0015e5b69ad35b46f156afb7cf6b836d06a) - Improve mobile view
@@ -609,3 +617,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.21.1]: https://github.com/turfaa/apotek-dashboard/compare/v0.21.0...v0.21.1
 [v0.21.2]: https://github.com/turfaa/apotek-dashboard/compare/v0.21.1...v0.21.2
 [v0.21.3]: https://github.com/turfaa/apotek-dashboard/compare/v0.21.2...v0.21.3
+[v0.21.4]: https://github.com/turfaa/apotek-dashboard/compare/v0.21.3...v0.21.4
