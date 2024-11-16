@@ -1,6 +1,6 @@
 "use client"
 
-import { Title, Subtitle, Text } from "@/components/typography"
+import { Title, Subtitle } from "@/components/typography"
 import { usePurchaseOrders } from "@/lib/api/hooks"
 import { usePrintMode } from "@/lib/print-mode"
 import useSearch from "@/lib/search-hook"

@@ -106,7 +106,7 @@ const columnConfig: Record<Column, ColumnConfig> = {
 
 type Column = keyof Row | "no."
 
-export default function ProcurementTable(): React.ReactElement {
+export default function PurchaseOrderTable(): React.ReactElement {
     const [ssrCompleted, setSsrCompleted] = useState(false)
     useEffect(() => setSsrCompleted(true), [])
 

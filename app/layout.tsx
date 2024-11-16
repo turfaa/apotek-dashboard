@@ -59,9 +59,7 @@ export default function RootLayout({
                     <Nav />
                 </Suspense>
 
-                <Suspense fallback={<Loading />}>
-                    {children}
-                </Suspense>
+                {children}
             </body>
         </html>
     )

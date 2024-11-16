@@ -5,7 +5,6 @@ import PurchaseOrderTitle from "@/app/procurements/purchase-order/title"
 import SearchButton from "@/components/search-button"
 import moment from "moment/moment"
 import { Metadata } from "next"
-import { Suspense } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { SearchParams } from "@/types/search-params"
 
@@ -37,29 +36,21 @@ export default function PurchaseOrder() {
     return (
         <main className="p-4 md:p-10 mx-auto">
             <div className="flex pb-4">
-                <Suspense>
-                    <PurchaseOrderTitle />
-                </Suspense>
+                <PurchaseOrderTitle />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Suspense>
-                    <SearchButton />
-                </Suspense>
+                <SearchButton />
 
                 <div className="justify-self-end flex gap-4">
-                    <Suspense>
-                        <NewDrugButton />
-                        <RefreshButton />
-                    </Suspense>
+                    <NewDrugButton />
+                    <RefreshButton />
                 </div>
             </div>
 
             <Card className="mt-4">
                 <CardContent className="mt-2">
-                    <Suspense>
-                        <PurchaseOrderTable />
-                    </Suspense>
+                    <PurchaseOrderTable />
                 </CardContent>
             </Card>
         </main>

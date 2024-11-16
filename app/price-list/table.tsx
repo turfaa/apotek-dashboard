@@ -1,19 +1,13 @@
-import { PriceListTableBodyFallback } from "./table-fallback"
 import { getDrugs } from "@/lib/api/drugv2"
-import { Table } from "@/components/ui/table"
-import { Suspense } from "react"
-import PriceListTableBody from "./table-body"
+import PriceListTableClient from "./table-client"
 import { auth } from "@/lib/auth"
+import { use } from "react"
 
-export default async function PriceListTableServerFetch(): Promise<React.ReactElement> {
-    const session = await auth()
-    const { drugs } = await getDrugs(session)
+export default function PriceListTable(): React.ReactElement {
+    const session = use(auth())
+    const { drugs } = use(getDrugs(session))
 
     return (
-        <Table>
-            <Suspense fallback={<PriceListTableBodyFallback />}>
-                <PriceListTableBody session={session} initialDrugs={drugs} />
-            </Suspense>
-        </Table>
+        <PriceListTableClient session={session} initialDrugs={drugs} />
     )
 }

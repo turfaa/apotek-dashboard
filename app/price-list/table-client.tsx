@@ -2,7 +2,7 @@
 
 import { Drug, getDrugs } from "@/lib/api/drugv2"
 import Link from 'next/link'
-import { TableBody, TableCell, TableRow } from "@/components/ui/table"
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
 import { Text, Bold } from "@/components/typography"
 import { useMemo, useState, useEffect } from "react"
 import { useTf } from "@/lib/tf/hook"
@@ -10,18 +10,18 @@ import useSearch from "@/lib/search-hook"
 import { Session } from "next-auth"
 import { useDebounce } from "use-debounce"
 import { Role } from "@/lib/api/auth"
-import { PriceListTableBodyFallback } from "./table-fallback"
+import PriceListTableFallback from "./table-fallback"
 import PriceListCard from "./card"
 
 const rolesAllowedToSeeDrugCost = [Role.ADMIN, Role.STAFF]
 const refreshInterval = 10000 // 10 seconds
 
-export interface PriceListTableBodyProps {
+export interface PriceListTableClientProps {
     session: Session | null
     initialDrugs: Drug[]
 }
 
-export default function PriceListTableBody({ session, initialDrugs }: PriceListTableBodyProps): React.ReactElement {
+export default function PriceListTableClient({ session, initialDrugs }: PriceListTableClientProps): React.ReactElement {
     const [ssrCompleted, setSsrCompleted] = useState(false)
     const [drugs, setDrugs] = useState(initialDrugs)
 
@@ -64,32 +64,34 @@ export default function PriceListTableBody({ session, initialDrugs }: PriceListT
     }, [drugs, debouncedQuery, search, drugById])
 
     if (!ssrCompleted) {
-        return <PriceListTableBodyFallback />
+        return <PriceListTableFallback />
     }
 
     const allowedToSeeDrugCost = rolesAllowedToSeeDrugCost.includes(session?.user?.role ?? Role.GUEST)
 
     return (
-        <TableBody>
-            {filtered.map((drug) => (
-                <TableRow key={drug.vmedisCode}>
-                    <TableCell className="flex flex-col gap-4 py-4">
-                        <Bold className="text-sm">{drug.name}</Bold>
+        <Table>
+            <TableBody>
+                {filtered.map((drug) => (
+                    <TableRow key={drug.vmedisCode}>
+                        <TableCell className="flex flex-col gap-4 py-4">
+                            <Bold className="text-sm">{drug.name}</Bold>
 
-                        <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-4">
-                            {drug.sections.map((section) => (
-                                <PriceListCard key={section.title} title={section.title} rows={section.rows} />
-                            ))}
-                        </div>
+                            <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-4">
+                                {drug.sections.map((section) => (
+                                    <PriceListCard key={section.title} title={section.title} rows={section.rows} />
+                                ))}
+                            </div>
 
-                        {allowedToSeeDrugCost && (
-                            <Link href={`/procurements/by-drug?drug-code=${drug.vmedisCode}`} target="_blank">
-                                <Text>Lihat harga pembelian obat terakhir</Text>
-                            </Link>
-                        )}
-                    </TableCell>
-                </TableRow>
-            ))}
-        </TableBody>
+                            {allowedToSeeDrugCost && (
+                                <Link href={`/procurements/by-drug?drug-code=${drug.vmedisCode}`} target="_blank">
+                                    <Text>Lihat harga pembelian obat terakhir</Text>
+                                </Link>
+                            )}
+                        </TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+        </Table>
     )
 }

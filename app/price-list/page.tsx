@@ -18,11 +18,7 @@ export default function PriceList(): React.ReactElement {
             <Title className="mb-4">Daftar Harga Obat</Title>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <Suspense fallback={<SearchButtonFallback />}>
-                        <SearchButton />
-                    </Suspense>
-                </div>
+                <SearchButton />
 
                 <div className="justify-self-end">
                     <Text>

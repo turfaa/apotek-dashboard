@@ -10,19 +10,13 @@ import { ReloadIcon } from "@radix-ui/react-icons"
 export default function PriceListTableFallback(): React.ReactElement {
     return (
         <Table>
-            <PriceListTableBodyFallback />
+            <TableBody>
+                <TableRow>
+                    <TableCell>
+                        <Loading />
+                    </TableCell>
+                </TableRow>
+            </TableBody>
         </Table>
-    )
-}
-
-export function PriceListTableBodyFallback(): React.ReactElement {
-    return (
-        <TableBody>
-            <TableRow>
-                <TableCell>
-                    <Loading />
-                </TableCell>
-            </TableRow>
-        </TableBody>
     )
 }
