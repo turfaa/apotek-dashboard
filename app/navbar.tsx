@@ -72,12 +72,14 @@ export default function Navbar({
                 <div className="flex h-16 justify-between">
                     <div className="flex">
                         <div className="flex flex-shrink-0 items-center">
-                            <Image
-                                src={Logo}
-                                height={40}
-                                width={40}
-                                alt="Logo"
-                            />
+                            <Link href="/">
+                                <Image
+                                    src={Logo}
+                                    height={40}
+                                    width={40}
+                                    alt="Logo"
+                                />
+                            </Link>
                         </div>
                         <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
                             {navigations.map((item) => {
