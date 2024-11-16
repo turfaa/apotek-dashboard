@@ -78,6 +78,8 @@ export default function Navbar({
                                     height={40}
                                     width={40}
                                     alt="Logo"
+                                    priority
+                                    loading="eager"
                                 />
                             </Link>
                         </div>

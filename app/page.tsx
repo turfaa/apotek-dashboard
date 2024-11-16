@@ -1,11 +1,16 @@
+import Loading from "@/components/loading"
 import { auth } from "@/lib/auth"
 import { allowedNavigations, homepage } from "@/lib/navigation"
-import { lazy } from "react"
+import dynamic from 'next/dynamic'
+import { use } from "react"
 
-export default async function Home(): Promise<React.ReactElement> {
-    const session = await auth()
+export default function Home(): React.ReactElement {
+    const session = use(auth())
     const home = homepage(allowedNavigations(session?.user?.role))
-    const Homepage = lazy(() => import(`@/app/${home}/page`))
+    const Homepage = dynamic(() => import(`@/app/${home}/page`), {
+        loading: () => <Loading />,
+        ssr: true
+    })
 
     return <Homepage />
 }
