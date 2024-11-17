@@ -1,11 +1,11 @@
 import { Card } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Chart, registerables } from "chart.js"
 import "chartjs-adapter-moment"
 import ChartDataLabels from "chartjs-plugin-datalabels"
 import { Line } from "react-chartjs-2"
 
 export interface MetricChartProps {
-    title: string
     data: Datum[]
     valueFormatter?: (value: number) => string
 }
@@ -83,3 +83,11 @@ export default function MetricChart(
 }
 
 Chart.register(ChartDataLabels, ...registerables)
+
+export function MetricChartFallback(): React.ReactElement {
+    return (
+        <Card className="p-6">
+            <Skeleton className="h-[150px] w-full" />
+        </Card>
+    )
+}

@@ -1,6 +1,9 @@
 "use client"
 
-import MetricGrid, { Datum } from "@/app/statistics/metric-grid"
+import MetricGrid, {
+    MetricGridFallback,
+    Datum,
+} from "@/app/statistics/metric-grid"
 import StatisticsTable from "@/app/statistics/table"
 import { useSalesStatistics } from "@/lib/api/hooks"
 import { SalesStatistics } from "@/lib/api/sale-statistics"
@@ -10,13 +13,10 @@ import { ExclamationTriangleIcon } from "@radix-ui/react-icons"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Card } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import Loading from "@/components/loading"
 
 export default function ClientSide(): React.ReactElement {
     const { data, error, isLoading } = useSalesStatistics()
     const { isPrintMode } = usePrintMode()
-
-    if (isLoading) return <Loading />
 
     let usedHistory = data?.history || []
     if (usedHistory.length > 24) {
@@ -60,15 +60,24 @@ export default function ClientSide(): React.ReactElement {
                 )}
 
                 <TabsContent value="summary">
-                    <MetricGrid
-                        title="Nominal Penjualan"
-                        data={salesTotals}
-                        valueFormatter={rupiah.format}
-                    />
-                    <MetricGrid
-                        title="Banyak Penjualan"
-                        data={salesNumbers}
-                    />
+                    {isLoading ? (
+                        <>
+                            <MetricGridFallback title="Nominal Penjualan" />
+                            <MetricGridFallback title="Banyak Penjualan" />
+                        </>
+                    ) : (
+                        <>
+                            <MetricGrid
+                                title="Nominal Penjualan"
+                                data={salesTotals}
+                                valueFormatter={rupiah.format}
+                            />
+                            <MetricGrid
+                                title="Banyak Penjualan"
+                                data={salesNumbers}
+                            />
+                        </>
+                    )}
                 </TabsContent>
 
                 <TabsContent value="daily">
