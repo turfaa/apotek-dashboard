@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.21.5] - 2024-11-17
+### :bug: Bug Fixes
+- [`712fa00`](https://github.com/turfaa/apotek-dashboard/commit/712fa0087887f6446166650f36f43ab391b80604) - Use skeleton in sale statistics page *(commit by [@turfaa](https://github.com/turfaa))*
+- [`712fa00`](https://github.com/turfaa/apotek-dashboard/commit/712fa00eb085514772be9d63ddd307bb89b7ef24) - Adjust text and subtitle typography *(commit by [@turfaa](https://github.com/turfaa))*
+
+### :wrench: Chores
+- [`712fa00`](https://github.com/turfaa/apotek-dashboard/commit/712fa00ae733e7e43596cb69713ff12a79e5ed4c) - promote to v1.0.0-rc.1 *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.21.4] - 2024-11-16
 ### :bug: Bug Fixes
 - [`712fa00`](https://github.com/turfaa/apotek-dashboard/commit/712fa00974ddb96e37f5657cf7621a5a73fe1246) - Reduce the number of suspense
@@ -618,3 +627,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.21.2]: https://github.com/turfaa/apotek-dashboard/compare/v0.21.1...v0.21.2
 [v0.21.3]: https://github.com/turfaa/apotek-dashboard/compare/v0.21.2...v0.21.3
 [v0.21.4]: https://github.com/turfaa/apotek-dashboard/compare/v0.21.3...v0.21.4
+[v0.21.5]: https://github.com/turfaa/apotek-dashboard/compare/v0.21.4...v0.21.5
