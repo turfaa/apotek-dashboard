@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.21.6] - 2024-11-17
+### :bug: Bug Fixes
+- [`712fa00`](https://github.com/turfaa/apotek-dashboard/commit/712fa00ab71fdcc0f80b52c22e1a2168dd61e737) - Use layouted loading text when dynamically loading homepage *(commit by [@turfaa](https://github.com/turfaa))*
+
+
 ## [v0.21.5] - 2024-11-17
 ### :bug: Bug Fixes
 - [`712fa00`](https://github.com/turfaa/apotek-dashboard/commit/712fa0087887f6446166650f36f43ab391b80604) - Use skeleton in sale statistics page *(commit by [@turfaa](https://github.com/turfaa))*
@@ -628,3 +633,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.21.3]: https://github.com/turfaa/apotek-dashboard/compare/v0.21.2...v0.21.3
 [v0.21.4]: https://github.com/turfaa/apotek-dashboard/compare/v0.21.3...v0.21.4
 [v0.21.5]: https://github.com/turfaa/apotek-dashboard/compare/v0.21.4...v0.21.5
+[v0.21.6]: https://github.com/turfaa/apotek-dashboard/compare/v0.21.5...v0.21.6
