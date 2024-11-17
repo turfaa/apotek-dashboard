@@ -1,4 +1,4 @@
-import Loading from "@/components/loading"
+import Loading from "./loading"
 import { auth } from "@/lib/auth"
 import { allowedNavigations, homepage } from "@/lib/navigation"
 import dynamic from 'next/dynamic'
