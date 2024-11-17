@@ -23,7 +23,7 @@ export function Subtitle({ children, className }: TypographyProps) {
     return (
         <p
             className={cn(
-                "text-base text-foreground",
+                "text-sm text-muted-foreground",
                 className
             )}
         >
@@ -36,7 +36,7 @@ export function Text({ children, className }: TypographyProps) {
     return (
         <p
             className={cn(
-                "text-sm text-muted-foreground",
+                "text-sm text-foreground",
                 className
             )}
         >

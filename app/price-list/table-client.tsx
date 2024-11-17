@@ -3,7 +3,7 @@
 import { Drug, getDrugs } from "@/lib/api/drugv2"
 import Link from 'next/link'
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
-import { Text, Bold } from "@/components/typography"
+import { Text, Bold, Subtitle } from "@/components/typography"
 import { useMemo, useState, useEffect } from "react"
 import { useTf } from "@/lib/tf/hook"
 import useSearch from "@/lib/search-hook"
@@ -85,7 +85,7 @@ export default function PriceListTableClient({ session, initialDrugs }: PriceLis
 
                             {allowedToSeeDrugCost && (
                                 <Link href={`/procurements/by-drug?drug-code=${drug.vmedisCode}`} target="_blank">
-                                    <Text>Lihat harga pembelian obat terakhir</Text>
+                                    <Subtitle>Lihat harga pembelian obat terakhir</Subtitle>
                                 </Link>
                             )}
                         </TableCell>

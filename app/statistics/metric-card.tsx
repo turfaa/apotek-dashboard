@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card"
-import { Text, Metric } from "@/components/typography"
+import { Text, Metric, Subtitle } from "@/components/typography"
 import { Skeleton } from "@/components/ui/skeleton"
 
 export interface MetricCardProps {
@@ -18,7 +18,7 @@ export default function MetricCard(props: MetricCardProps): React.ReactElement {
         <Card className="relative p-6 min-h-[180px]">
             <div className="flex items-start mb-12">
                 <div className="truncate">
-                    <Text>{props.title}</Text>
+                    <Subtitle>{props.title}</Subtitle>
                     <Metric className="truncate">
                         {formatter(props.value)}
                     </Metric>
@@ -26,10 +26,10 @@ export default function MetricCard(props: MetricCardProps): React.ReactElement {
             </div>
 
             <div className="absolute bottom-0 py-6">
-                <Text className="text-sm">
+                <Subtitle>
                     Terakhir diperbarui:{" "}
                     {props.lastUpdated.toLocaleString("id-ID")}
-                </Text>
+                </Subtitle>
             </div>
         </Card>
     )
@@ -40,7 +40,7 @@ export function MetricCardFallback({ title }: { title: string }): React.ReactEle
         <Card className="relative p-6 min-h-[180px]">
             <div className="flex items-start mb-12">
                 <div className="space-y-2">
-                    <Text>{title}</Text>
+                    <Subtitle>{title}</Subtitle>
                     <Skeleton className="h-8 w-[180px]" />
                 </div>
             </div>

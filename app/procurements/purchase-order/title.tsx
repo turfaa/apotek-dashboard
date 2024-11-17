@@ -1,6 +1,7 @@
 "use client"
 
 import { Title, Subtitle } from "@/components/typography"
+import { Skeleton } from "@/components/ui/skeleton"
 import { usePurchaseOrders } from "@/lib/api/hooks"
 import { usePrintMode } from "@/lib/print-mode"
 import useSearch from "@/lib/search-hook"
@@ -20,6 +21,7 @@ export default function PurchaseOrderTitle() {
         !isLoading &&
         !error &&
         computedAt !== undefined
+    const showSkeleton = !isPrintMode && (isLoading || !ssrCompleted)
     const showQuery = isPrintMode && query.length > 0
 
     return (
@@ -34,6 +36,7 @@ export default function PurchaseOrderTitle() {
                         Dihitung pada: {computedAt.toLocaleString("id-ID")}
                     </Subtitle>
                 )}
+                {showSkeleton && <Skeleton className="h-5 w-[200px]" />}
                 {showQuery && <Subtitle>Kepada: {query}</Subtitle>}
             </div>
         </div>
