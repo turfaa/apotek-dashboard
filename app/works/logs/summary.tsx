@@ -169,6 +169,51 @@ export function WorkLogsSummary({ searchParams, sessionPromise }: WorkLogsSummar
                             </TableCell>
                         </TableRow>
                     ))}
+                    {Object.keys(summaryByEmployee).length > 0 && (
+                        <TableRow className="bg-muted/50 font-medium">
+                            <TableCell>Total Keseluruhan</TableCell>
+                            <TableCell>
+                                <Badge variant="outline" className="font-medium">
+                                    {Object.values(summaryByEmployee).reduce((sum, summary) => sum + summary.totalPatients, 0)} pasien
+                                </Badge>
+                            </TableCell>
+                            <TableCell>
+                                <Badge variant="secondary" className="font-medium">
+                                    {Object.values(summaryByEmployee).reduce((sum, summary) => sum + summary.totalMultiplier, 0)} kali
+                                </Badge>
+                            </TableCell>
+                            <TableCell>
+                                <div className="space-y-1.5">
+                                    {Object.entries(
+                                        Object.values(summaryByEmployee).reduce((acc, summary) => {
+                                            Object.values(summary.workTypes).forEach(workType => {
+                                                if (!acc[workType.name]) {
+                                                    acc[workType.name] = {
+                                                        count: 0,
+                                                        multiplier: workType.multiplier,
+                                                        totalMultiplier: 0
+                                                    }
+                                                }
+                                                acc[workType.name].count += workType.count
+                                                acc[workType.name].totalMultiplier += workType.totalMultiplier
+                                            })
+                                            return acc
+                                        }, {} as Record<string, { count: number, multiplier: number, totalMultiplier: number }>)
+                                    ).map(([name, total]) => (
+                                        <div key={name} className="text-sm">
+                                            <span className="text-muted-foreground">
+                                                {name}:
+                                            </span>
+                                            {" "}
+                                            <span>
+                                                {total.count} kali
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                    )}
                     {Object.keys(summaryByEmployee).length === 0 && (
                         <TableRow>
                             <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
