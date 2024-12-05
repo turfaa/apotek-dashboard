@@ -9,6 +9,7 @@ import {
     startOfYesterday,
     sub,
     format,
+    endOfMonth,
 } from "date-fns"
 import { id } from "date-fns/locale"
 import {
@@ -81,21 +82,35 @@ const options: DateRangePickerOption[] = [
         from: sub(startOfMonth(today), { months: 1 }),
         until: sub(startOfMonth(today), { days: 1 }),
     },
+    {
+        value: "Bulan ini",
+        from: startOfMonth(today),
+        until: endOfMonth(today),
+    },
 ]
 
+export type DateRangePickerProps = CalendarProps & {
+    defaultDateRangeType?: string
+}
+
 export function DateRangePicker(
-    props: CalendarProps
+    props: DateRangePickerProps
 ): React.ReactElement {
     const [isPending, startTransition] = useTransition()
     const { push } = useRouter()
     const pathname: string = usePathname()
     const { isPrintMode } = usePrintMode()
     const searchParams: ReadonlyURLSearchParams = useSearchParams()
+    
+    const defaultFrom = props.defaultDateRangeType ? options.find(opt => opt.value === props.defaultDateRangeType)?.from : undefined
+    const defaultUntil = props.defaultDateRangeType ? options.find(opt => opt.value === props.defaultDateRangeType)?.until : undefined
 
-    const fromFromParams = searchParams.get("from")
+    console.log(defaultFrom, defaultUntil, props)
+
+    const fromFromParams = searchParams.get("from") ?? defaultFrom
     const from = fromFromParams ? new Date(fromFromParams) : new Date()
 
-    const untilFromParams = searchParams.get("until")
+    const untilFromParams = searchParams.get("until") ?? defaultUntil
     const until = untilFromParams ? new Date(untilFromParams) : new Date()
 
     const [date, setDate] = useState<DateRange | undefined>({

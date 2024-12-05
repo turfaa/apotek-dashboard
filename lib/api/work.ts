@@ -67,6 +67,7 @@ export interface UnderlyingWorkType {
 
 export async function createWorkLog(request: CreateWorkLogRequest, session?: Session | null): Promise<WorkLog> {
     const response = await fetchAPI<WorkLog>("POST", "/work-logs", request, {}, {
+        forHRIS: true,
         session: session,
     })
     return response
@@ -88,6 +89,7 @@ export async function getWorkLogs(
             },
         },
         {
+            forHRIS: true,
             session: session,
         },
     )
