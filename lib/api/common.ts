@@ -1,10 +1,10 @@
 export function buildDateRangeQueryParams(
     from?: string,
-    until?: string,
+    to?: string,
 ): string {
     if (!from) {
         return ""
     }
 
-    return until ? `from=${from}&until=${until}` : `from=${from}`
+    return to ? `from=${from}&to=${to}` : `from=${from}`
 }

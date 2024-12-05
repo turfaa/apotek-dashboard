@@ -82,6 +82,17 @@ const availableNavigations: NavigationItem[] = [
         allowedRoles: [Role.ADMIN, Role.STAFF],
     },
     {
+        name: "Pekerjaan",
+        allowedRoles: [Role.ADMIN, Role.STAFF],
+        target: [
+            {
+                name: "Jenis Pekerjaan",
+                href: "/works/types",
+                allowedRoles: [Role.ADMIN],
+            },
+        ],
+    },
+    {
         name: "HRIS",
         target: [
             {

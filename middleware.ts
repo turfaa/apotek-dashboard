@@ -24,7 +24,12 @@ const rewrites = [
     {
         source: "/api/employees",
         destination: `${process.env.HRIS_PROXY_URL}/v1/employees`,
-        allowedRoles: [Role.ADMIN],
+        allowedRoles: [Role.ADMIN, Role.STAFF],
+    },
+    {
+        source: "/api/work-types",
+        destination: `${process.env.HRIS_PROXY_URL}/v1/work-types`,
+        allowedRoles: [Role.ADMIN, Role.STAFF],
     },
 
     // v2 APIs are not protected by auth here becuase they are protected in the backend.

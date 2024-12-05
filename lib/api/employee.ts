@@ -2,7 +2,7 @@ import { fetchAPI } from "@/lib/api/base"
 import { Session } from "next-auth"
 
 export interface Employee {
-    id: string
+    id: number
     name: string
     shiftFee: number
     createdAt: Date
@@ -10,7 +10,7 @@ export interface Employee {
 }
 
 export interface UnderlyingEmployee {
-    id: string
+    id: number
     name: string
     shiftFee: string
     createdAt: string
