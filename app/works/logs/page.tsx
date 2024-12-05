@@ -5,6 +5,7 @@ import { Suspense } from "react"
 import { SearchParams } from "@/types/search-params"
 import { DateRangePicker } from "@/components/date-range-picker/date-range-picker"
 import { WorkLogsTable, WorkLogsTableSkeleton } from "./table"
+import { WorkLogsSummary, WorkLogsSummarySkeleton } from "./summary"
 import { AddWorkLogDialog } from "./add-dialog"
 import { auth } from "@/lib/auth"
 
@@ -48,6 +49,10 @@ export default function WorkLogs(props: WorkLogsProps): React.ReactElement {
                     </Button>
                 </AddWorkLogDialog>
             </div>
+
+            <Suspense fallback={<WorkLogsSummarySkeleton />}>
+                <WorkLogsSummary searchParams={searchParams} sessionPromise={session} />
+            </Suspense>
 
             <Suspense fallback={<WorkLogsTableSkeleton />}>
                 <WorkLogsTable searchParams={searchParams} sessionPromise={session} />
