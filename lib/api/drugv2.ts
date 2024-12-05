@@ -24,7 +24,7 @@ export async function getDrugs(session?: Session | null): Promise<DrugsResponse>
         null,
         {
             next: {
-                revalidate: 60, // Revalidate every minute.
+                revalidate: 0, // Don't cache, always revalidate.
             },
         },
         {

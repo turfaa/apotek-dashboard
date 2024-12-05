@@ -4,6 +4,7 @@ import { Session } from "next-auth"
 export interface FetchAPIOptions {
     version?: string
     session?: Session | null
+    forHRIS?: boolean
 }
 
 export async function fetchAPI<T>(
@@ -13,10 +14,7 @@ export async function fetchAPI<T>(
     options?: object,
     fetchAPIOptions?: FetchAPIOptions,
 ): Promise<T> {
-    const baseUrl =
-        process.env.VMEDIS_PROXY_URL
-            ? `${process.env.VMEDIS_PROXY_URL}/${fetchAPIOptions?.version ?? "v1"}`
-            : "/api"
+    const baseUrl = getBaseUrl(fetchAPIOptions)
 
     const res: Response = await fetch(`${baseUrl}${url}`, {
         method: method,
@@ -33,4 +31,9 @@ export async function fetchAPI<T>(
     }
 
     return await res.json()
+}
+
+function getBaseUrl(fetchAPIOptions?: FetchAPIOptions): string {
+    const baseUrl = fetchAPIOptions?.forHRIS ? process.env.HRIS_PROXY_URL : process.env.VMEDIS_PROXY_URL
+    return baseUrl ? `${baseUrl}/${fetchAPIOptions?.version ?? "v1"}` : "/api"
 }
