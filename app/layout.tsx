@@ -1,8 +1,8 @@
 import "@/app/globals.css"
 import Nav from "@/app/nav"
 import NavbarFallback from "@/app/navbar-fallback"
-import Loading from "@/components/loading"
 import { GeistSans } from "geist/font/sans"
+import { Toaster } from "@/components/ui/sonner"
 import type { Metadata, Viewport } from "next"
 import React, { Suspense } from "react"
 
@@ -60,6 +60,7 @@ export default function RootLayout({
                 </Suspense>
 
                 {children}
+                <Toaster />
             </body>
         </html>
     )

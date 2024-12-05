@@ -81,6 +81,17 @@ const availableNavigations: NavigationItem[] = [
         target: "/shifts",
         allowedRoles: [Role.ADMIN, Role.STAFF],
     },
+    {
+        name: "HRIS",
+        target: [
+            {
+                name: "Karyawan",
+                href: "/employees",
+                allowedRoles: [Role.ADMIN],
+            },
+        ],
+        allowedRoles: [Role.ADMIN],
+    },
 ]
 
 export function useNavigation(role?: Role | null): NavigationHook {

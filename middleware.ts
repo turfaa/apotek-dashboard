@@ -21,6 +21,11 @@ const rewrites = [
         destination: `${process.env.VMEDIS_PROXY_URL}/v1/procurements/recommendations`,
         allowedRoles: [Role.ADMIN, Role.STAFF],
     },
+    {
+        source: "/api/employees",
+        destination: `${process.env.HRIS_PROXY_URL}/v1/employees`,
+        allowedRoles: [Role.ADMIN],
+    },
 
     // v2 APIs are not protected by auth here becuase they are protected in the backend.
     {
