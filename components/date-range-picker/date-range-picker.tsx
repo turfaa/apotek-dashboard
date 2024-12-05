@@ -105,8 +105,6 @@ export function DateRangePicker(
     const defaultFrom = props.defaultDateRangeType ? options.find(opt => opt.value === props.defaultDateRangeType)?.from : undefined
     const defaultUntil = props.defaultDateRangeType ? options.find(opt => opt.value === props.defaultDateRangeType)?.until : undefined
 
-    console.log(defaultFrom, defaultUntil, props)
-
     const fromFromParams = searchParams.get("from") ?? defaultFrom
     const from = fromFromParams ? new Date(fromFromParams) : new Date()
 
