@@ -65,13 +65,13 @@ type FormData = z.infer<typeof formSchema>
 interface AddWorkLogDialogProps {
     children: React.ReactNode
     sessionPromise: Promise<Session | null>
+    employeesPromise: Promise<Employee[]>
+    workTypesPromise: Promise<WorkType[]>
 }
 
-export function AddWorkLogDialog({ children, sessionPromise }: AddWorkLogDialogProps) {
+export function AddWorkLogDialog({ children, sessionPromise, employeesPromise, workTypesPromise }: AddWorkLogDialogProps) {
     const router = useRouter()
     const [open, setOpen] = useState(false)
-    const [employees, setEmployees] = useState<Employee[]>([])
-    const [workTypes, setWorkTypes] = useState<WorkType[]>([])
     const patientNameRef = useRef<HTMLInputElement>(null)
     const workOutcomeRefs = useRef<(HTMLInputElement | null)[]>([])
 
@@ -94,19 +94,6 @@ export function AddWorkLogDialog({ children, sessionPromise }: AddWorkLogDialogP
         name: "units",
     })
 
-    const session = use(sessionPromise)
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const [fetchedEmployees, fetchedWorkTypes] = await Promise.all([
-                getEmployees(session),
-                getWorkTypes(session),
-            ])
-            setEmployees(fetchedEmployees)
-            setWorkTypes(fetchedWorkTypes)
-        }
-        fetchData()
-    }, [session])
 
     // Update refs array when fields change
     useEffect(() => {
@@ -128,6 +115,10 @@ export function AddWorkLogDialog({ children, sessionPromise }: AddWorkLogDialogP
             workOutcomeRefs.current[index]?.focus()
         }, 100)
     }
+
+    const session = use(sessionPromise)
+    const employees = use(employeesPromise)
+    const workTypes = use(workTypesPromise)
 
     async function onSubmit(values: FormData) {
         try {

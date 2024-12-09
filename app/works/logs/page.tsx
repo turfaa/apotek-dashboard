@@ -8,6 +8,8 @@ import { WorkLogsTable, WorkLogsTableSkeleton } from "./table"
 import { WorkLogsSummary, WorkLogsSummarySkeleton } from "./summary"
 import { AddWorkLogDialog } from "./add-dialog"
 import { auth } from "@/lib/auth"
+import { getWorkLogs, getWorkTypes } from "@/lib/api/work"
+import { getEmployees } from "@/lib/api/employee"
 
 export const metadata: Metadata = {
     title: "Laporan Pekerjaan",
@@ -19,7 +21,7 @@ export interface WorkLogsProps {
 }
 
 export default function WorkLogs(props: WorkLogsProps): React.ReactElement {
-    const session = auth()
+    const sessionPromise = auth()
     
     // If no dates provided, use current month
     const searchParams = props.searchParams.then(searchParams => {
@@ -35,6 +37,14 @@ export default function WorkLogs(props: WorkLogsProps): React.ReactElement {
         return searchParams
     })
     
+    const workLogsPromise = 
+        Promise.all([sessionPromise, searchParams])
+            .then(([session, searchParams]) => getWorkLogs(searchParams.from, searchParams.until, session))
+            .then(logs => logs.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()))
+    
+    const employeesPromise = sessionPromise.then(session => getEmployees(session))
+    const workTypesPromise = sessionPromise.then(session => getWorkTypes(session))
+    
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <div className="flex justify-between items-center mb-6">
@@ -42,7 +52,11 @@ export default function WorkLogs(props: WorkLogsProps): React.ReactElement {
                     <h2 className="text-3xl font-bold tracking-tight">Laporan Pekerjaan</h2>
                     <DateRangePicker className="max-w-min" defaultDateRangeType="Bulan ini" />
                 </div>
-                <AddWorkLogDialog sessionPromise={session}>
+                <AddWorkLogDialog 
+                    sessionPromise={sessionPromise}
+                    employeesPromise={employeesPromise}
+                    workTypesPromise={workTypesPromise}
+                >
                     <Button>
                         <Plus className="mr-2 h-4 w-4" />
                         Tambah Laporan
@@ -51,11 +65,11 @@ export default function WorkLogs(props: WorkLogsProps): React.ReactElement {
             </div>
 
             <Suspense fallback={<WorkLogsSummarySkeleton />}>
-                <WorkLogsSummary searchParams={searchParams} sessionPromise={session} />
+                <WorkLogsSummary workLogsPromise={workLogsPromise} />
             </Suspense>
 
             <Suspense fallback={<WorkLogsTableSkeleton />}>
-                <WorkLogsTable searchParams={searchParams} sessionPromise={session} />
+                <WorkLogsTable workLogsPromise={workLogsPromise} />
             </Suspense>
         </main>
     )

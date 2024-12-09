@@ -7,10 +7,8 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { getWorkLogs } from "@/lib/api/work"
-import { SearchParams } from "@/types/search-params"
+import { WorkLog } from "@/lib/api/work"
 import { use } from "react"
-import { Session } from "next-auth"
 import { Skeleton } from "@/components/ui/skeleton"
 import { CollapsibleHeader } from "./collapsible-header"
 import { Badge } from "@/components/ui/badge"
@@ -64,16 +62,11 @@ export function WorkLogsSummarySkeleton(): React.ReactElement {
 }
 
 interface WorkLogsSummaryProps {
-    searchParams: SearchParams
-    sessionPromise: Promise<Session | null>
+    workLogsPromise: Promise<WorkLog[]>
 }
 
-export function WorkLogsSummary({ searchParams, sessionPromise }: WorkLogsSummaryProps): React.ReactElement {
-    const workLogs = 
-        Promise.all([sessionPromise, searchParams])
-            .then(([session, searchParams]) => getWorkLogs(searchParams.from, searchParams.until, session))
-
-    const logs = use(workLogs)
+export function WorkLogsSummary({ workLogsPromise }: WorkLogsSummaryProps): React.ReactElement {
+    const logs = use(workLogsPromise)
 
     // Group logs by employee
     const summaryByEmployee = logs.reduce((acc, log) => {

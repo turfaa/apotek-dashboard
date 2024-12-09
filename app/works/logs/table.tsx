@@ -6,10 +6,8 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { getWorkLogs } from "@/lib/api/work"
-import { SearchParams } from "@/types/search-params"
+import { WorkLog } from "@/lib/api/work"
 import { use } from "react"
-import { Session } from "next-auth"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import { Printer } from "lucide-react"
@@ -58,17 +56,11 @@ export function WorkLogsTableSkeleton(): React.ReactElement {
 }
 
 interface WorkLogsTableProps {
-    searchParams: SearchParams
-    sessionPromise: Promise<Session | null>
+    workLogsPromise: Promise<WorkLog[]>
 }
 
-export function WorkLogsTable({ searchParams, sessionPromise }: WorkLogsTableProps): React.ReactElement {
-    const workLogs = 
-        Promise.all([sessionPromise, searchParams])
-            .then(([session, searchParams]) => getWorkLogs(searchParams.from, searchParams.until, session))
-            .then(logs => logs.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()))
-
-    const logs = use(workLogs)
+export function WorkLogsTable({ workLogsPromise }: WorkLogsTableProps): React.ReactElement {
+    const logs = use(workLogsPromise)
 
     return (
         <div className="rounded-md border">
