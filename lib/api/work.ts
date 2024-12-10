@@ -112,6 +112,23 @@ export function convertUnderlyingWorkLogUnit(underlyingWorkLogUnit: UnderlyingWo
     }
 }
 
+export async function deleteWorkLog(workLogID: number, deleterEmployeeID: number, session?: Session | null): Promise<void> {
+    await fetchAPI<void>(
+        "DELETE",
+        `/work-logs/${workLogID}`,
+        null,
+        {
+            headers: {
+                "X-Employee-ID": deleterEmployeeID.toString()
+            }
+        },
+        {
+            forHRIS: true,
+            session: session,
+        },
+    )
+}
+
 export async function createWorkType(createWorkTypeRequest: CreateWorkTypeRequest, session?: Session | null): Promise<WorkType> {
     return fetchAPI<WorkType>(
         "POST",

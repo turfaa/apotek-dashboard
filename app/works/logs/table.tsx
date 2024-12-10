@@ -7,11 +7,13 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { WorkLog } from "@/lib/api/work"
+import { Employee } from "@/lib/api/employee"
 import { use } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import { Printer } from "lucide-react"
 import Link from "next/link"
+import { DeleteWorkLogDialog } from "./delete-dialog"
 
 export function WorkLogsTableSkeleton(): React.ReactElement {
     return (
@@ -45,7 +47,10 @@ export function WorkLogsTableSkeleton(): React.ReactElement {
                                 </div>
                             </TableCell>
                             <TableCell>
-                                <Skeleton className="h-9 w-9" />
+                                <div className="flex gap-2">
+                                    <Skeleton className="h-9 w-9" />
+                                    <Skeleton className="h-9 w-9" />
+                                </div>
                             </TableCell>
                         </TableRow>
                     ))}
@@ -57,10 +62,12 @@ export function WorkLogsTableSkeleton(): React.ReactElement {
 
 interface WorkLogsTableProps {
     workLogsPromise: Promise<WorkLog[]>
+    employeesPromise: Promise<Employee[]>
 }
 
-export function WorkLogsTable({ workLogsPromise }: WorkLogsTableProps): React.ReactElement {
+export function WorkLogsTable({ workLogsPromise, employeesPromise }: WorkLogsTableProps): React.ReactElement {
     const logs = use(workLogsPromise)
+    const employees = use(employeesPromise)
 
     return (
         <div className="rounded-md border">
@@ -96,19 +103,25 @@ export function WorkLogsTable({ workLogsPromise }: WorkLogsTableProps): React.Re
                                 </ul>
                             </TableCell>
                             <TableCell>
-                                <Link
-                                    href={`/api/work-logs/${log.id}/for-patient`}
-                                    target="_blank"
-                                    title="Cetak untuk pasien"
-                                >
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="cursor-pointer"
+                                <div className="flex gap-2">
+                                    <Link
+                                        href={`/api/work-logs/${log.id}/for-patient`}
+                                        target="_blank"
+                                        title="Cetak untuk pasien"
                                     >
-                                        <Printer className="h-4 w-4" />
-                                    </Button>
-                                </Link>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="cursor-pointer"
+                                        >
+                                            <Printer className="h-4 w-4" />
+                                        </Button>
+                                    </Link>
+                                    <DeleteWorkLogDialog
+                                        workLogId={log.id}
+                                        employees={employees}
+                                    />
+                                </div>
                             </TableCell>
                         </TableRow>
                     ))}

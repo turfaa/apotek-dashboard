@@ -69,7 +69,10 @@ export default function WorkLogs(props: WorkLogsProps): React.ReactElement {
             </Suspense>
 
             <Suspense fallback={<WorkLogsTableSkeleton />}>
-                <WorkLogsTable workLogsPromise={workLogsPromise} />
+                <WorkLogsTable 
+                    workLogsPromise={workLogsPromise} 
+                    employeesPromise={employeesPromise}
+                />
             </Suspense>
         </main>
     )
