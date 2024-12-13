@@ -1,4 +1,4 @@
-import React, { use } from "react"
+import React from "react"
 import Link from "next/link"
 import { Table } from "@/cui/components"
 import { auth } from "@/lib/auth"
@@ -10,15 +10,13 @@ import { Button } from "@/components/ui/button"
 import { TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Tooltip } from "@/components/ui/tooltip"
 
-
 export interface ShiftsTableProps {
     searchParams: SearchParams
 }
 
-export default function ShiftsTable(props: ShiftsTableProps): React.ReactElement {
-    const session = use(auth())
-    const searchParams = use(props.searchParams)
-    const data = use(getShifts(searchParams.from, searchParams.until, session))
+export default async function ShiftsTable(props: ShiftsTableProps): Promise<React.ReactElement> {
+    const data = await Promise.all([auth(), props.searchParams]).
+        then(([session, { from, until }]) => getShifts(from, until, session))
 
     return (
         <Table
