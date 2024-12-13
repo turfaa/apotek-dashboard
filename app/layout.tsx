@@ -5,6 +5,7 @@ import { GeistSans } from "geist/font/sans"
 import { Toaster } from "@/components/ui/sonner"
 import type { Metadata, Viewport } from "next"
 import React, { Suspense } from "react"
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
 // export const fetchCache = 'default-cache'
 
@@ -59,7 +60,9 @@ export default function RootLayout({
                     <Nav />
                 </Suspense>
 
-                {children}
+                <NuqsAdapter>
+                    {children}
+                </NuqsAdapter>
                 <Toaster />
             </body>
         </html>

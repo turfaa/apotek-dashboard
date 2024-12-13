@@ -1,4 +1,4 @@
-import { useQueryState } from "next-usequerystate"
+import { useQueryState } from "nuqs"
 import { useCallback, useTransition } from "react"
 
 export interface SearchHook {

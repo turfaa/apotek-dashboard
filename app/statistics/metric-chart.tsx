@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Chart, registerables } from "chart.js"
+import { Chart } from "chart.js/auto"
 import "chartjs-adapter-moment"
 import ChartDataLabels from "chartjs-plugin-datalabels"
 import { Line } from "react-chartjs-2"
@@ -82,7 +82,7 @@ export default function MetricChart(
     )
 }
 
-Chart.register(ChartDataLabels, ...registerables)
+Chart.register(ChartDataLabels)
 
 export function MetricChartFallback(): React.ReactElement {
     return (
