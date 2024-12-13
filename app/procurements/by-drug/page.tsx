@@ -2,7 +2,7 @@ import React, { Suspense } from "react"
 import { Card } from "@/components/ui/card"
 import { Title } from "@/components/typography"
 import { Metadata } from "next"
-import DrugSelector, { DrugSelectorFallback } from "@/components/drug-selector"
+import DrugSelector from "@/components/drug-selector"
 import LastDrugProcurementsTable, {
     LastDrugProcurementsTableFallback,
 } from "./table"

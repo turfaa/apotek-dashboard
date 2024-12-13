@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card"
-import { Title, Text } from "@/components/typography"
+import { Title } from "@/components/typography"
 import { Metadata } from "next"
 import { Suspense } from "react"
 import ShiftsTable, { ShiftsTableFallback } from "./table"

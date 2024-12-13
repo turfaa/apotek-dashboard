@@ -10,15 +10,14 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { SearchParams } from "@/types/search-params"
-import { use } from "react"
 
 export interface SoldDrugsTableProps {
     searchParams: SearchParams
 }
 
-export default function SoldDrugsTable({ searchParams }: SoldDrugsTableProps): React.ReactElement {
-    const { from, until } = use(searchParams)
-    const { drugs } = use(getSoldDrugs(from, until))
+export default async function SoldDrugsTable(props: SoldDrugsTableProps): Promise<React.ReactElement> {
+    const { from, until } = await props.searchParams
+    const { drugs } = await getSoldDrugs(from, until)
     const totalPrice = drugs.reduce(
         (total, drug) => total + drug.totalAmount,
         0,

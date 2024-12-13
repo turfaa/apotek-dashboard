@@ -42,16 +42,10 @@ export default function Navbar({
 }: {
     session?: Session | null
 }): React.ReactElement {
-    const { homepage, navigations } = useNavigation(session?.user?.role)
-
-    let pathname = usePathname()
-    if (pathname === "/") pathname = `/${homepage}`
-
     const { isPrintMode, setPrintMode } = usePrintMode(
         session?.user?.role ?? Role.GUEST,
     )
     const [pageLoadCompleted, setPageLoadCompleted] = useState(false)
-    const [isSheetOpen, setIsSheetOpen] = useState(false)
 
     useEffect(() => setPageLoadCompleted(true), [])
 
@@ -65,6 +59,21 @@ export default function Navbar({
     if (isPrintMode) {
         return <> </>
     }
+
+    return <InnerNavbar session={session} />
+}
+
+export function InnerNavbar({
+    session,
+}: {
+    session?: Session | null
+}): React.ReactElement {
+    const { homepage, navigations } = useNavigation(session?.user?.role)
+
+    let pathname = usePathname()
+    if (pathname === "/") pathname = `/${homepage}`
+
+    const [isSheetOpen, setIsSheetOpen] = useState(false)
 
     return (
         <nav className="bg-white shadow-sm">

@@ -1,7 +1,7 @@
-import Navbar from "./navbar"
+import { InnerNavbar } from "./navbar"
 
 export default function NavbarFallback(): React.ReactElement {
     return (
-        <Navbar session={null} />
+        <InnerNavbar session={null} />
     )
 }

@@ -10,7 +10,6 @@ import { AddWorkLogDialog } from "./add-dialog"
 import { auth } from "@/lib/auth"
 import { getWorkLogs, getWorkTypes } from "@/lib/api/work"
 import { getEmployees } from "@/lib/api/employee"
-import { Skeleton } from "@/components/ui/skeleton"
 
 export const metadata: Metadata = {
     title: "Laporan Pekerjaan",
