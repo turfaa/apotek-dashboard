@@ -4,7 +4,7 @@ import { Drug, getDrugs } from "@/lib/api/drugv2"
 import Link from 'next/link'
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
 import { Text, Bold, Subtitle } from "@/components/typography"
-import { useMemo, useState, useEffect } from "react"
+import { useMemo, useState, useEffect, use } from "react"
 import { useTf } from "@/lib/tf/hook"
 import useSearch from "@/lib/search-hook"
 import { Session } from "next-auth"
@@ -17,11 +17,13 @@ const rolesAllowedToSeeDrugCost = [Role.ADMIN, Role.STAFF]
 const refreshInterval = 10000 // 10 seconds
 
 export interface PriceListTableClientProps {
-    session: Session | null
-    initialDrugs: Drug[]
+    sessionPromise: Promise<Session | null>
+    initialDrugsPromise: Promise<Drug[]>
 }
 
-export default function PriceListTableClient({ session, initialDrugs }: PriceListTableClientProps): React.ReactElement {
+export default function PriceListTableClient({ sessionPromise, initialDrugsPromise }: PriceListTableClientProps): React.ReactElement {
+    const session = use(sessionPromise)
+    const initialDrugs = use(initialDrugsPromise)
     const [ssrCompleted, setSsrCompleted] = useState(false)
     const [drugs, setDrugs] = useState(initialDrugs)
 
