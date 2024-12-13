@@ -16,47 +16,11 @@ import { Badge } from "@/components/ui/badge"
 export function WorkLogsSummarySkeleton(): React.ReactElement {
     return (
         <Card className="mb-6">
-            <CardHeader className="p-4 pb-0">
-                <div className="flex items-center justify-between">
-                    <CardTitle>Ringkasan Pekerjaan</CardTitle>
+            <CardHeader className="p-4 py-0">
+                <CollapsibleHeader>
                     <Skeleton className="h-9 w-9" />
-                </div>
+                </CollapsibleHeader>
             </CardHeader>
-            <CardContent className="p-4">
-                <div className="rounded-md border">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Karyawan</TableHead>
-                                <TableHead>Total Pasien</TableHead>
-                                <TableHead>Total Pekerjaan</TableHead>
-                                <TableHead>Rincian Pekerjaan</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {Array.from({ length: 3 }).map((_, index) => (
-                                <TableRow key={index}>
-                                    <TableCell>
-                                        <Skeleton className="h-4 w-32" />
-                                    </TableCell>
-                                    <TableCell>
-                                        <Skeleton className="h-4 w-16" />
-                                    </TableCell>
-                                    <TableCell>
-                                        <Skeleton className="h-4 w-16" />
-                                    </TableCell>
-                                    <TableCell>
-                                        <div className="space-y-2">
-                                            <Skeleton className="h-4 w-48" />
-                                            <Skeleton className="h-4 w-40" />
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </div>
-            </CardContent>
         </Card>
     )
 }
@@ -65,8 +29,8 @@ interface WorkLogsSummaryProps {
     workLogsPromise: Promise<WorkLog[]>
 }
 
-export function WorkLogsSummary({ workLogsPromise }: WorkLogsSummaryProps): React.ReactElement {
-    const logs = use(workLogsPromise)
+export async function WorkLogsSummary({ workLogsPromise }: WorkLogsSummaryProps): Promise<React.ReactElement> {
+    const logs = await workLogsPromise
 
     // Group logs by employee
     const summaryByEmployee = logs.reduce((acc, log) => {

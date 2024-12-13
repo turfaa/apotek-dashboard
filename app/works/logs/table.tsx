@@ -65,9 +65,9 @@ interface WorkLogsTableProps {
     employeesPromise: Promise<Employee[]>
 }
 
-export function WorkLogsTable({ workLogsPromise, employeesPromise }: WorkLogsTableProps): React.ReactElement {
-    const logs = use(workLogsPromise)
-    const employees = use(employeesPromise)
+export async function WorkLogsTable({ workLogsPromise, employeesPromise }: WorkLogsTableProps): Promise<React.ReactElement> {
+    const logs = await workLogsPromise
+    const employees = await employeesPromise
 
     return (
         <div className="rounded-md border">

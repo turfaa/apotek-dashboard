@@ -13,8 +13,7 @@ export const metadata: Metadata = {
 }
 
 export default function WorkTypesPage(): React.ReactElement {
-    const workTypes = auth().
-        then(session => getWorkTypes(session))
+    const workTypesPromise = auth().then(session => getWorkTypes(session))
 
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
@@ -32,7 +31,7 @@ export default function WorkTypesPage(): React.ReactElement {
                     </Button>
                 </Link>
             </div>
-            <DataTable columns={columns} dataPromise={workTypes} />
+            <DataTable columns={columns} dataPromise={workTypesPromise} />
         </main>
     )
 } 

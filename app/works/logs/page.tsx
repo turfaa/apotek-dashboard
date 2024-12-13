@@ -10,6 +10,7 @@ import { AddWorkLogDialog } from "./add-dialog"
 import { auth } from "@/lib/auth"
 import { getWorkLogs, getWorkTypes } from "@/lib/api/work"
 import { getEmployees } from "@/lib/api/employee"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export const metadata: Metadata = {
     title: "Laporan Pekerjaan",
@@ -52,16 +53,18 @@ export default function WorkLogs(props: WorkLogsProps): React.ReactElement {
                     <h2 className="text-3xl font-bold tracking-tight">Laporan Pekerjaan</h2>
                     <DateRangePicker className="max-w-min" defaultDateRangeType="Bulan ini" />
                 </div>
-                <AddWorkLogDialog 
-                    sessionPromise={sessionPromise}
-                    employeesPromise={employeesPromise}
-                    workTypesPromise={workTypesPromise}
-                >
-                    <Button>
-                        <Plus className="mr-2 h-4 w-4" />
-                        Tambah Laporan
-                    </Button>
-                </AddWorkLogDialog>
+                <Suspense fallback={<Button disabled><Plus className="mr-2 h-4 w-4" /> Tambah Laporan</Button>}>
+                    <AddWorkLogDialog 
+                        sessionPromise={sessionPromise}
+                        employeesPromise={employeesPromise}
+                        workTypesPromise={workTypesPromise}
+                    >
+                        <Button>
+                            <Plus className="mr-2 h-4 w-4" />
+                            Tambah Laporan
+                        </Button>
+                    </AddWorkLogDialog>
+                </Suspense>
             </div>
 
             <Suspense fallback={<WorkLogsSummarySkeleton />}>
