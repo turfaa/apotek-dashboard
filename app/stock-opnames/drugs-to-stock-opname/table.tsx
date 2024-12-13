@@ -11,19 +11,18 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { SearchParams } from "@/types/search-params"
-import { use } from "react"
 
 export interface DrugsTableProps {
     searchParams: SearchParams
     mode?: DrugsToStockOpnameMode
 }
 
-export default function DrugsTable({
+export default async function DrugsTable({
     searchParams,
     mode,
-}: DrugsTableProps): React.ReactElement {
-    const { date } = use(searchParams)
-    const { drugs } = use(getDrugsToStockOpname(date, mode))
+}: DrugsTableProps): Promise<React.ReactElement> {
+    const { date } = await searchParams
+    const { drugs } = await getDrugsToStockOpname(date, mode)
 
     return (
         <Table>

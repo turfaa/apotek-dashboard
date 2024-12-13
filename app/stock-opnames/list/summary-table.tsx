@@ -10,11 +10,10 @@ import {
 import { getStockOpnameSummaries } from "@/lib/api/stock-opname"
 import { rupiah } from "@/lib/rupiah"
 import { SearchParams } from "@/types/search-params"
-import { use } from "react"
 
-export default function StockOpnameSummaryTable({ searchParams }: { searchParams: SearchParams }): React.ReactElement {
-    const { from, until } = use(searchParams)
-    const { summaries } = use(getStockOpnameSummaries(from, until))
+export default async function StockOpnameSummaryTable({ searchParams }: { searchParams: SearchParams }): Promise<React.ReactElement> {
+    const { from, until } = await searchParams
+    const { summaries } = await getStockOpnameSummaries(from, until)
     const totalHppDifference = summaries.reduce(
         (total, stockOpname) => total + stockOpname.hppDifference,
         0,

@@ -10,11 +10,10 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { SearchParams } from "@/types/search-params"
-import { use } from "react"
 
-export default function CompactedStockOpnameTable({ searchParams }: { searchParams: SearchParams }): React.ReactElement {
-    const { from, until } = use(searchParams)
-    const { stockOpnames } = use(getCompactedStockOpnames(from, until))
+export default async function CompactedStockOpnameTable({ searchParams }: { searchParams: SearchParams }): Promise<React.ReactElement> {
+    const { from, until } = await searchParams
+    const { stockOpnames } = await getCompactedStockOpnames(from, until)
     const totalHppDifference = stockOpnames.reduce(
         (total, stockOpname) => total + stockOpname.hppDifference,
         0,
