@@ -12,6 +12,7 @@ import { use } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { CollapsibleHeader } from "./collapsible-header"
 import { Badge } from "@/components/ui/badge"
+import { rupiah } from "@/lib/rupiah"
 
 export function WorkLogsSummarySkeleton(): React.ReactElement {
     return (
@@ -39,11 +40,11 @@ export async function WorkLogsSummary({ workLogsPromise }: WorkLogsSummaryProps)
             acc[employeeId] = {
                 employee: log.employee,
                 totalPatients: 0,
+                workCount: 0,
                 totalMultiplier: 0,
                 workTypes: {} as Record<number, { 
                     name: string, 
                     count: number,
-                    multiplier: number,
                     totalMultiplier: number
                 }>
             }
@@ -59,26 +60,23 @@ export async function WorkLogsSummary({ workLogsPromise }: WorkLogsSummaryProps)
                 acc[employeeId].workTypes[workTypeId] = {
                     name: unit.workType.name,
                     count: 0,
-                    multiplier: unit.workType.multiplier,
-                    totalMultiplier: 0
                 }
             }
             // Increment count and add multiplier for each unit
             acc[employeeId].workTypes[workTypeId].count++
-            acc[employeeId].workTypes[workTypeId].totalMultiplier += unit.workType.multiplier
-            acc[employeeId].totalMultiplier += unit.workType.multiplier
+            acc[employeeId].workCount++
+            acc[employeeId].totalMultiplier += unit.workMultiplier
         })
 
         return acc
     }, {} as Record<number, {
         employee: { id: number, name: string },
         totalPatients: number,
+        workCount: number,
         totalMultiplier: number,
         workTypes: Record<number, { 
             name: string, 
             count: number,
-            multiplier: number,
-            totalMultiplier: number
         }>
     }>)
 
@@ -89,7 +87,7 @@ export async function WorkLogsSummary({ workLogsPromise }: WorkLogsSummaryProps)
                     <TableRow className="bg-muted/50">
                         <TableHead className="font-semibold">Karyawan</TableHead>
                         <TableHead className="font-semibold">Total Pasien</TableHead>
-                        <TableHead className="font-semibold">Total Pekerjaan</TableHead>
+                        <TableHead className="font-semibold">Total Kompensasi</TableHead>
                         <TableHead className="font-semibold">Rincian Pekerjaan</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -106,7 +104,7 @@ export async function WorkLogsSummary({ workLogsPromise }: WorkLogsSummaryProps)
                             </TableCell>
                             <TableCell>
                                 <Badge variant="secondary" className="font-normal">
-                                    {summary.totalMultiplier} kali
+                                    {rupiah.format(summary.totalMultiplier * 1000)}
                                 </Badge>
                             </TableCell>
                             <TableCell>
@@ -122,6 +120,15 @@ export async function WorkLogsSummary({ workLogsPromise }: WorkLogsSummaryProps)
                                             </span>
                                         </div>
                                     ))}
+                                    <div className="text-sm">  
+                                        <span className="text-muted-foreground">
+                                            Total Pekerjaan:
+                                        </span>
+                                        {" "}
+                                        <span>
+                                            {summary.workCount} kali
+                                        </span>
+                                    </div>
                                 </div>
                             </TableCell>
                         </TableRow>
@@ -136,7 +143,9 @@ export async function WorkLogsSummary({ workLogsPromise }: WorkLogsSummaryProps)
                             </TableCell>
                             <TableCell>
                                 <Badge variant="secondary" className="font-medium">
-                                    {Object.values(summaryByEmployee).reduce((sum, summary) => sum + summary.totalMultiplier, 0)} kali
+                                    {rupiah.format(
+                                        Object.values(summaryByEmployee).reduce((sum, summary) => sum + summary.totalMultiplier, 0) * 1000
+                                    )}
                                 </Badge>
                             </TableCell>
                             <TableCell>
@@ -147,15 +156,12 @@ export async function WorkLogsSummary({ workLogsPromise }: WorkLogsSummaryProps)
                                                 if (!acc[workType.name]) {
                                                     acc[workType.name] = {
                                                         count: 0,
-                                                        multiplier: workType.multiplier,
-                                                        totalMultiplier: 0
                                                     }
                                                 }
                                                 acc[workType.name].count += workType.count
-                                                acc[workType.name].totalMultiplier += workType.totalMultiplier
                                             })
                                             return acc
-                                        }, {} as Record<string, { count: number, multiplier: number, totalMultiplier: number }>)
+                                        }, {} as Record<string, { count: number }>)
                                     ).map(([name, total]) => (
                                         <div key={name} className="text-sm">
                                             <span className="text-muted-foreground">
@@ -167,6 +173,15 @@ export async function WorkLogsSummary({ workLogsPromise }: WorkLogsSummaryProps)
                                             </span>
                                         </div>
                                     ))}
+                                    <div className="text-sm">
+                                        <span className="text-muted-foreground">
+                                            Total Pekerjaan:
+                                        </span>
+                                        {" "}
+                                        <span>
+                                            {Object.values(summaryByEmployee).reduce((sum, summary) => sum + summary.workCount, 0)} kali
+                                        </span>
+                                    </div>
                                 </div>
                             </TableCell>
                         </TableRow>

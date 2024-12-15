@@ -34,12 +34,14 @@ export interface WorkLogUnit {
     id: number
     workType: WorkType
     workOutcome: string
+    workMultiplier: number
 }
 
 export interface UnderlyingWorkLogUnit {
     id: number
     workType: UnderlyingWorkType
     workOutcome: string
+    workMultiplier: string
 }
 
 export interface CreateWorkTypeRequest {
@@ -109,6 +111,7 @@ export function convertUnderlyingWorkLogUnit(underlyingWorkLogUnit: UnderlyingWo
     return {
         ...underlyingWorkLogUnit,
         workType: convertUnderlyingWorkType(underlyingWorkLogUnit.workType),
+        workMultiplier: parseFloat(underlyingWorkLogUnit.workMultiplier),
     }
 }
 
