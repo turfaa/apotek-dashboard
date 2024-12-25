@@ -30,7 +30,7 @@ export default function MetricGrid(props: MetricGridProps): React.ReactElement {
     }
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <MetricCard
                 title={props.title}
                 value={sum}
@@ -48,7 +48,7 @@ export default function MetricGrid(props: MetricGridProps): React.ReactElement {
 
 export function MetricGridFallback({ title }: { title: string }): React.ReactElement {
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <MetricCardFallback title={title} />
             <MetricChartFallback />
         </div>

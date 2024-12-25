@@ -59,14 +59,14 @@ export default function ClientSide(): React.ReactElement {
                     </TabsList>
                 )}
 
-                <TabsContent value="summary">
+                <TabsContent value="summary" className="mt-4">
                     {isLoading ? (
-                        <>
+                        <div className="flex flex-col gap-6">
                             <MetricGridFallback title="Nominal Penjualan" />
                             <MetricGridFallback title="Banyak Penjualan" />
-                        </>
+                        </div>
                     ) : (
-                        <>
+                        <div className="flex flex-col gap-6">
                             <MetricGrid
                                 title="Nominal Penjualan"
                                 data={salesTotals}
@@ -76,16 +76,16 @@ export default function ClientSide(): React.ReactElement {
                                 title="Banyak Penjualan"
                                 data={salesNumbers}
                             />
-                        </>
+                        </div>
                     )}
                 </TabsContent>
 
-                <TabsContent value="daily">
-                    <Card className="mt-6 p-6">
+                <TabsContent value="daily" className="mt-4">
+                    <div className="rounded-md border">
                         <StatisticsTable
                             statistics={data?.dailyHistory || []}
                         />
-                    </Card>
+                    </div>
                 </TabsContent>
             </Tabs>
         </>
