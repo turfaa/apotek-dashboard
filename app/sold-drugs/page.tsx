@@ -19,9 +19,9 @@ export default function SoldDrugs(props: { searchParams: SearchParams }): React.
 
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
-            <div className="flex flex-col gap-2">
-                <Title>Obat Terjual</Title>
-                <DateRangePicker className="max-w-min" />
+            <div>
+                <Title className="mb-2">Obat Terjual</Title>
+                <DateRangePicker />
             </div>
 
             <SearchButton className="mt-4" />
