@@ -57,7 +57,7 @@ export default function InvoiceCard({
             <div className="flex justify-between w-full">
                 <Title>{title}</Title>
                 <Button
-                    variant="outline"
+                    variant="destructive"
                     size="sm"
                     onClick={removeInvoice}
                 >
