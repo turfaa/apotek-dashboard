@@ -1,4 +1,6 @@
-import { getSoldDrugs } from "@/lib/api/sold-drug"
+"use client"
+
+import { SoldDrug } from "@/lib/api/sold-drug"
 import { rupiah } from "@/lib/rupiah"
 import {
     Table,
@@ -9,16 +11,41 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { SearchParams } from "@/types/search-params"
+import { useMemo, use } from "react"
+import { useDebounce } from "use-debounce"
+import useSearch from "@/lib/search-hook"
+import { useTf } from "@/lib/tf/hook"
 
 export interface SoldDrugsTableProps {
-    searchParams: SearchParams
+    drugsPromise: Promise<SoldDrug[]>
 }
 
-export default async function SoldDrugsTable(props: SoldDrugsTableProps): Promise<React.ReactElement> {
-    const { from, until } = await props.searchParams
-    const { drugs } = await getSoldDrugs(from, until)
-    const totalPrice = drugs.reduce(
+export default function SoldDrugsTable({ drugsPromise }: SoldDrugsTableProps): React.ReactElement {
+    const { query } = useSearch()
+    const [debouncedQuery] = useDebounce(query, 300)
+    const drugs = use(drugsPromise)
+
+    const [drugIds, drugSearchTexts, drugById] = useMemo(() => {
+        return [
+            drugs.map((d) => d.drug.vmedisCode),
+            drugs.map((d) => d.drug.name),
+            new Map(drugs.map((d) => [d.drug.vmedisCode, d])),
+        ]
+    }, [drugs])
+
+    const { search } = useTf(drugIds, drugSearchTexts)
+
+    const filteredDrugs = useMemo(() => {
+        if (debouncedQuery.length < 3) {
+            return drugs
+        }
+
+        return search(debouncedQuery).map((vmedisCode) =>
+            drugById.get(vmedisCode),
+        ) as SoldDrug[]
+    }, [drugs, debouncedQuery, search, drugById])
+
+    const totalPrice = filteredDrugs.reduce(
         (total, drug) => total + drug.totalAmount,
         0,
     )
@@ -36,7 +63,7 @@ export default async function SoldDrugsTable(props: SoldDrugsTableProps): Promis
             </TableHeader>
 
             <TableBody>
-                {drugs.map((drug, index) => (
+                {filteredDrugs.map((drug, index) => (
                     <TableRow key={index}>
                         <TableHead>{index + 1}</TableHead>
                         <TableCell>{drug.drug.name}</TableCell>
@@ -57,4 +84,4 @@ export default async function SoldDrugsTable(props: SoldDrugsTableProps): Promis
             </TableFooter>
         </Table>
     )
-}
+} 

@@ -1,29 +1,36 @@
 import SoldDrugsTable from "@/app/sold-drugs/table"
 import DateRangePicker from "@/components/date-range-picker"
-import { Card } from "@/components/ui/card"
-import { Title } from "@/components/typography"
+import { Title } from "@/components/typography/v2"
 import { Metadata } from "next"
 import { Suspense } from "react"
-import Loading from "@/components/loading"
+import SoldDrugsTableFallback from "./table-fallback"
 import { SearchParams } from "@/types/search-params"
+import SearchButton from "@/components/search-button"
+import { getSoldDrugs } from "@/lib/api/sold-drug"
 
 export const metadata: Metadata = {
     title: "Obat Terjual",
 }
 
 export default function SoldDrugs(props: { searchParams: SearchParams }): React.ReactElement {
+    const drugsPromise = props.searchParams
+        .then(params => getSoldDrugs(params.from, params.until))
+        .then(response => response.drugs)
+
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
-            <div className="flex flex-row justify-start gap-2">
-                <Title>Obat Terjual pada</Title>
+            <div className="flex flex-col gap-2">
+                <Title>Obat Terjual</Title>
                 <DateRangePicker className="max-w-min" />
             </div>
 
-            <Card className="mt-4 p-6">
-                <Suspense fallback={<Loading />}>
-                    <SoldDrugsTable searchParams={props.searchParams} />
+            <SearchButton className="mt-4" />
+
+            <div className="rounded-md border mt-4">
+                <Suspense fallback={<SoldDrugsTableFallback />}>
+                    <SoldDrugsTable drugsPromise={drugsPromise} />
                 </Suspense>
-            </Card>
+            </div>
         </main>
     )
 }

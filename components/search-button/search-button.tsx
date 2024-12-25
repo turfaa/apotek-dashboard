@@ -6,11 +6,15 @@ import useSearch from "@/lib/search-hook"
 import { usePrintMode } from "@/lib/print-mode"
 
 export interface SearchButtonProps {
+    placeholder?: string
     disabled?: boolean
+    className?: string
 }
 
 export function SearchButton({
+    placeholder,
     disabled,
+    className,
 }: SearchButtonProps): React.ReactElement {
     const { query, setQuery } = useSearch()
     const { isPrintMode } = usePrintMode()
@@ -21,7 +25,8 @@ export function SearchButton({
 
     return (
         <Input
-            placeholder="Cari obat..."
+            className={className}
+            placeholder={placeholder ?? "Cari obat..."}
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
                 setQuery(event.target.value)
             }
