@@ -1,5 +1,4 @@
-import { Card } from "@/components/ui/card"
-import { Title } from "@/components/typography"
+import { Title } from "@/components/typography/v2"
 import { Metadata } from "next"
 import { Suspense } from "react"
 import ShiftsTable, { ShiftsTableFallback } from "./table"
@@ -17,16 +16,16 @@ export interface ShiftsProps {
 export default async function Shifts(props: ShiftsProps): Promise<React.ReactElement> {
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
-            <div className="flex flex-row justify-start gap-2">
-                <Title>Laporan Shift</Title>
-                <DateRangePicker className="max-w-min" />
+            <div className="mb-6">
+                <Title className="mb-2">Laporan Shift</Title>
+                <DateRangePicker />
             </div>
 
-            <Card className="mt-4 p-4">
+            <div className="rounded-md border">
                 <Suspense fallback={<ShiftsTableFallback />}>
                     <ShiftsTable searchParams={props.searchParams} />
                 </Suspense>
-            </Card>
+            </div>
         </main>
     )
 }
