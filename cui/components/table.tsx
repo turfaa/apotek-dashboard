@@ -1,4 +1,4 @@
-import React, { act } from "react"
+import React, { use } from "react"
 import {
     Table as TableComp,
     TableBody,
@@ -51,4 +51,14 @@ export default function Table({ table, rowActions }: TableProps): React.ReactEle
             )}
         </TableComp>
     )
+}
+
+export interface TablePromiseProps {
+    tablePromise: Promise<TableType>
+    rowActions?: RowAction[]
+}
+
+export function TablePromise({ tablePromise, rowActions }: TablePromiseProps): React.ReactElement {
+    const table = use(tablePromise)
+    return <Table table={table} rowActions={rowActions} />
 }

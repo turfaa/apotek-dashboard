@@ -1,9 +1,8 @@
 "use client"
 
 import { Drug, getDrugs } from "@/lib/api/drugv2"
-import Link from 'next/link'
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
-import { Text, Bold, Subtitle } from "@/components/typography"
+import { Text, Bold } from "@/components/typography"
 import { useMemo, useState, useEffect, use } from "react"
 import { useTf } from "@/lib/tf/hook"
 import useSearch from "@/lib/search-hook"
@@ -12,6 +11,7 @@ import { useDebounce } from "use-debounce"
 import { Role } from "@/lib/api/auth"
 import PriceListTableFallback from "./table-fallback"
 import PriceListCard from "./card"
+import LastProcurementsDialog from "./last-procurements-dialog"
 
 const rolesAllowedToSeeDrugCost = [Role.ADMIN, Role.STAFF]
 const refreshInterval = 10000 // 10 seconds
@@ -86,9 +86,7 @@ export default function PriceListTableClient({ sessionPromise, initialDrugsPromi
                             </div>
 
                             {allowedToSeeDrugCost && (
-                                <Link href={`/procurements/by-drug?drug-code=${drug.vmedisCode}`} target="_blank">
-                                    <Subtitle>Lihat harga pembelian obat terakhir</Subtitle>
-                                </Link>
+                                <LastProcurementsDialog drugCode={drug.vmedisCode} session={session} />
                             )}
                         </TableCell>
                     </TableRow>
