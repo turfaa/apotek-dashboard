@@ -64,12 +64,12 @@ const availableNavigations: NavigationItem[] = [
         name: "Stock Opname",
         target: [
             {
-                name: "Obat Harus SO",
+                name: "Obat Harus Stok Opname",
                 href: "/stock-opnames/drugs-to-stock-opname",
                 allowedRoles: [Role.ADMIN, Role.STAFF],
             },
             {
-                name: "Laporan SO",
+                name: "Laporan Stok Opname",
                 href: "/stock-opnames",
                 allowedRoles: [Role.ADMIN, Role.STAFF],
             },

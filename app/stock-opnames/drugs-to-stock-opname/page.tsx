@@ -1,14 +1,13 @@
 import DrugsTable from "./table"
+import DrugsToStockOpnameTableFallback from "./table-fallback"
 import { DrugsToStockOpnameMode } from "@/lib/api/drugs-to-stock-opname"
 import DatePicker from "@/components/date-picker"
 import { TabsContent } from "@/components/ui/tabs"
-import { Card } from "@/components/ui/card"
-import { Title } from "@/components/typography"
+import { Title } from "@/components/typography/v2"
 import { Metadata } from "next"
 import { Suspense } from "react"
 import TabGroup from "@/components/tab-group"
 import { ReaderIcon, BackpackIcon } from "@radix-ui/react-icons"
-import Loading from "@/components/loading"
 import { SearchParams } from "@/types/search-params"
 
 export const metadata: Metadata = {
@@ -18,8 +17,8 @@ export const metadata: Metadata = {
 export default function DrugsToStockOpname({ searchParams }: { searchParams: SearchParams }): React.ReactElement {
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
-            <div className="flex flex-row justify-start gap-2">
-                <Title>Obat yang harus stok opname pada</Title>
+            <div>
+                <Title className="mb-2">Obat Harus Stok Opname</Title>
                 <DatePicker />
             </div>
 
@@ -31,25 +30,25 @@ export default function DrugsToStockOpname({ searchParams }: { searchParams: Sea
                 ]}
             >
                 <TabsContent value="sales-based">
-                    <Card className="mt-4 p-6">
-                        <Suspense fallback={<Loading />}>
+                    <div className="rounded-md border mt-4">
+                        <Suspense fallback={<DrugsToStockOpnameTableFallback />}>
                             <DrugsTable
                                 mode={DrugsToStockOpnameMode.SalesBased}
                                 searchParams={searchParams}
                             />
                         </Suspense>
-                    </Card>
+                    </div>
                 </TabsContent>
 
                 <TabsContent value="conservative">
-                    <Card className="mt-4 p-6">
-                        <Suspense fallback={<Loading />}>
+                    <div className="rounded-md border mt-4">
+                        <Suspense fallback={<DrugsToStockOpnameTableFallback />}>
                             <DrugsTable
                                 mode={DrugsToStockOpnameMode.Conservative}
                                 searchParams={searchParams}
                             />
                         </Suspense>
-                    </Card>
+                    </div>
                 </TabsContent>
             </TabGroup>
         </main>
