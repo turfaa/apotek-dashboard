@@ -1,6 +1,6 @@
 import React, { Suspense } from "react"
 import { Card } from "@/components/ui/card"
-import { Title } from "@/components/typography"
+import { Title } from "@/components/typography/v2"
 import { Metadata } from "next"
 import DrugSelector from "@/components/drug-selector"
 import LastDrugProcurementsTable, {
@@ -15,15 +15,16 @@ export const metadata: Metadata = {
 export default async function LastDrugProcurements(props: { searchParams: SearchParams }): Promise<React.ReactElement> {
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl" >
-            <Title className="mb-4">Laporan Pembelian Obat Terakhir</Title>
+            <div className="mb-6">
+                <Title className="mb-4">Laporan Pembelian Obat Terakhir</Title>
+                <DrugSelector />
+            </div>
 
-            <DrugSelector />
-
-            <Card className="mt-4 p-6">
+            <div className="rounded-md border">
                 <Suspense fallback={<LastDrugProcurementsTableFallback />}>
                     <LastDrugProcurementsTable searchParams={props.searchParams} />
                 </Suspense>
-            </Card>
+            </div>
         </main>
     )
 }

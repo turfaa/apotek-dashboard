@@ -4,6 +4,15 @@ import { getLastDrugProcurements } from "@/lib/api/last-drug-procurements"
 import { Table } from "@/cui/components"
 import { auth } from "@/lib/auth"
 import { SearchParams } from "@/types/search-params"
+import {
+    Table as TableComp,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
+import { Skeleton } from "@/components/ui/skeleton"
 
 const DEFAULT_DRUG_PROCUREMENTS_LIMIT = 5
 
@@ -40,11 +49,30 @@ export default function LastDrugProcurementsTable({
 
 export function LastDrugProcurementsTableFallback(): React.ReactElement {
     return (
-        <Table
-            table={{
-                header: ["Tanggal Diinput", "Nomor Faktur", "Tanggal Faktur", "Jumlah", "Harga Satuan", "Supplier"],
-                rows: [{ id: "0", columns: ["Mohon tunggu..."] }],
-            }}
-        />
+        <TableComp>
+            <TableHeader>
+                <TableRow>
+                    <TableHead>Tanggal Diinput</TableHead>
+                    <TableHead>Nomor Faktur</TableHead>
+                    <TableHead>Tanggal Faktur</TableHead>
+                    <TableHead>Jumlah</TableHead>
+                    <TableHead>Harga Satuan</TableHead>
+                    <TableHead>Supplier</TableHead>
+                </TableRow>
+            </TableHeader>
+
+            <TableBody>
+                {Array.from({ length: 5 }).map((_, index) => (
+                    <TableRow key={index}>
+                        <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
+                        <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
+                        <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
+                        <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
+                        <TableCell><Skeleton className="h-4 w-[120px]" /></TableCell>
+                        <TableCell><Skeleton className="h-4 w-[200px]" /></TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+        </TableComp>
     )
 }
