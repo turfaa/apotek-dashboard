@@ -16,8 +16,8 @@ export interface ShiftsProps {
 export default async function Shifts(props: ShiftsProps): Promise<React.ReactElement> {
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
-            <div className="mb-6">
-                <Title className="mb-2">Laporan Shift</Title>
+            <div className="flex flex-col gap-2 mb-6">
+                <Title>Laporan Shift</Title>
                 <DateRangePicker />
             </div>
 

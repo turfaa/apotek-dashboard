@@ -19,12 +19,12 @@ export default function SoldDrugs(props: { searchParams: SearchParams }): React.
 
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
-            <div>
-                <Title className="mb-2">Obat Terjual</Title>
+            <div className="flex flex-col gap-2 mb-4">
+                <Title>Obat Terjual</Title>
                 <DateRangePicker />
             </div>
 
-            <SearchButton className="mt-4" />
+            <SearchButton />
 
             <div className="rounded-md border mt-4">
                 <Suspense fallback={<SoldDrugsTableFallback />}>

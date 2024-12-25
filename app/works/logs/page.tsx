@@ -49,8 +49,8 @@ export default function WorkLogs(props: WorkLogsProps): React.ReactElement {
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <div className="flex justify-between items-center mb-6">
-                <div>
-                    <Title className="mb-2">Laporan Pekerjaan</Title>
+                <div className="flex flex-col gap-2">
+                    <Title>Laporan Pekerjaan</Title>
                     <DateRangePicker defaultDateRangeType="Bulan ini" />
                 </div>
 

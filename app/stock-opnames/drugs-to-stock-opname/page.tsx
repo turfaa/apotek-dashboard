@@ -17,13 +17,12 @@ export const metadata: Metadata = {
 export default function DrugsToStockOpname({ searchParams }: { searchParams: SearchParams }): React.ReactElement {
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
-            <div>
-                <Title className="mb-2">Obat Harus Stok Opname</Title>
+            <div className="flex flex-col gap-2 mb-4">
+                <Title>Obat Harus Stok Opname</Title>
                 <DatePicker />
             </div>
 
             <TabGroup
-                className="mt-4"
                 tabLabels={[
                     { tag: "sales-based", label: "Berdasarkan Penjualan", icon: <BackpackIcon className="h-4 w-4" /> },
                     { tag: "conservative", label: "Berdasarkan Semua Obat", icon: <ReaderIcon className="h-4 w-4" /> },

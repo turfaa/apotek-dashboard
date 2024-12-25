@@ -26,15 +26,14 @@ export default function StockOpnames({ searchParams }: { searchParams: SearchPar
 
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
-            <div>
-                <Title className="mb-2">Laporan Stok Opname</Title>
+            <div className="flex flex-col gap-2 mb-4">
+                <Title>Laporan Stok Opname</Title>
                 <DateRangePicker />
             </div>
 
-            <SearchButton className="mt-4" />
+            <SearchButton className="mb-4" />
 
             <TabGroup
-                className="mt-4"
                 tabLabels={[
                     { tag: "summary", label: "Ringkasan", icon: <LightningBoltIcon className="h-4 w-4" /> },
                     { tag: "compacted", label: "Compact", icon: <ReaderIcon className="h-4 w-4" /> },

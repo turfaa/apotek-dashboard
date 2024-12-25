@@ -26,7 +26,7 @@ export default function LastDrugProcurementsTable({
     const { "drug-code": drugCode, limit } = use(searchParams)
 
     if (!drugCode) {
-        return <Text>Silakan pilih obat terlebih dahulu</Text>
+        return <Text className="text-center py-4">Silakan pilih obat terlebih dahulu</Text>
     }
 
     let limitNumber = DEFAULT_DRUG_PROCUREMENTS_LIMIT
