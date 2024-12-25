@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/table"
 import { Skeleton } from "@/components/ui/skeleton"
 
-const DEFAULT_DRUG_PROCUREMENTS_LIMIT = 5
+const DEFAULT_DRUG_PROCUREMENTS_LIMIT = 10
 
 export interface LastDrugProcurementsTableProps {
     searchParams: SearchParams
