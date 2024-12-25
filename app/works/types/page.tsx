@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import Link from "next/link"
 import { auth } from "@/lib/auth"
+import { Subtitle, Title } from "@/components/typography/v2"
 
 export const metadata: Metadata = {
     title: "Jenis Pekerjaan",
@@ -19,10 +20,8 @@ export default function WorkTypesPage(): React.ReactElement {
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <div className="flex justify-between items-center mb-6">
                 <div>
-                    <h2 className="text-3xl font-bold tracking-tight">Jenis Pekerjaan</h2>
-                    <p className="text-muted-foreground">
-                        Kelola jenis pekerjaan dan pengali gaji di sini.
-                    </p>
+                    <Title>Jenis Pekerjaan</Title>
+                    <Subtitle>Kelola jenis pekerjaan dan pengali gaji di sini.</Subtitle>
                 </div>
                 <Link href="/works/types/new">
                     <Button>

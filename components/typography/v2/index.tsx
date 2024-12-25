@@ -18,3 +18,9 @@ export function Title({ children, className }: TypographyProps) {
         </h2>
     )
 }
+
+export function Subtitle({ children, className }: TypographyProps) {
+    return (
+        <p className={cn("text-muted-foreground", className)}>{children}</p>
+    )
+}

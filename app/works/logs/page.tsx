@@ -10,6 +10,7 @@ import { AddWorkLogDialog } from "./add-dialog"
 import { auth } from "@/lib/auth"
 import { getWorkLogs, getWorkTypes } from "@/lib/api/work"
 import { getEmployees } from "@/lib/api/employee"
+import { Title } from "@/components/typography/v2"
 
 export const metadata: Metadata = {
     title: "Laporan Pekerjaan",
@@ -48,10 +49,11 @@ export default function WorkLogs(props: WorkLogsProps): React.ReactElement {
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <div className="flex justify-between items-center mb-6">
-                <div className="flex flex-row justify-start gap-4 items-center">
-                    <h2 className="text-3xl font-bold tracking-tight">Laporan Pekerjaan</h2>
-                    <DateRangePicker className="max-w-min" defaultDateRangeType="Bulan ini" />
+                <div>
+                    <Title className="mb-2">Laporan Pekerjaan</Title>
+                    <DateRangePicker defaultDateRangeType="Bulan ini" />
                 </div>
+
                 <Suspense fallback={<Button disabled><Plus className="mr-2 h-4 w-4" /> Tambah Laporan</Button>}>
                     <AddWorkLogDialog 
                         sessionPromise={sessionPromise}

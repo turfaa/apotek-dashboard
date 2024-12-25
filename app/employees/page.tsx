@@ -5,7 +5,7 @@ import { columns } from "./columns"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import Link from "next/link"
-import { use } from "react"
+import { Title, Subtitle } from "@/components/typography/v2"
 import { auth } from "@/lib/auth"
 
 export const metadata: Metadata = {
@@ -21,10 +21,8 @@ export default function EmployeesPage(): React.ReactElement {
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <div className="flex justify-between items-center mb-6">
                 <div>
-                    <h2 className="text-3xl font-bold tracking-tight">Karyawan</h2>
-                    <p className="text-muted-foreground">
-                        Kelola karyawan dan gaji per shift mereka di sini.
-                    </p>
+                    <Title>Karyawan</Title>
+                    <Subtitle>Kelola karyawan dan gaji per shift mereka di sini.</Subtitle>
                 </div>
                 <Link href="/employees/new">
                     <Button>
