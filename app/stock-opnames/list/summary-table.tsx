@@ -1,3 +1,5 @@
+"use client"
+
 import {
     Table,
     TableBody,
@@ -10,15 +12,57 @@ import {
 import { getStockOpnameSummaries } from "@/lib/api/stock-opname"
 import { rupiah } from "@/lib/rupiah"
 import { SearchParams } from "@/types/search-params"
+import { useMemo, use } from "react"
+import { useDebounce } from "use-debounce"
+import useSearch from "@/lib/search-hook"
+import { useTf } from "@/lib/tf/hook"
 
-export default async function StockOpnameSummaryTable({ searchParams }: { searchParams: SearchParams }): Promise<React.ReactElement> {
-    const { from, until } = await searchParams
-    const { summaries } = await getStockOpnameSummaries(from, until)
-    const totalHppDifference = summaries.reduce(
+export interface StockOpnameSummaryTableProps {
+    summariesPromise: Promise<{
+        drugName: string
+        drugCode: string
+        unit: string
+        changes: {
+            batchCode: string
+            initialQuantity: number
+            realQuantity: number
+        }[]
+        quantityDifference: number
+        hppDifference: number
+        salePriceDifference: number
+    }[]>
+}
+
+export default function StockOpnameSummaryTable({ summariesPromise }: StockOpnameSummaryTableProps): React.ReactElement {
+    const { query } = useSearch()
+    const [debouncedQuery] = useDebounce(query, 300)
+    const summaries = use(summariesPromise)
+
+    const [drugIds, drugSearchTexts, drugById] = useMemo(() => {
+        return [
+            summaries.map((d) => d.drugCode),
+            summaries.map((d) => d.drugName),
+            new Map(summaries.map((d) => [d.drugCode, d])),
+        ]
+    }, [summaries])
+
+    const { search } = useTf(drugIds, drugSearchTexts)
+
+    const filteredSummaries = useMemo(() => {
+        if (debouncedQuery.length < 3) {
+            return summaries
+        }
+
+        return search(debouncedQuery).map((drugCode) =>
+            drugById.get(drugCode),
+        ) as typeof summaries
+    }, [summaries, debouncedQuery, search, drugById])
+
+    const totalHppDifference = filteredSummaries.reduce(
         (total, stockOpname) => total + stockOpname.hppDifference,
         0,
     )
-    const totalSalePriceDifference = summaries.reduce(
+    const totalSalePriceDifference = filteredSummaries.reduce(
         (total, stockOpname) => total + stockOpname.salePriceDifference,
         0,
     )
@@ -37,7 +81,7 @@ export default async function StockOpnameSummaryTable({ searchParams }: { search
             </TableHeader>
 
             <TableBody>
-                {summaries.map((row, index) => (
+                {filteredSummaries.map((row, index) => (
                     <TableRow key={index}>
                         <TableCell>{index + 1}</TableCell>
                         <TableCell>{row.drugName}</TableCell>
