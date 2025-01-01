@@ -31,8 +31,9 @@ export default function WorkLogs(props: WorkLogsProps): React.ReactElement {
             const firstDay = new Date(now.getFullYear(), now.getMonth(), 1)
             const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0)
 
-            searchParams.from = firstDay.toISOString().split('T')[0]
-            searchParams.until = lastDay.toISOString().split('T')[0]
+            // Convert to YYYY-MM-DD
+            searchParams.from = firstDay.toLocaleDateString('en-CA')
+            searchParams.until = lastDay.toLocaleDateString('en-CA')
         }
         
         return searchParams
