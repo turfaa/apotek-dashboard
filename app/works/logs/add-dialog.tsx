@@ -41,16 +41,14 @@ import { Session } from "next-auth"
 // Form schema matches the API types but handles string values for select inputs
 const formSchema = z.object({
     employeeID: z.coerce.number({
-        required_error: "Pilih karyawan",
-        invalid_type_error: "Pilih karyawan",
+        error: "Pilih karyawan",
     }),
     patientName: z.string().min(1, {
         message: "Masukkan nama pasien",
     }),
     units: z.array(z.object({
         workTypeID: z.coerce.number({
-            required_error: "Pilih jenis pekerjaan",
-            invalid_type_error: "Pilih jenis pekerjaan",
+            error: "Pilih jenis pekerjaan",
         }),
         workOutcome: z.string().min(1, {
             message: "Masukkan hasil pekerjaan",
@@ -75,7 +73,7 @@ export function AddWorkLogDialog({ children, sessionPromise, employeesPromise, w
     const patientNameRef = useRef<HTMLInputElement>(null)
     const workOutcomeRefs = useRef<(HTMLInputElement | null)[]>([])
 
-    const form = useForm<FormData>({
+    const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
             employeeID: 0,

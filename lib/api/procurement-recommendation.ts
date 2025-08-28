@@ -25,6 +25,11 @@ export async function getProcurementRecommendations(): Promise<ProcurementRecomm
             "GET",
             "/procurements/recommendations",
             null,
+            {
+                next: {
+                    revalidate: 0, // Don't cache, always revalidate.
+                },
+            },
         )
 
     return {

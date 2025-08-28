@@ -32,7 +32,9 @@ export async function getSalesStatistics(
         `/sales/statistics?${buildDateRangeQueryParams(from, until)}`,
         null,
         {
-            cache: "no-cache",
+            next: {
+                revalidate: 0, // Don't cache, always revalidate.
+            },
         },
     )
 

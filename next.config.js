@@ -18,7 +18,7 @@ const nextConfig = {
     },
     experimental: {
         // ppr: true,
-        dynamicIO: true,
+        // dynamicIO: true,
     },
 }
 

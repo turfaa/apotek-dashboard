@@ -80,7 +80,7 @@ export function InnerNavbar({
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 justify-between">
                     <div className="flex">
-                        <div className="flex flex-shrink-0 items-center">
+                        <div className="flex shrink-0 items-center">
                             <Link href="/">
                                 <Image
                                     src={Logo}
@@ -211,7 +211,7 @@ export function InnerNavbar({
                                             return (
                                                 <Collapsible key={item.name}>
                                                     <CollapsibleTrigger className="flex w-full items-center pl-3 pr-4 py-2 text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-800 border-l-4 border-transparent">
-                                                        <span className="flex-grow">{item.name}</span>
+                                                        <span className="grow">{item.name}</span>
                                                         <ChevronDownIcon className="h-4 w-4" />
                                                     </CollapsibleTrigger>
                                                     <CollapsibleContent>
@@ -239,7 +239,7 @@ export function InnerNavbar({
                                         {session?.user ? (
                                             <>
                                                 <div className="flex items-center px-4">
-                                                    <div className="flex-shrink-0">
+                                                    <div className="shrink-0">
                                                         <Image
                                                             className="h-8 w-8 rounded-full"
                                                             src={session?.user?.image ?? Anonymous}

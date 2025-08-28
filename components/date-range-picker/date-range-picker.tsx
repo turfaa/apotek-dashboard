@@ -136,7 +136,7 @@ export function DateRangePicker(
                             className="w-full sm:w-[300px] justify-start text-left font-normal"
                             disabled={isPending}
                         >
-                            <CalendarIcon className="mr-2 h-4 w-4 flex-shrink-0" />
+                            <CalendarIcon className="mr-2 h-4 w-4 shrink-0" />
                             <span className="truncate">
                                 {date?.from ? (
                                     date.to && date.to.toDateString() !== date.from.toDateString() ? (

@@ -21,7 +21,9 @@ export async function GetInvoiceCalculators(): Promise<InvoiceCalculatorsRespons
         "/procurements/invoice-calculators",
         null,
         {
-            cache: "no-cache",
+            next: {
+                revalidate: 0, // Don't cache, always revalidate.
+            },
         },
     )
 }
