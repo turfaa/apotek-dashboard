@@ -5,6 +5,7 @@ export interface Employee {
     id: number
     name: string
     shiftFee: number
+    showInAttendances: boolean
     createdAt: Date
     updatedAt: Date
 }
@@ -13,6 +14,7 @@ export interface UnderlyingEmployee {
     id: number
     name: string
     shiftFee: string
+    showInAttendances: boolean
     createdAt: string
     updatedAt: string
 }
@@ -41,6 +43,7 @@ export function convertUnderlyingEmployee(underlyingEmployee: UnderlyingEmployee
         id: underlyingEmployee.id,
         name: underlyingEmployee.name,
         shiftFee: parseFloat(underlyingEmployee.shiftFee),
+        showInAttendances: underlyingEmployee.showInAttendances,
         createdAt: new Date(underlyingEmployee.createdAt),
         updatedAt: new Date(underlyingEmployee.updatedAt),
     }
