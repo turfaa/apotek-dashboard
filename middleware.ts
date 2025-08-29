@@ -37,8 +37,13 @@ const rewrites = [
         allowedRoles: [Role.ADMIN, Role.STAFF],
     },
     {
-        source: "/api/attendances/types",
-        destination: `${process.env.HRIS_PROXY_URL}/v1/attendances/types`,
+        source: "/api/attendances",
+        destination: `${process.env.HRIS_PROXY_URL}/v1/attendances`,
+        allowedRoles: [Role.ADMIN, Role.STAFF],
+    },
+    {
+        source: "/api/attendances/:path*",
+        destination: `${process.env.HRIS_PROXY_URL}/v1/attendances/:path*`,
         allowedRoles: [Role.ADMIN, Role.STAFF],
     },
 

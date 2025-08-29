@@ -51,7 +51,6 @@ export interface UpsertAttendanceRequest {
     date: string
     typeID: number
     overtimeHours: number
-    operatorEmployeeID: number
 }
 
 export interface CreateAttendanceTypeRequest {
@@ -83,7 +82,7 @@ export async function getAttendances(month: string, session?: Session | null): P
     )
 }
 
-export async function upsertAttendance(request: UpsertAttendanceRequest,session?: Session | null): Promise<void> {
+export async function upsertAttendance(request: UpsertAttendanceRequest, session?: Session | null): Promise<void> {
     await fetchAPI<void>(
         "PUT",
         `/attendances/${request.employeeID}/${request.date}`,
@@ -91,11 +90,7 @@ export async function upsertAttendance(request: UpsertAttendanceRequest,session?
             typeID: request.typeID,
             overtimeHours: request.overtimeHours,
         },
-        {
-            headers: {
-                "X-Employee-ID": request.operatorEmployeeID.toString()
-            }
-        },
+        {},
         {
             forHRIS: true,
             session: session,

@@ -63,7 +63,7 @@ export default function RootLayout({
                 <NuqsAdapter>
                     {children}
                 </NuqsAdapter>
-                <Toaster />
+                <Toaster closeButton />
             </body>
         </html>
     )
