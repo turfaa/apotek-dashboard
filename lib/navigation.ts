@@ -115,6 +115,11 @@ const availableNavigations: NavigationItem[] = [
                 href: "/attendances/types",
                 allowedRoles: [Role.ADMIN],
             },
+            {
+                name: "Gaji",
+                href: "/salary",
+                allowedRoles: [Role.ADMIN],
+            },
         ],
         allowedRoles: [Role.ADMIN, Role.STAFF],
     },

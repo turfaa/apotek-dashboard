@@ -10,7 +10,7 @@ import {
     useRouter,
     useSearchParams,
 } from "next/navigation"
-import { useTransition, useRef } from "react"
+import { useTransition, useRef, useEffect } from "react"
 import { CalendarIcon } from "@radix-ui/react-icons"
 import { format } from "date-fns"
 import { Button } from "@/components/ui/button"
@@ -30,10 +30,24 @@ export function MonthPicker(props: MonthCalProps): React.ReactElement {
     const searchParams: ReadonlyURLSearchParams = useSearchParams()
 
     const monthFromParams = searchParams.get("month")
-    const selectedMonth = monthFromParams ? new Date(monthFromParams) : new Date()
+    // Default to previous month if no month parameter
+    const defaultMonth = new Date()
+    defaultMonth.setMonth(defaultMonth.getMonth() - 1)
+    const selectedMonth = monthFromParams ? new Date(monthFromParams) : defaultMonth
     const monthString = format(selectedMonth, "MMMM yyyy", { locale: id })
 
     const popOverRef = useRef<HTMLButtonElement | null>(null)
+
+    // Set URL parameter if using default month
+    useEffect(() => {
+        if (!monthFromParams) {
+            const params = new URLSearchParams(window.location.search)
+            params.set("month", moment(defaultMonth).format("YYYY-MM"))
+            startTransition(() => {
+                push(`${pathname}?${params.toString()}`)
+            })
+        }
+    }, [monthFromParams, defaultMonth, pathname, push, startTransition])
 
     if (isPrintMode) {
         return <Title>{monthString}</Title>
