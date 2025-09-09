@@ -18,7 +18,7 @@ import {
     useRouter,
     useSearchParams,
 } from "next/navigation"
-import { useState, useTransition, useEffect, useRef } from "react"
+import { useState, useEffect, useRef } from "react"
 import { CalendarIcon } from "@radix-ui/react-icons"
 import { Button } from "@/components/ui/button"
 import { Calendar, CalendarProps } from "@/components/ui/calendar"
@@ -96,7 +96,7 @@ export type DateRangePickerProps = CalendarProps & {
 export function DateRangePicker(
     props: DateRangePickerProps
 ): React.ReactElement {
-    const [isPending, startTransition] = useTransition()
+    const [isPending, setIsPending] = useState(false)
     const { push } = useRouter()
     const pathname: string = usePathname()
     const { isPrintMode } = usePrintMode()
@@ -135,9 +135,12 @@ export function DateRangePicker(
     useEffect(() => {
         if (isPending) {
             const timeout = setTimeout(() => {
+                console.warn('DateRangePicker: isPending stuck, forcing reset')
+                setIsPending(false)
+                transitionRef.current = false
                 // Force a re-render by updating a dummy state
                 setDate(prev => prev ? { ...prev } : undefined)
-            }, 5000) // 5 second timeout
+            }, 2000) // 2 second timeout
             
             return () => clearTimeout(timeout)
         }
@@ -209,6 +212,7 @@ export function DateRangePicker(
 
                                 if (!transitionRef.current) {
                                     transitionRef.current = true
+                                    setIsPending(true)
                                     const newUrl = `${pathname}?${params.toString()}`
                                     
                                     // Use window.history directly to ensure URL changes
@@ -216,11 +220,13 @@ export function DateRangePicker(
                                     window.dispatchEvent(new PopStateEvent('popstate'))
                                     
                                     // Also try the Next.js router as a backup
-                                    startTransition(() => {
-                                        push(newUrl)
-                                    })
+                                    push(newUrl)
                                     
-                                    transitionRef.current = false
+                                    // Reset states after a short delay
+                                    setTimeout(() => {
+                                        setIsPending(false)
+                                        transitionRef.current = false
+                                    }, 100)
                                 }
                             }}
                             locale={id}
@@ -253,6 +259,7 @@ export function DateRangePicker(
 
                             if (!transitionRef.current) {
                                 transitionRef.current = true
+                                setIsPending(true)
                                 const newUrl = `${pathname}?${params.toString()}`
                                 
                                 // Use window.history directly to ensure URL changes
@@ -260,11 +267,13 @@ export function DateRangePicker(
                                 window.dispatchEvent(new PopStateEvent('popstate'))
                                 
                                 // Also try the Next.js router as a backup
-                                startTransition(() => {
-                                    push(newUrl)
-                                })
+                                push(newUrl)
                                 
-                                transitionRef.current = false
+                                // Reset states after a short delay
+                                setTimeout(() => {
+                                    setIsPending(false)
+                                    transitionRef.current = false
+                                }, 100)
                             }
                         }}
                     >
