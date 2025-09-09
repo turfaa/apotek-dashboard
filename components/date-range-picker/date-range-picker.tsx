@@ -18,7 +18,7 @@ import {
     useRouter,
     useSearchParams,
 } from "next/navigation"
-import { useState, useTransition, useEffect, useRef } from "react"
+import { useState, useTransition } from "react"
 import { CalendarIcon } from "@radix-ui/react-icons"
 import { Button } from "@/components/ui/button"
 import { Calendar, CalendarProps } from "@/components/ui/calendar"
@@ -101,7 +101,6 @@ export function DateRangePicker(
     const pathname: string = usePathname()
     const { isPrintMode } = usePrintMode()
     const searchParams: ReadonlyURLSearchParams = useSearchParams()
-    const transitionRef = useRef<boolean>(false)
     
     const defaultFrom = props.defaultDateRangeType ? options.find(opt => opt.value === props.defaultDateRangeType)?.from : undefined
     const defaultUntil = props.defaultDateRangeType ? options.find(opt => opt.value === props.defaultDateRangeType)?.until : undefined
@@ -116,32 +115,6 @@ export function DateRangePicker(
         from,
         to: until,
     })
-
-    // Sync internal state with URL changes
-    useEffect(() => {
-        const fromFromParams = searchParams.get("from") ?? defaultFrom
-        const untilFromParams = searchParams.get("until") ?? defaultUntil
-        
-        const newFrom = fromFromParams ? new Date(fromFromParams) : new Date()
-        const newUntil = untilFromParams ? new Date(untilFromParams) : new Date()
-        
-        setDate({
-            from: newFrom,
-            to: newUntil,
-        })
-    }, [searchParams, defaultFrom, defaultUntil])
-
-    // Reset isPending state if it gets stuck (fallback for production issues)
-    useEffect(() => {
-        if (isPending) {
-            const timeout = setTimeout(() => {
-                // Force a re-render by updating a dummy state
-                setDate(prev => prev ? { ...prev } : undefined)
-            }, 5000) // 5 second timeout
-            
-            return () => clearTimeout(timeout)
-        }
-    }, [isPending])
 
     if (isPrintMode) {
         return (
@@ -207,21 +180,9 @@ export function DateRangePicker(
                                     )
                                 }
 
-                                if (!transitionRef.current) {
-                                    transitionRef.current = true
-                                    const newUrl = `${pathname}?${params.toString()}`
-                                    
-                                    // Use window.history directly to ensure URL changes
-                                    window.history.pushState({}, '', newUrl)
-                                    window.dispatchEvent(new PopStateEvent('popstate'))
-                                    
-                                    // Also try the Next.js router as a backup
-                                    startTransition(() => {
-                                        push(newUrl)
-                                    })
-                                    
-                                    transitionRef.current = false
-                                }
+                                startTransition(() => {
+                                    push(`${pathname}?${params.toString()}`)
+                                })
                             }}
                             locale={id}
                         />
@@ -251,21 +212,9 @@ export function DateRangePicker(
                                 format(option.until, "yyyy-MM-dd")
                             )
 
-                            if (!transitionRef.current) {
-                                transitionRef.current = true
-                                const newUrl = `${pathname}?${params.toString()}`
-                                
-                                // Use window.history directly to ensure URL changes
-                                window.history.pushState({}, '', newUrl)
-                                window.dispatchEvent(new PopStateEvent('popstate'))
-                                
-                                // Also try the Next.js router as a backup
-                                startTransition(() => {
-                                    push(newUrl)
-                                })
-                                
-                                transitionRef.current = false
-                            }
+                            startTransition(() => {
+                                push(`${pathname}?${params.toString()}`)
+                            })
                         }}
                     >
                         <SelectTrigger className="w-full sm:w-[200px]">
