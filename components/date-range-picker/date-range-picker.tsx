@@ -18,7 +18,7 @@ import {
     useRouter,
     useSearchParams,
 } from "next/navigation"
-import { useState, useTransition } from "react"
+import { useMemo, useState, useTransition } from "react"
 import { CalendarIcon } from "@radix-ui/react-icons"
 import { Button } from "@/components/ui/button"
 import { Calendar, CalendarProps } from "@/components/ui/calendar"
@@ -102,14 +102,18 @@ export function DateRangePicker(
     const { isPrintMode } = usePrintMode()
     const searchParams: ReadonlyURLSearchParams = useSearchParams()
     
-    const defaultFrom = props.defaultDateRangeType ? options.find(opt => opt.value === props.defaultDateRangeType)?.from : undefined
-    const defaultUntil = props.defaultDateRangeType ? options.find(opt => opt.value === props.defaultDateRangeType)?.until : undefined
+    const [from, until] = useMemo<[Date, Date]>(() => {
+        const defaultFrom = props.defaultDateRangeType ? options.find(opt => opt.value === props.defaultDateRangeType)?.from : undefined
+        const defaultUntil = props.defaultDateRangeType ? options.find(opt => opt.value === props.defaultDateRangeType)?.until : undefined
 
-    const fromFromParams = searchParams.get("from") ?? defaultFrom
-    const from = fromFromParams ? new Date(fromFromParams) : new Date()
+        const fromFromParams = searchParams.get("from") ?? defaultFrom
+        const from = fromFromParams ? new Date(fromFromParams) : new Date()
 
-    const untilFromParams = searchParams.get("until") ?? defaultUntil
-    const until = untilFromParams ? new Date(untilFromParams) : new Date()
+        const untilFromParams = searchParams.get("until") ?? defaultUntil
+        const until = untilFromParams ? new Date(untilFromParams) : new Date()
+        
+        return [from, until]
+    }, [])
 
     const [date, setDate] = useState<DateRange | undefined>({
         from,
