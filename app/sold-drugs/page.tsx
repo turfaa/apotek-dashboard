@@ -12,10 +12,12 @@ export const metadata: Metadata = {
     title: "Obat Terjual",
 }
 
-export default function SoldDrugs(props: { searchParams: SearchParams }): React.ReactElement {
+export default function SoldDrugs(props: {
+    searchParams: SearchParams
+}): React.ReactElement {
     const drugsPromise = props.searchParams
-        .then(params => getSoldDrugs(params.from, params.until))
-        .then(response => response.drugs)
+        .then((params) => getSoldDrugs(params.from, params.until))
+        .then((response) => response.drugs)
 
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">

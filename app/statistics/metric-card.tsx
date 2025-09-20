@@ -35,7 +35,11 @@ export default function MetricCard(props: MetricCardProps): React.ReactElement {
     )
 }
 
-export function MetricCardFallback({ title }: { title: string }): React.ReactElement {
+export function MetricCardFallback({
+    title,
+}: {
+    title: string
+}): React.ReactElement {
     return (
         <Card className="relative p-6 min-h-[180px]">
             <div className="flex items-start mb-12">

@@ -29,7 +29,10 @@ interface DeleteWorkLogDialogProps {
     employees: Employee[]
 }
 
-export function DeleteWorkLogDialog({ workLogId, employees }: DeleteWorkLogDialogProps) {
+export function DeleteWorkLogDialog({
+    workLogId,
+    employees,
+}: DeleteWorkLogDialogProps) {
     const [open, setOpen] = useState(false)
     const [employeeId, setEmployeeId] = useState<string>("")
     const router = useRouter()
@@ -61,15 +64,13 @@ export function DeleteWorkLogDialog({ workLogId, employees }: DeleteWorkLogDialo
                 <DialogHeader>
                     <DialogTitle>Hapus Laporan Pekerjaan</DialogTitle>
                     <DialogDescription>
-                        Apakah Anda yakin ingin menghapus laporan pekerjaan ini? Tindakan ini tidak dapat dibatalkan.
+                        Apakah Anda yakin ingin menghapus laporan pekerjaan ini?
+                        Tindakan ini tidak dapat dibatalkan.
                     </DialogDescription>
                 </DialogHeader>
 
                 <div className="py-4">
-                    <Select
-                        value={employeeId}
-                        onValueChange={setEmployeeId}
-                    >
+                    <Select value={employeeId} onValueChange={setEmployeeId}>
                         <SelectTrigger>
                             <SelectValue placeholder="Pilih karyawan yang menghapus" />
                         </SelectTrigger>
@@ -87,10 +88,7 @@ export function DeleteWorkLogDialog({ workLogId, employees }: DeleteWorkLogDialo
                 </div>
 
                 <DialogFooter>
-                    <Button
-                        variant="outline"
-                        onClick={() => setOpen(false)}
-                    >
+                    <Button variant="outline" onClick={() => setOpen(false)}>
                         Batal
                     </Button>
                     <Button
@@ -104,4 +102,4 @@ export function DeleteWorkLogDialog({ workLogId, employees }: DeleteWorkLogDialo
             </DialogContent>
         </Dialog>
     )
-} 
+}

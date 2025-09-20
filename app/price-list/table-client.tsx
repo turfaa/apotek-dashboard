@@ -21,7 +21,10 @@ export interface PriceListTableClientProps {
     initialDrugsPromise: Promise<Drug[]>
 }
 
-export default function PriceListTableClient({ sessionPromise, initialDrugsPromise }: PriceListTableClientProps): React.ReactElement {
+export default function PriceListTableClient({
+    sessionPromise,
+    initialDrugsPromise,
+}: PriceListTableClientProps): React.ReactElement {
     const session = use(sessionPromise)
     const initialDrugs = use(initialDrugsPromise)
     const [ssrCompleted, setSsrCompleted] = useState(false)
@@ -69,7 +72,9 @@ export default function PriceListTableClient({ sessionPromise, initialDrugsPromi
         return <PriceListTableFallback />
     }
 
-    const allowedToSeeDrugCost = rolesAllowedToSeeDrugCost.includes(session?.user?.role ?? Role.GUEST)
+    const allowedToSeeDrugCost = rolesAllowedToSeeDrugCost.includes(
+        session?.user?.role ?? Role.GUEST,
+    )
 
     return (
         <Table>
@@ -81,12 +86,19 @@ export default function PriceListTableClient({ sessionPromise, initialDrugsPromi
 
                             <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-4">
                                 {drug.sections.map((section) => (
-                                    <PriceListCard key={section.title} title={section.title} rows={section.rows} />
+                                    <PriceListCard
+                                        key={section.title}
+                                        title={section.title}
+                                        rows={section.rows}
+                                    />
                                 ))}
                             </div>
 
                             {allowedToSeeDrugCost && (
-                                <LastProcurementsDialog drugCode={drug.vmedisCode} session={session} />
+                                <LastProcurementsDialog
+                                    drugCode={drug.vmedisCode}
+                                    session={session}
+                                />
                             )}
                         </TableCell>
                     </TableRow>

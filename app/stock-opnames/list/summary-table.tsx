@@ -16,22 +16,26 @@ import useSearch from "@/lib/search-hook"
 import { useTf } from "@/lib/tf/hook"
 
 export interface StockOpnameSummaryTableProps {
-    summariesPromise: Promise<{
-        drugName: string
-        drugCode: string
-        unit: string
-        changes: {
-            batchCode: string
-            initialQuantity: number
-            realQuantity: number
+    summariesPromise: Promise<
+        {
+            drugName: string
+            drugCode: string
+            unit: string
+            changes: {
+                batchCode: string
+                initialQuantity: number
+                realQuantity: number
+            }[]
+            quantityDifference: number
+            hppDifference: number
+            salePriceDifference: number
         }[]
-        quantityDifference: number
-        hppDifference: number
-        salePriceDifference: number
-    }[]>
+    >
 }
 
-export default function StockOpnameSummaryTable({ summariesPromise }: StockOpnameSummaryTableProps): React.ReactElement {
+export default function StockOpnameSummaryTable({
+    summariesPromise,
+}: StockOpnameSummaryTableProps): React.ReactElement {
     const { query } = useSearch()
     const [debouncedQuery] = useDebounce(query, 300)
     const summaries = use(summariesPromise)
@@ -86,9 +90,9 @@ export default function StockOpnameSummaryTable({ summariesPromise }: StockOpnam
                         <TableCell className="flex flex-col items-start">
                             {row.changes.map((change, changeIndex) => (
                                 <span key={changeIndex}>
-                                    {change.initialQuantity} {row.unit}{" "}
-                                    {"->"} {change.realQuantity} {row.unit}{" "}
-                                    [{change.batchCode}]{" "}
+                                    {change.initialQuantity} {row.unit} {"->"}{" "}
+                                    {change.realQuantity} {row.unit} [
+                                    {change.batchCode}]{" "}
                                 </span>
                             ))}
                         </TableCell>

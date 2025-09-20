@@ -1,6 +1,10 @@
 import { fetchAPI } from "./base"
 import { Session } from "next-auth"
-import { convertUnderlyingEmployee, Employee, UnderlyingEmployee } from "./employee"
+import {
+    convertUnderlyingEmployee,
+    Employee,
+    UnderlyingEmployee,
+} from "./employee"
 import { buildDateRangeQueryParams } from "./common"
 
 export interface CreateWorkLogRequest {
@@ -67,11 +71,20 @@ export interface UnderlyingWorkType {
     notes: string
 }
 
-export async function createWorkLog(request: CreateWorkLogRequest, session?: Session | null): Promise<WorkLog> {
-    const response = await fetchAPI<WorkLog>("POST", "/work-logs", request, {}, {
-        forHRIS: true,
-        session: session,
-    })
+export async function createWorkLog(
+    request: CreateWorkLogRequest,
+    session?: Session | null,
+): Promise<WorkLog> {
+    const response = await fetchAPI<WorkLog>(
+        "POST",
+        "/work-logs",
+        request,
+        {},
+        {
+            forHRIS: true,
+            session: session,
+        },
+    )
     return response
 }
 
@@ -87,7 +100,6 @@ export async function getWorkLogs(
         {
             next: {
                 revalidate: 0, // Don't cache, always revalidate.
-                
             },
         },
         {
@@ -98,7 +110,9 @@ export async function getWorkLogs(
     return underlyingWorkLogs.map(convertUnderlyingWorkLog)
 }
 
-export function convertUnderlyingWorkLog(underlyingWorkLog: UnderlyingWorkLog): WorkLog {
+export function convertUnderlyingWorkLog(
+    underlyingWorkLog: UnderlyingWorkLog,
+): WorkLog {
     return {
         ...underlyingWorkLog,
         createdAt: new Date(underlyingWorkLog.createdAt),
@@ -107,7 +121,9 @@ export function convertUnderlyingWorkLog(underlyingWorkLog: UnderlyingWorkLog): 
     }
 }
 
-export function convertUnderlyingWorkLogUnit(underlyingWorkLogUnit: UnderlyingWorkLogUnit): WorkLogUnit {
+export function convertUnderlyingWorkLogUnit(
+    underlyingWorkLogUnit: UnderlyingWorkLogUnit,
+): WorkLogUnit {
     return {
         ...underlyingWorkLogUnit,
         workType: convertUnderlyingWorkType(underlyingWorkLogUnit.workType),
@@ -115,15 +131,19 @@ export function convertUnderlyingWorkLogUnit(underlyingWorkLogUnit: UnderlyingWo
     }
 }
 
-export async function deleteWorkLog(workLogID: number, deleterEmployeeID: number, session?: Session | null): Promise<void> {
+export async function deleteWorkLog(
+    workLogID: number,
+    deleterEmployeeID: number,
+    session?: Session | null,
+): Promise<void> {
     await fetchAPI<void>(
         "DELETE",
         `/work-logs/${workLogID}`,
         null,
         {
             headers: {
-                "X-Employee-ID": deleterEmployeeID.toString()
-            }
+                "X-Employee-ID": deleterEmployeeID.toString(),
+            },
         },
         {
             forHRIS: true,
@@ -132,7 +152,10 @@ export async function deleteWorkLog(workLogID: number, deleterEmployeeID: number
     )
 }
 
-export async function createWorkType(createWorkTypeRequest: CreateWorkTypeRequest, session?: Session | null): Promise<WorkType> {
+export async function createWorkType(
+    createWorkTypeRequest: CreateWorkTypeRequest,
+    session?: Session | null,
+): Promise<WorkType> {
     return fetchAPI<WorkType>(
         "POST",
         "/work-types",
@@ -141,11 +164,13 @@ export async function createWorkType(createWorkTypeRequest: CreateWorkTypeReques
         {
             forHRIS: true,
             session: session,
-        }
+        },
     )
 }
 
-export async function getWorkTypes(session?: Session | null): Promise<WorkType[]> {
+export async function getWorkTypes(
+    session?: Session | null,
+): Promise<WorkType[]> {
     const underlyingWorkTypes = await fetchAPI<UnderlyingWorkType[]>(
         "GET",
         "/work-types",
@@ -163,7 +188,9 @@ export async function getWorkTypes(session?: Session | null): Promise<WorkType[]
     return underlyingWorkTypes.map(convertUnderlyingWorkType)
 }
 
-export function convertUnderlyingWorkType(underlyingWorkType: UnderlyingWorkType): WorkType {
+export function convertUnderlyingWorkType(
+    underlyingWorkType: UnderlyingWorkType,
+): WorkType {
     return {
         ...underlyingWorkType,
         multiplier: parseFloat(underlyingWorkType.multiplier),

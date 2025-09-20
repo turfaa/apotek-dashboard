@@ -6,7 +6,11 @@ import { getShifts } from "@/lib/api/shift"
 import { SearchParams } from "@/types/search-params"
 import { PrinterIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import {
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { Tooltip } from "@/components/ui/tooltip"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
@@ -22,16 +26,23 @@ export interface ShiftsTableProps {
     searchParams: SearchParams
 }
 
-export default async function ShiftsTable(props: ShiftsTableProps): Promise<React.ReactElement> {
-    const data = await Promise.all([auth(), props.searchParams]).
-        then(([session, { from, until }]) => getShifts(from, until, session))
+export default async function ShiftsTable(
+    props: ShiftsTableProps,
+): Promise<React.ReactElement> {
+    const data = await Promise.all([auth(), props.searchParams]).then(
+        ([session, { from, until }]) => getShifts(from, until, session),
+    )
 
     return (
         <Table
             table={data}
             rowActions={[
                 (id) => (
-                    <Link href={`/api/shifts/${id}/show`} target="_blank" key={id}>
+                    <Link
+                        href={`/api/shifts/${id}/show`}
+                        target="_blank"
+                        key={id}
+                    >
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
@@ -70,15 +81,33 @@ export function ShiftsTableFallback(): React.ReactElement {
             <TableBody>
                 {Array.from({ length: 5 }).map((_, index) => (
                     <TableRow key={index}>
-                        <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-[120px]" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-[120px]" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-[120px]" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-[200px]" /></TableCell>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[100px]" />
+                        </TableCell>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[150px]" />
+                        </TableCell>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[150px]" />
+                        </TableCell>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[150px]" />
+                        </TableCell>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[120px]" />
+                        </TableCell>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[120px]" />
+                        </TableCell>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[120px]" />
+                        </TableCell>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[100px]" />
+                        </TableCell>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[200px]" />
+                        </TableCell>
                         <TableCell>
                             <Skeleton className="h-9 w-9" />
                         </TableCell>

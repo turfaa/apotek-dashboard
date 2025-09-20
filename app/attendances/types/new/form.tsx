@@ -50,10 +50,13 @@ export function AttendanceTypeForm({ session }: AttendanceTypeFormProps) {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            await createAttendanceType({
-                name: values.name,
-                payableType: values.payableType,
-            }, session)
+            await createAttendanceType(
+                {
+                    name: values.name,
+                    payableType: values.payableType,
+                },
+                session,
+            )
             toast.success("Jenis kehadiran berhasil ditambahkan")
             router.push("/attendances/types")
             router.refresh()
@@ -73,7 +76,10 @@ export function AttendanceTypeForm({ session }: AttendanceTypeFormProps) {
                         <FormItem>
                             <FormLabel>Nama</FormLabel>
                             <FormControl>
-                                <Input placeholder="Masukkan nama jenis kehadiran" {...field} />
+                                <Input
+                                    placeholder="Masukkan nama jenis kehadiran"
+                                    {...field}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -85,16 +91,25 @@ export function AttendanceTypeForm({ session }: AttendanceTypeFormProps) {
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Tipe Pembayaran</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                            >
                                 <FormControl>
                                     <SelectTrigger>
                                         <SelectValue placeholder="Pilih tipe pembayaran" />
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                    <SelectItem value={PayableType.Working}>Kerja</SelectItem>
-                                    <SelectItem value={PayableType.Benefit}>Tunjangan</SelectItem>
-                                    <SelectItem value={PayableType.None}>Tidak Ada</SelectItem>
+                                    <SelectItem value={PayableType.Working}>
+                                        Kerja
+                                    </SelectItem>
+                                    <SelectItem value={PayableType.Benefit}>
+                                        Tunjangan
+                                    </SelectItem>
+                                    <SelectItem value={PayableType.None}>
+                                        Tidak Ada
+                                    </SelectItem>
                                 </SelectContent>
                             </Select>
                             <FormMessage />

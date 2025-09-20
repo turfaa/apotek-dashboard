@@ -45,9 +45,15 @@ export default function DrugSelectorClient({
         )
 
         if (!!selectedDrug) {
-            const foundIndex = filtered.findIndex((drug) => drug.vmedisCode === selectedDrug.vmedisCode)
+            const foundIndex = filtered.findIndex(
+                (drug) => drug.vmedisCode === selectedDrug.vmedisCode,
+            )
             if (foundIndex !== -1) {
-                filtered = [filtered[foundIndex], ...filtered.slice(0, foundIndex), ...filtered.slice(foundIndex + 1)]
+                filtered = [
+                    filtered[foundIndex],
+                    ...filtered.slice(0, foundIndex),
+                    ...filtered.slice(foundIndex + 1),
+                ]
             }
         }
 
@@ -80,30 +86,40 @@ export default function DrugSelectorClient({
                         onValueChange={setSearchValue}
                     />
                     <CommandList>
-                        <CommandEmpty>Tidak ada obat yang ditemukan</CommandEmpty>
+                        <CommandEmpty>
+                            Tidak ada obat yang ditemukan
+                        </CommandEmpty>
                         <CommandGroup className="max-h-[300px] overflow-auto">
-                            {drugsToShow.slice(0, DRUG_LIST_LIMIT).map((drug) => (
-                                <CommandItem
-                                    key={drug.vmedisCode}
-                                    value={drug.name}
-                                    onSelect={() => {
-                                        setSelectedDrug(drug.vmedisCode)
-                                        setOpen(false)
-                                    }}
-                                >
-                                    <CheckIcon
-                                        className={cn(
-                                            "mr-2 h-4 w-4",
-                                            selectedDrug?.vmedisCode === drug.vmedisCode
-                                                ? "opacity-100"
-                                                : "opacity-0"
-                                        )}
-                                    />
-                                    {drug.name}
-                                </CommandItem>
-                            ))}
+                            {drugsToShow
+                                .slice(0, DRUG_LIST_LIMIT)
+                                .map((drug) => (
+                                    <CommandItem
+                                        key={drug.vmedisCode}
+                                        value={drug.name}
+                                        onSelect={() => {
+                                            setSelectedDrug(drug.vmedisCode)
+                                            setOpen(false)
+                                        }}
+                                    >
+                                        <CheckIcon
+                                            className={cn(
+                                                "mr-2 h-4 w-4",
+                                                selectedDrug?.vmedisCode ===
+                                                    drug.vmedisCode
+                                                    ? "opacity-100"
+                                                    : "opacity-0",
+                                            )}
+                                        />
+                                        {drug.name}
+                                    </CommandItem>
+                                ))}
                             {drugsToShow.length > DRUG_LIST_LIMIT && (
-                                <CommandItem disabled className="text-gray-500" value="zzzzzzzz" forceMount>
+                                <CommandItem
+                                    disabled
+                                    className="text-gray-500"
+                                    value="zzzzzzzz"
+                                    forceMount
+                                >
                                     {`${drugsToShow.length - DRUG_LIST_LIMIT} obat tidak ditampilkan, ` +
                                         "tulis nama obat lebih spesifik jika obat yang Anda cari belum muncul"}
                                 </CommandItem>

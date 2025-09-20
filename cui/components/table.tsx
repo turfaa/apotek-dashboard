@@ -16,7 +16,10 @@ export interface TableProps {
 
 export type RowAction = (id: string) => React.ReactElement
 
-export default function Table({ table, rowActions }: TableProps): React.ReactElement {
+export default function Table({
+    table,
+    rowActions,
+}: TableProps): React.ReactElement {
     if (table.header.length == 0 && table.rows.length == 0) {
         return <></>
     }
@@ -58,7 +61,10 @@ export interface TablePromiseProps {
     rowActions?: RowAction[]
 }
 
-export function TablePromise({ tablePromise, rowActions }: TablePromiseProps): React.ReactElement {
+export function TablePromise({
+    tablePromise,
+    rowActions,
+}: TablePromiseProps): React.ReactElement {
     const table = use(tablePromise)
     return <Table table={table} rowActions={rowActions} />
 }

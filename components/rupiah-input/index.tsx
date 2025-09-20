@@ -25,25 +25,26 @@ const RupiahInput = React.forwardRef<HTMLInputElement, RupiahInputProps>(
     ({ className, value, onChange, onInput, ...props }, _ref) => {
         const rupiahMask = useMaskito({ options: maskitoOptions })
 
-        const formattedValue = typeof value === "number"
-            ? maskitoTransform(value.toString().replace(".", ","), maskitoOptions)
-            : value
+        const formattedValue =
+            typeof value === "number"
+                ? maskitoTransform(
+                      value.toString().replace(".", ","),
+                      maskitoOptions,
+                  )
+                : value
 
         const handleInput = React.useCallback(
             (e: React.FormEvent<HTMLInputElement>) => {
                 onInput?.(e)
                 if (!onChange) return
 
-                let amount = maskitoParseNumber(
-                    e.currentTarget.value,
-                    ",",
-                )
+                let amount = maskitoParseNumber(e.currentTarget.value, ",")
                 if (isNaN(amount)) {
                     amount = 0
                 }
                 onChange(amount)
             },
-            [onChange, onInput]
+            [onChange, onInput],
         )
 
         return (
@@ -57,8 +58,8 @@ const RupiahInput = React.forwardRef<HTMLInputElement, RupiahInputProps>(
                 {...props}
             />
         )
-    }
+    },
 )
 RupiahInput.displayName = "RupiahInput"
 
-export { RupiahInput } 
+export { RupiahInput }

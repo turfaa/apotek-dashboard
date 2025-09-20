@@ -28,12 +28,24 @@ export default function CompactedStockOpnameTableFallback(): React.ReactElement 
                 {Array.from({ length: 5 }).map((_, index) => (
                     <TableRow key={index}>
                         <TableCell>{index + 1}</TableCell>
-                        <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-[200px]" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-[250px]" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[100px]" />
+                        </TableCell>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[200px]" />
+                        </TableCell>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[250px]" />
+                        </TableCell>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[100px]" />
+                        </TableCell>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[150px]" />
+                        </TableCell>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[150px]" />
+                        </TableCell>
                     </TableRow>
                 ))}
             </TableBody>
@@ -41,10 +53,14 @@ export default function CompactedStockOpnameTableFallback(): React.ReactElement 
             <TableFooter>
                 <TableRow>
                     <TableCell colSpan={5}>Total</TableCell>
-                    <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
+                    <TableCell>
+                        <Skeleton className="h-4 w-[150px]" />
+                    </TableCell>
+                    <TableCell>
+                        <Skeleton className="h-4 w-[150px]" />
+                    </TableCell>
                 </TableRow>
             </TableFooter>
         </Table>
     )
-} 
+}

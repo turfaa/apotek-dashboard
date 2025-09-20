@@ -23,7 +23,9 @@ interface EmployeePickerProps {
     employees: Employee[]
 }
 
-export function EmployeePicker({ employees }: EmployeePickerProps): React.ReactElement {
+export function EmployeePicker({
+    employees,
+}: EmployeePickerProps): React.ReactElement {
     const [isPending, startTransition] = useTransition()
     const { push } = useRouter()
     const pathname: string = usePathname()
@@ -31,10 +33,12 @@ export function EmployeePicker({ employees }: EmployeePickerProps): React.ReactE
     const searchParams: ReadonlyURLSearchParams = useSearchParams()
 
     const employeeIdFromParams = searchParams.get("employeeID")
-    const selectedEmployee = employeeIdFromParams 
-        ? employees.find(emp => emp.id.toString() === employeeIdFromParams)
+    const selectedEmployee = employeeIdFromParams
+        ? employees.find((emp) => emp.id.toString() === employeeIdFromParams)
         : null
-    const employeeName = selectedEmployee ? selectedEmployee.name : "Pilih Karyawan"
+    const employeeName = selectedEmployee
+        ? selectedEmployee.name
+        : "Pilih Karyawan"
 
     if (isPrintMode) {
         return <Title>{employeeName}</Title>
@@ -62,7 +66,10 @@ export function EmployeePicker({ employees }: EmployeePickerProps): React.ReactE
             <SelectTrigger className="w-[240px]">
                 <div className="flex items-center">
                     <PersonIcon className="mr-2 h-4 w-4" />
-                    <SelectValue placeholder="Pilih Karyawan" className="text-left" />
+                    <SelectValue
+                        placeholder="Pilih Karyawan"
+                        className="text-left"
+                    />
                 </div>
             </SelectTrigger>
             <SelectContent>

@@ -20,8 +20,8 @@ import { Button } from "@/components/ui/button"
 import { use } from "react"
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  dataPromise: Promise<TData[]>
+    columns: ColumnDef<TData, TValue>[]
+    dataPromise: Promise<TData[]>
 }
 
 export function DataTable<TData, TValue>({
@@ -49,9 +49,10 @@ export function DataTable<TData, TValue>({
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext()
-                                                )}
+                                                      header.column.columnDef
+                                                          .header,
+                                                      header.getContext(),
+                                                  )}
                                         </TableHead>
                                     )
                                 })}
@@ -63,13 +64,15 @@ export function DataTable<TData, TValue>({
                             table.getRowModel().rows.map((row) => (
                                 <TableRow
                                     key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
+                                    data-state={
+                                        row.getIsSelected() && "selected"
+                                    }
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>
                                             {flexRender(
                                                 cell.column.columnDef.cell,
-                                                cell.getContext()
+                                                cell.getContext(),
                                             )}
                                         </TableCell>
                                     ))}
@@ -108,4 +111,4 @@ export function DataTable<TData, TValue>({
             </div>
         </div>
     )
-} 
+}

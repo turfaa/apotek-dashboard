@@ -94,16 +94,20 @@ export type DateRangePickerProps = CalendarProps & {
 }
 
 export function DateRangePicker(
-    props: DateRangePickerProps
+    props: DateRangePickerProps,
 ): React.ReactElement {
     const [isPending, startTransition] = useTransition()
     const { push } = useRouter()
     const pathname: string = usePathname()
     const { isPrintMode } = usePrintMode()
     const searchParams: ReadonlyURLSearchParams = useSearchParams()
-    
-    const defaultFrom = props.defaultDateRangeType ? options.find(opt => opt.value === props.defaultDateRangeType)?.from : undefined
-    const defaultUntil = props.defaultDateRangeType ? options.find(opt => opt.value === props.defaultDateRangeType)?.until : undefined
+
+    const defaultFrom = props.defaultDateRangeType
+        ? options.find((opt) => opt.value === props.defaultDateRangeType)?.from
+        : undefined
+    const defaultUntil = props.defaultDateRangeType
+        ? options.find((opt) => opt.value === props.defaultDateRangeType)?.until
+        : undefined
 
     const fromFromParams = searchParams.get("from") ?? defaultFrom
     const from = fromFromParams ? new Date(fromFromParams) : new Date()
@@ -139,10 +143,17 @@ export function DateRangePicker(
                             <CalendarIcon className="mr-2 h-4 w-4 shrink-0" />
                             <span className="truncate">
                                 {date?.from ? (
-                                    date.to && date.to.toDateString() !== date.from.toDateString() ? (
+                                    date.to &&
+                                    date.to.toDateString() !==
+                                        date.from.toDateString() ? (
                                         <>
-                                            {format(date.from, "PPP", { locale: id })} -{" "}
-                                            {format(date.to, "PPP", { locale: id })}
+                                            {format(date.from, "PPP", {
+                                                locale: id,
+                                            })}{" "}
+                                            -{" "}
+                                            {format(date.to, "PPP", {
+                                                locale: id,
+                                            })}
                                         </>
                                     ) : (
                                         format(date.from, "PPP", { locale: id })
@@ -163,20 +174,22 @@ export function DateRangePicker(
                                 if (!newDate?.from) return
                                 setDate(newDate)
 
-                                const params = new URLSearchParams(window.location.search)
+                                const params = new URLSearchParams(
+                                    window.location.search,
+                                )
                                 params.set(
                                     "from",
-                                    format(newDate.from, "yyyy-MM-dd")
+                                    format(newDate.from, "yyyy-MM-dd"),
                                 )
                                 if (newDate.to) {
                                     params.set(
                                         "until",
-                                        format(newDate.to, "yyyy-MM-dd")
+                                        format(newDate.to, "yyyy-MM-dd"),
                                     )
                                 } else {
                                     params.set(
                                         "until",
-                                        format(newDate.from, "yyyy-MM-dd")
+                                        format(newDate.from, "yyyy-MM-dd"),
                                     )
                                 }
 
@@ -193,7 +206,9 @@ export function DateRangePicker(
                     <Select
                         disabled={isPending}
                         onValueChange={(value) => {
-                            const option = options.find(opt => opt.value === value)
+                            const option = options.find(
+                                (opt) => opt.value === value,
+                            )
                             if (!option) return
 
                             const newDate = {
@@ -202,14 +217,16 @@ export function DateRangePicker(
                             }
                             setDate(newDate)
 
-                            const params = new URLSearchParams(window.location.search)
+                            const params = new URLSearchParams(
+                                window.location.search,
+                            )
                             params.set(
                                 "from",
-                                format(option.from, "yyyy-MM-dd")
+                                format(option.from, "yyyy-MM-dd"),
                             )
                             params.set(
                                 "until",
-                                format(option.until, "yyyy-MM-dd")
+                                format(option.until, "yyyy-MM-dd"),
                             )
 
                             startTransition(() => {
@@ -222,7 +239,10 @@ export function DateRangePicker(
                         </SelectTrigger>
                         <SelectContent>
                             {options.map((option) => (
-                                <SelectItem key={option.value} value={option.value}>
+                                <SelectItem
+                                    key={option.value}
+                                    value={option.value}
+                                >
                                     {option.value}
                                 </SelectItem>
                             ))}

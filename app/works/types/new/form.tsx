@@ -50,12 +50,15 @@ export function WorkTypeForm({ session }: WorkTypeFormProps) {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            await createWorkType({
-                name: values.name,
-                outcomeUnit: values.outcomeUnit,
-                multiplier: values.multiplier,
-                notes: values.notes || "",
-            }, session)
+            await createWorkType(
+                {
+                    name: values.name,
+                    outcomeUnit: values.outcomeUnit,
+                    multiplier: values.multiplier,
+                    notes: values.notes || "",
+                },
+                session,
+            )
             toast.success("Jenis pekerjaan berhasil ditambahkan")
             router.push("/works/types")
             router.refresh()
@@ -88,7 +91,10 @@ export function WorkTypeForm({ session }: WorkTypeFormProps) {
                         <FormItem>
                             <FormLabel>Satuan Hasil</FormLabel>
                             <FormControl>
-                                <Input placeholder="Contoh: pasien, resep, dll" {...field} />
+                                <Input
+                                    placeholder="Contoh: pasien, resep, dll"
+                                    {...field}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -106,7 +112,11 @@ export function WorkTypeForm({ session }: WorkTypeFormProps) {
                                     step="0.1"
                                     placeholder="1"
                                     {...field}
-                                    onChange={e => field.onChange(parseFloat(e.target.value))}
+                                    onChange={(e) =>
+                                        field.onChange(
+                                            parseFloat(e.target.value),
+                                        )
+                                    }
                                 />
                             </FormControl>
                             <FormMessage />
@@ -143,4 +153,4 @@ export function WorkTypeForm({ session }: WorkTypeFormProps) {
             </form>
         </Form>
     )
-} 
+}

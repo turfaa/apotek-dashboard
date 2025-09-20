@@ -65,7 +65,10 @@ export enum PayableType {
 }
 
 // month is in format "YYYY-MM".
-export async function getAttendances(month: string, session?: Session | null): Promise<GetAttendancesResponse> {
+export async function getAttendances(
+    month: string,
+    session?: Session | null,
+): Promise<GetAttendancesResponse> {
     return await fetchAPI<GetAttendancesResponse>(
         "GET",
         `/attendances?month=${month}`,
@@ -82,7 +85,10 @@ export async function getAttendances(month: string, session?: Session | null): P
     )
 }
 
-export async function upsertAttendance(request: UpsertAttendanceRequest, session?: Session | null): Promise<void> {
+export async function upsertAttendance(
+    request: UpsertAttendanceRequest,
+    session?: Session | null,
+): Promise<void> {
     await fetchAPI<void>(
         "PUT",
         `/attendances/${request.employeeID}/${request.date}`,
@@ -98,12 +104,15 @@ export async function upsertAttendance(request: UpsertAttendanceRequest, session
     )
 }
 
-export async function createAttendanceType(request: CreateAttendanceTypeRequest, session?: Session | null): Promise<AttendanceType> {
+export async function createAttendanceType(
+    request: CreateAttendanceTypeRequest,
+    session?: Session | null,
+): Promise<AttendanceType> {
     return await fetchAPI<AttendanceType>(
-        "POST", 
-        "/attendances/types", 
-        request, 
-        {}, 
+        "POST",
+        "/attendances/types",
+        request,
+        {},
         {
             forHRIS: true,
             session: session,
@@ -111,16 +120,18 @@ export async function createAttendanceType(request: CreateAttendanceTypeRequest,
     )
 }
 
-export async function getAttendanceTypes(session?: Session | null): Promise<AttendanceType[]> {
+export async function getAttendanceTypes(
+    session?: Session | null,
+): Promise<AttendanceType[]> {
     return await fetchAPI<AttendanceType[]>(
-        "GET", 
-        "/attendances/types", 
-        null, 
+        "GET",
+        "/attendances/types",
+        null,
         {
             next: {
                 revalidate: 0, // Don't cache, always revalidate.
             },
-        }, 
+        },
         {
             forHRIS: true,
             session: session,

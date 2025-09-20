@@ -19,7 +19,9 @@ export interface UnderlyingEmployee {
     updatedAt: string
 }
 
-export async function getEmployees(session?: Session | null): Promise<Employee[]> {
+export async function getEmployees(
+    session?: Session | null,
+): Promise<Employee[]> {
     const underlyingEmployees = await fetchAPI<UnderlyingEmployee[]>(
         "GET",
         "/employees",
@@ -38,7 +40,9 @@ export async function getEmployees(session?: Session | null): Promise<Employee[]
     return underlyingEmployees.map(convertUnderlyingEmployee)
 }
 
-export function convertUnderlyingEmployee(underlyingEmployee: UnderlyingEmployee): Employee {
+export function convertUnderlyingEmployee(
+    underlyingEmployee: UnderlyingEmployee,
+): Employee {
     return {
         id: underlyingEmployee.id,
         name: underlyingEmployee.name,
@@ -49,9 +53,19 @@ export function convertUnderlyingEmployee(underlyingEmployee: UnderlyingEmployee
     }
 }
 
-export async function createEmployee(name: string, shiftFee: number, session?: Session | null): Promise<Employee> {
-    return fetchAPI<Employee>("POST", "/employees", { name, shiftFee }, {}, {
-        forHRIS: true,
-        session: session,
-    })
+export async function createEmployee(
+    name: string,
+    shiftFee: number,
+    session?: Session | null,
+): Promise<Employee> {
+    return fetchAPI<Employee>(
+        "POST",
+        "/employees",
+        { name, shiftFee },
+        {},
+        {
+            forHRIS: true,
+            session: session,
+        },
+    )
 }

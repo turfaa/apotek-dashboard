@@ -14,7 +14,11 @@ export const metadata: Metadata = {
     title: "Obat Harus Stok Opname",
 }
 
-export default function DrugsToStockOpname({ searchParams }: { searchParams: SearchParams }): React.ReactElement {
+export default function DrugsToStockOpname({
+    searchParams,
+}: {
+    searchParams: SearchParams
+}): React.ReactElement {
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <div className="flex flex-col gap-2 mb-4">
@@ -24,13 +28,23 @@ export default function DrugsToStockOpname({ searchParams }: { searchParams: Sea
 
             <TabGroup
                 tabLabels={[
-                    { tag: "sales-based", label: "Berdasarkan Penjualan", icon: <BackpackIcon className="h-4 w-4" /> },
-                    { tag: "conservative", label: "Berdasarkan Semua Obat", icon: <ReaderIcon className="h-4 w-4" /> },
+                    {
+                        tag: "sales-based",
+                        label: "Berdasarkan Penjualan",
+                        icon: <BackpackIcon className="h-4 w-4" />,
+                    },
+                    {
+                        tag: "conservative",
+                        label: "Berdasarkan Semua Obat",
+                        icon: <ReaderIcon className="h-4 w-4" />,
+                    },
                 ]}
             >
                 <TabsContent value="sales-based">
                     <div className="rounded-md border mt-4">
-                        <Suspense fallback={<DrugsToStockOpnameTableFallback />}>
+                        <Suspense
+                            fallback={<DrugsToStockOpnameTableFallback />}
+                        >
                             <DrugsTable
                                 mode={DrugsToStockOpnameMode.SalesBased}
                                 searchParams={searchParams}
@@ -41,7 +55,9 @@ export default function DrugsToStockOpname({ searchParams }: { searchParams: Sea
 
                 <TabsContent value="conservative">
                     <div className="rounded-md border mt-4">
-                        <Suspense fallback={<DrugsToStockOpnameTableFallback />}>
+                        <Suspense
+                            fallback={<DrugsToStockOpnameTableFallback />}
+                        >
                             <DrugsTable
                                 mode={DrugsToStockOpnameMode.Conservative}
                                 searchParams={searchParams}

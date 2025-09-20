@@ -47,7 +47,8 @@ export default function StatisticsTable({
                             {rupiah.format(
                                 statistic.numberOfSales == 0
                                     ? statistic.totalSales
-                                    : statistic.totalSales / statistic.numberOfSales,
+                                    : statistic.totalSales /
+                                          statistic.numberOfSales,
                             )}
                         </TableCell>
                     </TableRow>
@@ -66,7 +67,11 @@ export default function StatisticsTable({
                         )}
                     </TableCell>
                     <TableCell>
-                        {rupiah.format(numberOfSales == 0 ? totalSales : totalSales / numberOfSales)}
+                        {rupiah.format(
+                            numberOfSales == 0
+                                ? totalSales
+                                : totalSales / numberOfSales,
+                        )}
                     </TableCell>
                 </TableRow>
             </TableFooter>

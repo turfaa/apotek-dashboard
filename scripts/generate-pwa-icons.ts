@@ -18,4 +18,4 @@ async function generateIcons() {
     console.log("PWA icons generated successfully!")
 }
 
-generateIcons().catch(console.error) 
+generateIcons().catch(console.error)

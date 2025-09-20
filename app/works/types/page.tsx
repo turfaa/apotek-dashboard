@@ -14,14 +14,16 @@ export const metadata: Metadata = {
 }
 
 export default function WorkTypesPage(): React.ReactElement {
-    const workTypesPromise = auth().then(session => getWorkTypes(session))
+    const workTypesPromise = auth().then((session) => getWorkTypes(session))
 
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <div className="flex justify-between items-center mb-6">
                 <div>
                     <Title>Jenis Pekerjaan</Title>
-                    <Subtitle>Kelola jenis pekerjaan dan pengali gaji di sini.</Subtitle>
+                    <Subtitle>
+                        Kelola jenis pekerjaan dan pengali gaji di sini.
+                    </Subtitle>
                 </div>
                 <Link href="/works/types/new">
                     <Button>
@@ -33,4 +35,4 @@ export default function WorkTypesPage(): React.ReactElement {
             <DataTable columns={columns} dataPromise={workTypesPromise} />
         </main>
     )
-} 
+}

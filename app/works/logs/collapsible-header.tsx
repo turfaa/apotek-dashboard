@@ -16,7 +16,7 @@ interface CollapsibleHeaderProps {
 
 export function CollapsibleHeader({ children }: CollapsibleHeaderProps) {
     const [isOpen, setIsOpen] = useState(false)
-    
+
     return (
         <Collapsible open={isOpen} onOpenChange={setIsOpen}>
             <div className="flex items-center justify-between">
@@ -31,9 +31,7 @@ export function CollapsibleHeader({ children }: CollapsibleHeaderProps) {
                     </Button>
                 </CollapsibleTrigger>
             </div>
-            <CollapsibleContent>
-                {children}
-            </CollapsibleContent>
+            <CollapsibleContent>{children}</CollapsibleContent>
         </Collapsible>
     )
-} 
+}

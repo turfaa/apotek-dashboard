@@ -1,46 +1,46 @@
-import { postLogin, Role } from "@/lib/api/auth";
-import NextAuth, { NextAuthConfig, Session } from "next-auth";
-import { JWT } from "next-auth/jwt";
-import google from "next-auth/providers/google";
+import { postLogin, Role } from "@/lib/api/auth"
+import NextAuth, { NextAuthConfig, Session } from "next-auth"
+import { JWT } from "next-auth/jwt"
+import google from "next-auth/providers/google"
 
 export const authConfig: NextAuthConfig = {
-  providers: [google],
+    providers: [google],
 
-  callbacks: {
-    async jwt({ token, user, trigger }): Promise<JWT> {
-      if (trigger != "signIn") {
-        return token;
-      }
+    callbacks: {
+        async jwt({ token, user, trigger }): Promise<JWT> {
+            if (trigger != "signIn") {
+                return token
+            }
 
-      if (user.email) {
-        const backendUser = await postLogin({ email: user.email });
-        token.role = backendUser.role;
-      }
+            if (user.email) {
+                const backendUser = await postLogin({ email: user.email })
+                token.role = backendUser.role
+            }
 
-      return token;
+            return token
+        },
+
+        session({ session, token }): Session {
+            if (session.user) {
+                session.user.role = token.role as Role
+            }
+
+            return session
+        },
+
+        authorized(): boolean {
+            return true
+        },
     },
 
-    session({ session, token }): Session {
-      if (session.user) {
-        session.user.role = token.role as Role;
-      }
+    trustHost: true,
 
-      return session;
+    experimental: {
+        enableWebAuthn: true,
     },
-
-    authorized(): boolean {
-      return true;
-    },
-  },
-
-  trustHost: true,
-
-  experimental: {
-    enableWebAuthn: true,
-  },
-};
+}
 
 export const {
-  auth,
-  handlers: { GET, POST },
-} = NextAuth(authConfig);
+    auth,
+    handlers: { GET, POST },
+} = NextAuth(authConfig)

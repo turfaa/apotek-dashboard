@@ -54,7 +54,9 @@ export default function ClientSide(): React.ReactElement {
                 {!isPrintMode && (
                     <TabsList>
                         <TabsTrigger value="summary">Ringkasan</TabsTrigger>
-                        <TabsTrigger value="daily">Statistik Harian</TabsTrigger>
+                        <TabsTrigger value="daily">
+                            Statistik Harian
+                        </TabsTrigger>
                     </TabsList>
                 )}
 

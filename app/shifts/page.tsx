@@ -13,7 +13,9 @@ export interface ShiftsProps {
     searchParams: SearchParams
 }
 
-export default async function Shifts(props: ShiftsProps): Promise<React.ReactElement> {
+export default async function Shifts(
+    props: ShiftsProps,
+): Promise<React.ReactElement> {
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <div className="flex flex-col gap-2 mb-6">

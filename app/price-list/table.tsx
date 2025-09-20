@@ -4,9 +4,14 @@ import { auth } from "@/lib/auth"
 
 export default function PriceListTable(): React.ReactElement {
     const sessionPromise = auth()
-    const drugsPromise = sessionPromise.then((session) => getDrugs(session)).then((drugs) => drugs.drugs)
+    const drugsPromise = sessionPromise
+        .then((session) => getDrugs(session))
+        .then((drugs) => drugs.drugs)
 
     return (
-        <PriceListTableClient sessionPromise={sessionPromise} initialDrugsPromise={drugsPromise} />
+        <PriceListTableClient
+            sessionPromise={sessionPromise}
+            initialDrugsPromise={drugsPromise}
+        />
     )
 }

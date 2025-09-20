@@ -1,36 +1,36 @@
-import { fetchAPI } from "@/lib/api/base";
-import { Session } from "next-auth";
+import { fetchAPI } from "@/lib/api/base"
+import { Session } from "next-auth"
 
 export interface DrugsResponse {
-  drugs: Drug[];
+    drugs: Drug[]
 }
 
 export interface Drug {
-  vmedisCode: string;
-  name: string;
-  sections: Section[];
+    vmedisCode: string
+    name: string
+    sections: Section[]
 }
 
 export interface Section {
-  title: string;
-  rows: string[];
+    title: string
+    rows: string[]
 }
 
 export async function getDrugs(
-  session?: Session | null
+    session?: Session | null,
 ): Promise<DrugsResponse> {
-  return fetchAPI(
-    "GET",
-    "/drugs",
-    null,
-    {
-      next: {
-        revalidate: 0, // Don't cache, always revalidate.
-      },
-    },
-    {
-      version: "v2",
-      session: session,
-    }
-  );
+    return fetchAPI(
+        "GET",
+        "/drugs",
+        null,
+        {
+            next: {
+                revalidate: 0, // Don't cache, always revalidate.
+            },
+        },
+        {
+            version: "v2",
+            session: session,
+        },
+    )
 }

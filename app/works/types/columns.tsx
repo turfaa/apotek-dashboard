@@ -24,4 +24,4 @@ export const columns: ColumnDef<WorkType>[] = [
         accessorKey: "notes",
         header: "Catatan",
     },
-] 
+]

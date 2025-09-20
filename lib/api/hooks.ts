@@ -1,6 +1,9 @@
 import { buildDateRangeQueryParams } from "@/lib/api/common"
 import { DrugsResponse, getDrugs } from "@/lib/api/drug"
-import { DrugsResponse as DrugsResponseV2, getDrugs as getDrugsV2 } from "./drugv2"
+import {
+    DrugsResponse as DrugsResponseV2,
+    getDrugs as getDrugsV2,
+} from "./drugv2"
 import {
     ProcurementRecommendation,
     ProcurementRecommendationsResponse,

@@ -20,7 +20,9 @@ export interface SoldDrugsTableProps {
     drugsPromise: Promise<SoldDrug[]>
 }
 
-export default function SoldDrugsTable({ drugsPromise }: SoldDrugsTableProps): React.ReactElement {
+export default function SoldDrugsTable({
+    drugsPromise,
+}: SoldDrugsTableProps): React.ReactElement {
     const { query } = useSearch()
     const [debouncedQuery] = useDebounce(query, 300)
     const drugs = use(drugsPromise)
@@ -84,4 +86,4 @@ export default function SoldDrugsTable({ drugsPromise }: SoldDrugsTableProps): R
             </TableFooter>
         </Table>
     )
-} 
+}

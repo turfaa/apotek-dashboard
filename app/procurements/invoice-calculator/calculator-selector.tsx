@@ -74,14 +74,18 @@ export default function CalculatorSelector({
                                 key={calc.supplier}
                                 value={calc.supplier}
                                 onSelect={(supplier) => {
-                                    setCalculator(calculatorBySupplier[supplier])
+                                    setCalculator(
+                                        calculatorBySupplier[supplier],
+                                    )
                                     setOpen(false)
                                 }}
                             >
                                 <Check
                                     className={cn(
                                         "mr-2 h-4 w-4",
-                                        calculator?.supplier === calc.supplier ? "opacity-100" : "opacity-0"
+                                        calculator?.supplier === calc.supplier
+                                            ? "opacity-100"
+                                            : "opacity-0",
                                     )}
                                 />
                                 {calc.supplier}

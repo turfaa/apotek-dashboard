@@ -26,7 +26,11 @@ export default function LastDrugProcurementsTable({
     const { "drug-code": drugCode, limit } = use(searchParams)
 
     if (!drugCode) {
-        return <Text className="text-center py-4">Silakan pilih obat terlebih dahulu</Text>
+        return (
+            <Text className="text-center py-4">
+                Silakan pilih obat terlebih dahulu
+            </Text>
+        )
     }
 
     let limitNumber = DEFAULT_DRUG_PROCUREMENTS_LIMIT
@@ -38,11 +42,7 @@ export default function LastDrugProcurementsTable({
     }
 
     const session = use(auth())
-    const data = use(getLastDrugProcurements(
-        drugCode,
-        limitNumber,
-        session,
-    ))
+    const data = use(getLastDrugProcurements(drugCode, limitNumber, session))
 
     return <Table table={data} />
 }
@@ -64,12 +64,24 @@ export function LastDrugProcurementsTableFallback(): React.ReactElement {
             <TableBody>
                 {Array.from({ length: 5 }).map((_, index) => (
                     <TableRow key={index}>
-                        <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-[120px]" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-[200px]" /></TableCell>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[150px]" />
+                        </TableCell>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[150px]" />
+                        </TableCell>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[150px]" />
+                        </TableCell>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[100px]" />
+                        </TableCell>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[120px]" />
+                        </TableCell>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[200px]" />
+                        </TableCell>
                     </TableRow>
                 ))}
             </TableBody>

@@ -25,14 +25,20 @@ export interface UnderlyingSalaryComponent {
     total: string
 }
 
-export function convertUnderlyingSalary(underlyingSalary: UnderlyingSalary): Salary {
+export function convertUnderlyingSalary(
+    underlyingSalary: UnderlyingSalary,
+): Salary {
     return {
-        components: underlyingSalary.components.map(convertUnderlyingSalaryComponent),
+        components: underlyingSalary.components.map(
+            convertUnderlyingSalaryComponent,
+        ),
         total: parseFloat(underlyingSalary.total),
     }
 }
 
-export function convertUnderlyingSalaryComponent(underlyingSalaryComponent: UnderlyingSalaryComponent): SalaryComponent {
+export function convertUnderlyingSalaryComponent(
+    underlyingSalaryComponent: UnderlyingSalaryComponent,
+): SalaryComponent {
     return {
         description: underlyingSalaryComponent.description,
         multiplier: parseFloat(underlyingSalaryComponent.multiplier),
@@ -41,7 +47,11 @@ export function convertUnderlyingSalaryComponent(underlyingSalaryComponent: Unde
     }
 }
 
-export async function getSalary(employeeID: number, month: string, session?: Session | null): Promise<Salary> {
+export async function getSalary(
+    employeeID: number,
+    month: string,
+    session?: Session | null,
+): Promise<Salary> {
     const underlying = await fetchAPI<UnderlyingSalary>(
         "GET",
         `/salary/${month}/${employeeID}`,
@@ -54,7 +64,7 @@ export async function getSalary(employeeID: number, month: string, session?: Ses
         {
             forHRIS: true,
             session: session,
-        },   
+        },
     )
 
     return convertUnderlyingSalary(underlying)

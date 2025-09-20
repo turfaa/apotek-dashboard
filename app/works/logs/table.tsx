@@ -64,7 +64,10 @@ interface WorkLogsTableProps {
     employeesPromise: Promise<Employee[]>
 }
 
-export async function WorkLogsTable({ workLogsPromise, employeesPromise }: WorkLogsTableProps): Promise<React.ReactElement> {
+export async function WorkLogsTable({
+    workLogsPromise,
+    employeesPromise,
+}: WorkLogsTableProps): Promise<React.ReactElement> {
     const logs = await workLogsPromise
     const employees = await employeesPromise
 
@@ -96,7 +99,9 @@ export async function WorkLogsTable({ workLogsPromise, employeesPromise }: WorkL
                                 <ul className="list-disc list-inside">
                                     {log.units.map((unit) => (
                                         <li key={unit.id}>
-                                            {unit.workType.name}: {unit.workOutcome} {unit.workType.outcomeUnit}
+                                            {unit.workType.name}:{" "}
+                                            {unit.workOutcome}{" "}
+                                            {unit.workType.outcomeUnit}
                                         </li>
                                     ))}
                                 </ul>
@@ -135,4 +140,4 @@ export async function WorkLogsTable({ workLogsPromise, employeesPromise }: WorkL
             </Table>
         </div>
     )
-} 
+}

@@ -20,21 +20,24 @@ export function useDrugSelector(drugs: Drug[]): DrugSelectorHook {
     const pathname: string = usePathname()
     const searchParams: ReadonlyURLSearchParams = useSearchParams()
 
-    const setSelectedDrug = useCallback((drugCode: string | null) => {
-        const params: URLSearchParams = new URLSearchParams(
-            window.location.search,
-        )
+    const setSelectedDrug = useCallback(
+        (drugCode: string | null) => {
+            const params: URLSearchParams = new URLSearchParams(
+                window.location.search,
+            )
 
-        if (drugCode == "" || drugCode == null) {
-            params.delete("drug-code")
-        } else {
-            params.set("drug-code", drugCode)
-        }
+            if (drugCode == "" || drugCode == null) {
+                params.delete("drug-code")
+            } else {
+                params.set("drug-code", drugCode)
+            }
 
-        startTransition(() => {
-            push(`${pathname}?${params.toString()}`)
-        })
-    }, [pathname, push])
+            startTransition(() => {
+                push(`${pathname}?${params.toString()}`)
+            })
+        },
+        [pathname, push],
+    )
 
     const drugCodeFromParams = searchParams.get("drug-code")
     const drugCode = drugCodeFromParams ? drugCodeFromParams : ""

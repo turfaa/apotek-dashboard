@@ -5,7 +5,7 @@ import { GeistSans } from "geist/font/sans"
 import { Toaster } from "@/components/ui/sonner"
 import type { Metadata, Viewport } from "next"
 import React, { Suspense } from "react"
-import { NuqsAdapter } from 'nuqs/adapters/next/app'
+import { NuqsAdapter } from "nuqs/adapters/next/app"
 
 // export const fetchCache = 'default-cache'
 
@@ -47,7 +47,6 @@ export const viewport: Viewport = {
     themeColor: "#ffffff",
 }
 
-
 export default function RootLayout({
     children,
 }: {
@@ -60,9 +59,7 @@ export default function RootLayout({
                     <Nav />
                 </Suspense>
 
-                <NuqsAdapter>
-                    {children}
-                </NuqsAdapter>
+                <NuqsAdapter>{children}</NuqsAdapter>
                 <Toaster closeButton />
             </body>
         </html>

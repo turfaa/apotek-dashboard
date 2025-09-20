@@ -56,18 +56,17 @@ export default function InvoiceCard({
         <div className="flex flex-col items-start gap-2">
             <div className="flex justify-between w-full">
                 <Title>{title}</Title>
-                <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={removeInvoice}
-                >
+                <Button variant="destructive" size="sm" onClick={removeInvoice}>
                     <TrashIcon className="h-4 w-4 mr-2" />
                     Hapus
                 </Button>
             </div>
 
             {invoice.components.map((component, index) => (
-                <div key={index} className="flex justify-between w-full items-center">
+                <div
+                    key={index}
+                    className="flex justify-between w-full items-center"
+                >
                     <Text>{component.name}</Text>
 
                     <RupiahInput
@@ -131,7 +130,9 @@ export default function InvoiceCard({
     )
 }
 
-function RupiahInput(props: React.ComponentProps<typeof Input>): React.ReactElement {
+function RupiahInput(
+    props: React.ComponentProps<typeof Input>,
+): React.ReactElement {
     const rupiahMask = useMaskito({ options: maskitoOptions })
     return <Input {...props} ref={rupiahMask} />
 }

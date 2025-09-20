@@ -44,4 +44,4 @@ export const columns: ColumnDef<Employee>[] = [
             })
         },
     },
-] 
+]

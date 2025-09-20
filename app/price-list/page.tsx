@@ -15,7 +15,9 @@ export const metadata: Metadata = {
 
 export default function PriceList(): React.ReactElement {
     const sessionPromise = auth()
-    const drugsPromise = sessionPromise.then(session => getDrugs(session)).then(response => response.drugs)
+    const drugsPromise = sessionPromise
+        .then((session) => getDrugs(session))
+        .then((response) => response.drugs)
 
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
@@ -27,7 +29,10 @@ export default function PriceList(): React.ReactElement {
                 <div className="justify-self-end">
                     <Text>
                         Hubungi{" "}
-                        <Link href="https://wa.me/6281223556554" target="_blank">
+                        <Link
+                            href="https://wa.me/6281223556554"
+                            target="_blank"
+                        >
                             081223556554
                         </Link>{" "}
                         untuk mendapatkan harga partai/medis.
@@ -37,7 +42,10 @@ export default function PriceList(): React.ReactElement {
 
             <Card className="mt-4 p-6">
                 <Suspense fallback={<PriceListTableFallback />}>
-                    <PriceListTable sessionPromise={sessionPromise} initialDrugsPromise={drugsPromise} />
+                    <PriceListTable
+                        sessionPromise={sessionPromise}
+                        initialDrugsPromise={drugsPromise}
+                    />
                 </Suspense>
             </Card>
         </main>

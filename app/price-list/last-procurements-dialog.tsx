@@ -1,6 +1,13 @@
 "use client"
 
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import {
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Subtitle } from "@/components/typography"
 import { Suspense, useState, useMemo } from "react"
@@ -17,11 +24,18 @@ interface LastProcurementsDialogProps {
     session: Session | null
 }
 
-export default function LastProcurementsDialog({ drugCode, session }: LastProcurementsDialogProps): React.ReactElement {
+export default function LastProcurementsDialog({
+    drugCode,
+    session,
+}: LastProcurementsDialogProps): React.ReactElement {
     const [isOpen, setIsOpen] = useState(false)
     const procurementsPromise = useMemo(() => {
         if (!isOpen) return Promise.resolve({ header: [], rows: [] })
-        return getLastDrugProcurements(drugCode, DEFAULT_DRUG_PROCUREMENTS_LIMIT, session)
+        return getLastDrugProcurements(
+            drugCode,
+            DEFAULT_DRUG_PROCUREMENTS_LIMIT,
+            session,
+        )
     }, [drugCode, session, isOpen])
 
     return (
@@ -43,7 +57,10 @@ export default function LastProcurementsDialog({ drugCode, session }: LastProcur
                     </Suspense>
                 </div>
                 <DialogFooter>
-                    <Link href={`/procurements/by-drug?drug-code=${drugCode}`} target="_blank">
+                    <Link
+                        href={`/procurements/by-drug?drug-code=${drugCode}`}
+                        target="_blank"
+                    >
                         <Subtitle className="cursor-pointer hover:underline">
                             Lihat lebih banyak
                         </Subtitle>
@@ -52,4 +69,4 @@ export default function LastProcurementsDialog({ drugCode, session }: LastProcur
             </DialogContent>
         </Dialog>
     )
-} 
+}

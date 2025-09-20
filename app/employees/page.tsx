@@ -14,15 +14,16 @@ export const metadata: Metadata = {
 }
 
 export default function EmployeesPage(): React.ReactElement {
-    const employees = auth().
-        then(session => getEmployees(session))
+    const employees = auth().then((session) => getEmployees(session))
 
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <div className="flex justify-between items-center mb-6">
                 <div>
                     <Title>Karyawan</Title>
-                    <Subtitle>Kelola karyawan dan gaji per shift mereka di sini.</Subtitle>
+                    <Subtitle>
+                        Kelola karyawan dan gaji per shift mereka di sini.
+                    </Subtitle>
                 </div>
                 <Link href="/employees/new">
                     <Button>
@@ -34,4 +35,4 @@ export default function EmployeesPage(): React.ReactElement {
             <DataTable columns={columns} dataPromise={employees} />
         </main>
     )
-} 
+}

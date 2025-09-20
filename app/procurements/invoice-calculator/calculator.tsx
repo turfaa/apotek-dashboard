@@ -62,11 +62,7 @@ export default function Calculator(): React.ReactElement {
                 </div>
             ))}
 
-            <Button
-                variant="default"
-                onClick={addInvoice}
-                className="self-end"
-            >
+            <Button variant="default" onClick={addInvoice} className="self-end">
                 <PlusIcon className="mr-2 h-4 w-4" />
                 Tambah Faktur
             </Button>

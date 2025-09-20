@@ -1,10 +1,6 @@
 "use client"
 
-import {
-    Tabs,
-    TabsList,
-    TabsTrigger,
-} from "@/components/ui/tabs"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
     ReadonlyURLSearchParams,
     usePathname,
@@ -39,9 +35,11 @@ export function TabGroup({
     const { isPrintMode } = usePrintMode()
 
     const currentTab = searchParams.get("tab")?.toLowerCase()
-    const defaultValue = currentTab && tabLabels.map(t => t.tag.toLowerCase()).includes(currentTab)
-        ? currentTab
-        : tabLabels[0].tag.toLowerCase()
+    const defaultValue =
+        currentTab &&
+        tabLabels.map((t) => t.tag.toLowerCase()).includes(currentTab)
+            ? currentTab
+            : tabLabels[0].tag.toLowerCase()
 
     return (
         <Tabs

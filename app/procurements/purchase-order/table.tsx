@@ -19,7 +19,6 @@ import { Input } from "@/components/ui/input"
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
 import Loading from "@/components/loading"
 
-
 export interface Row {
     vmedisCode: string
     name: string
@@ -126,8 +125,7 @@ export default function PurchaseOrderTable(): React.ReactElement {
     const { query } = useSearch()
     const { isPrintMode } = usePrintMode()
 
-    if (isLoading || !ssrCompleted)
-        return <Loading />
+    if (isLoading || !ssrCompleted) return <Loading />
 
     if (error)
         return (
@@ -191,8 +189,8 @@ export default function PurchaseOrderTable(): React.ReactElement {
                                 column === "no."
                                     ? `${index + 1}`
                                     : columnConfig[column].formatter?.(
-                                        row[column],
-                                    ) || row[column]?.toString()
+                                          row[column],
+                                      ) || row[column]?.toString()
 
                             return (
                                 <TableCell
@@ -205,25 +203,24 @@ export default function PurchaseOrderTable(): React.ReactElement {
                                     }
                                 >
                                     {!!columnConfig[column].onEdit &&
-                                        !isPrintMode
-                                        ? (
-                                            <Input
-                                                value={value}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        row.vmedisCode,
-                                                        columnConfig[
-                                                            column
-                                                        ].onEdit?.(
-                                                            row.raw,
-                                                            e.target.value,
-                                                        ) || row.raw,
-                                                    )
-                                                }
-                                            />
-                                        )
-                                        : value
-                                    }
+                                    !isPrintMode ? (
+                                        <Input
+                                            value={value}
+                                            onChange={(e) =>
+                                                setData(
+                                                    row.vmedisCode,
+                                                    columnConfig[
+                                                        column
+                                                    ].onEdit?.(
+                                                        row.raw,
+                                                        e.target.value,
+                                                    ) || row.raw,
+                                                )
+                                            }
+                                        />
+                                    ) : (
+                                        value
+                                    )}
                                 </TableCell>
                             )
                         })}

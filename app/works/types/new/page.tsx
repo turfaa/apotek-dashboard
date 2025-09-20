@@ -14,7 +14,9 @@ export default function NewWorkTypePage() {
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <div className="mb-6">
-                <h2 className="text-3xl font-bold tracking-tight">Tambah Jenis Pekerjaan</h2>
+                <h2 className="text-3xl font-bold tracking-tight">
+                    Tambah Jenis Pekerjaan
+                </h2>
                 <p className="text-muted-foreground">
                     Buat jenis pekerjaan baru dan atur pengali gajinya.
                 </p>
@@ -24,4 +26,4 @@ export default function NewWorkTypePage() {
             </div>
         </main>
     )
-} 
+}

@@ -45,12 +45,17 @@ export default class Corpus {
             [] as [string, [number, number]][],
         )
 
-        return filteredResults.sort(([, [score1, firstTermPosition1]], [, [score2, firstTermPosition2]]) => {
-            if (firstTermPosition1 !== firstTermPosition2) {
-                return firstTermPosition1 - firstTermPosition2
-            }
+        return filteredResults.sort(
+            (
+                [, [score1, firstTermPosition1]],
+                [, [score2, firstTermPosition2]],
+            ) => {
+                if (firstTermPosition1 !== firstTermPosition2) {
+                    return firstTermPosition1 - firstTermPosition2
+                }
 
-            return score2 - score1
-        })
+                return score2 - score1
+            },
+        )
     }
 }

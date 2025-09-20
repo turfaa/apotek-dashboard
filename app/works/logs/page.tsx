@@ -23,30 +23,37 @@ export interface WorkLogsProps {
 
 export default function WorkLogs(props: WorkLogsProps): React.ReactElement {
     const sessionPromise = auth()
-    
+
     // If no dates provided, use current month
-    const searchParams = props.searchParams.then(searchParams => {
+    const searchParams = props.searchParams.then((searchParams) => {
         if (!searchParams.from && !searchParams.until) {
             const now = new Date()
             const firstDay = new Date(now.getFullYear(), now.getMonth(), 1)
             const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0)
 
             // Convert to YYYY-MM-DD
-            searchParams.from = firstDay.toLocaleDateString('en-CA')
-            searchParams.until = lastDay.toLocaleDateString('en-CA')
+            searchParams.from = firstDay.toLocaleDateString("en-CA")
+            searchParams.until = lastDay.toLocaleDateString("en-CA")
         }
-        
+
         return searchParams
     })
-    
-    const workLogsPromise = 
-        Promise.all([sessionPromise, searchParams])
-            .then(([session, searchParams]) => getWorkLogs(searchParams.from, searchParams.until, session))
-            .then(logs => logs.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()))
-    
-    const employeesPromise = sessionPromise.then(session => getEmployees(session))
-    const workTypesPromise = sessionPromise.then(session => getWorkTypes(session))
-    
+
+    const workLogsPromise = Promise.all([sessionPromise, searchParams])
+        .then(([session, searchParams]) =>
+            getWorkLogs(searchParams.from, searchParams.until, session),
+        )
+        .then((logs) =>
+            logs.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()),
+        )
+
+    const employeesPromise = sessionPromise.then((session) =>
+        getEmployees(session),
+    )
+    const workTypesPromise = sessionPromise.then((session) =>
+        getWorkTypes(session),
+    )
+
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <div className="flex justify-between items-center mb-6">
@@ -55,8 +62,14 @@ export default function WorkLogs(props: WorkLogsProps): React.ReactElement {
                     <DateRangePicker defaultDateRangeType="Bulan ini" />
                 </div>
 
-                <Suspense fallback={<Button disabled><Plus className="mr-2 h-4 w-4" /> Tambah Laporan</Button>}>
-                    <AddWorkLogDialog 
+                <Suspense
+                    fallback={
+                        <Button disabled>
+                            <Plus className="mr-2 h-4 w-4" /> Tambah Laporan
+                        </Button>
+                    }
+                >
+                    <AddWorkLogDialog
                         sessionPromise={sessionPromise}
                         employeesPromise={employeesPromise}
                         workTypesPromise={workTypesPromise}
@@ -74,11 +87,11 @@ export default function WorkLogs(props: WorkLogsProps): React.ReactElement {
             </Suspense>
 
             <Suspense fallback={<WorkLogsTableSkeleton />}>
-                <WorkLogsTable 
-                    workLogsPromise={workLogsPromise} 
+                <WorkLogsTable
+                    workLogsPromise={workLogsPromise}
                     employeesPromise={employeesPromise}
                 />
             </Suspense>
         </main>
     )
-} 
+}

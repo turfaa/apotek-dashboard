@@ -29,7 +29,12 @@ const availableNavigations: NavigationItem[] = [
             {
                 name: "Daftar Harga",
                 href: "/price-list",
-                allowedRoles: [Role.ADMIN, Role.STAFF, Role.RESELLER, Role.GUEST],
+                allowedRoles: [
+                    Role.ADMIN,
+                    Role.STAFF,
+                    Role.RESELLER,
+                    Role.GUEST,
+                ],
             },
             {
                 name: "Obat Terjual",
@@ -148,10 +153,21 @@ export function allowedNavigations(role?: Role | null): NavigationItem[] {
     }
 
     const navigations = availableNavigations
-        .filter((navigation) => !navigation.allowedRoles || navigation.allowedRoles.includes(role))
+        .filter(
+            (navigation) =>
+                !navigation.allowedRoles ||
+                navigation.allowedRoles.includes(role),
+        )
         .map((navigation) => ({
             ...navigation,
-            target: typeof navigation.target === "string" ? navigation.target : navigation.target.filter((page) => !page.allowedRoles || page.allowedRoles.includes(role)),
+            target:
+                typeof navigation.target === "string"
+                    ? navigation.target
+                    : navigation.target.filter(
+                          (page) =>
+                              !page.allowedRoles ||
+                              page.allowedRoles.includes(role),
+                      ),
         }))
         .filter((navigation) => navigation.target.length > 0)
 
@@ -159,10 +175,14 @@ export function allowedNavigations(role?: Role | null): NavigationItem[] {
 }
 
 export function isPageAllowed(href: string, role?: Role | null): boolean {
-    const matchedNavigations = availableNavigations.filter((navigation) => navigation.target === href)
+    const matchedNavigations = availableNavigations.filter(
+        (navigation) => navigation.target === href,
+    )
 
     const matchedPages = availableNavigations
-        .flatMap((navigation) => Array.isArray(navigation.target) ? navigation.target : [])
+        .flatMap((navigation) =>
+            Array.isArray(navigation.target) ? navigation.target : [],
+        )
         .filter((page) => page.href === href)
 
     if (matchedNavigations.length === 0 && matchedPages.length === 0) {
@@ -170,12 +190,22 @@ export function isPageAllowed(href: string, role?: Role | null): boolean {
     }
 
     return (
-        matchedNavigations.some((navigation) => !navigation.allowedRoles || navigation.allowedRoles.includes(role ?? Role.GUEST)) ||
-        matchedPages.some((page) => !page.allowedRoles || page.allowedRoles.includes(role ?? Role.GUEST))
+        matchedNavigations.some(
+            (navigation) =>
+                !navigation.allowedRoles ||
+                navigation.allowedRoles.includes(role ?? Role.GUEST),
+        ) ||
+        matchedPages.some(
+            (page) =>
+                !page.allowedRoles ||
+                page.allowedRoles.includes(role ?? Role.GUEST),
+        )
     )
 }
 
-function flattenSingleNavigations(navigations: NavigationItem[]): NavigationItem[] {
+function flattenSingleNavigations(
+    navigations: NavigationItem[],
+): NavigationItem[] {
     return navigations.map((navigation) => {
         if (typeof navigation.target === "string") {
             return navigation

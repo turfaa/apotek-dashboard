@@ -14,7 +14,10 @@ import { useTransition, useRef, useEffect } from "react"
 import { CalendarIcon } from "@radix-ui/react-icons"
 import { format } from "date-fns"
 import { Button } from "@/components/ui/button"
-import { MonthPicker as MonthPickerComponent, MonthCalProps } from "@/components/ui/monthpicker"
+import {
+    MonthPicker as MonthPickerComponent,
+    MonthCalProps,
+} from "@/components/ui/monthpicker"
 import {
     Popover,
     PopoverContent,
@@ -33,7 +36,9 @@ export function MonthPicker(props: MonthCalProps): React.ReactElement {
     // Default to previous month if no month parameter
     const defaultMonth = new Date()
     defaultMonth.setMonth(defaultMonth.getMonth() - 1)
-    const selectedMonth = monthFromParams ? new Date(monthFromParams) : defaultMonth
+    const selectedMonth = monthFromParams
+        ? new Date(monthFromParams)
+        : defaultMonth
     const monthString = format(selectedMonth, "MMMM yyyy", { locale: id })
 
     const popOverRef = useRef<HTMLButtonElement | null>(null)
@@ -74,10 +79,7 @@ export function MonthPicker(props: MonthCalProps): React.ReactElement {
                         const params: URLSearchParams = new URLSearchParams(
                             window.location.search,
                         )
-                        params.set(
-                            "month",
-                            moment(month).format("YYYY-MM"),
-                        )
+                        params.set("month", moment(month).format("YYYY-MM"))
 
                         startTransition(() => {
                             push(`${pathname}?${params.toString()}`)
@@ -87,7 +89,8 @@ export function MonthPicker(props: MonthCalProps): React.ReactElement {
                     }}
                     callbacks={{
                         yearLabel: (year: number) => year.toString(),
-                        monthLabel: (month: { number: number; name: string }) => month.name
+                        monthLabel: (month: { number: number; name: string }) =>
+                            month.name,
                     }}
                 />
             </PopoverContent>

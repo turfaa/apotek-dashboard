@@ -14,14 +14,18 @@ export const metadata: Metadata = {
 }
 
 export default function AttendanceTypesPage(): React.ReactElement {
-    const attendanceTypesPromise = auth().then(session => getAttendanceTypes(session))
+    const attendanceTypesPromise = auth().then((session) =>
+        getAttendanceTypes(session),
+    )
 
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <div className="flex justify-between items-center mb-6">
                 <div>
                     <Title>Jenis Kehadiran</Title>
-                    <Subtitle>Kelola jenis kehadiran dan tipe pembayaran di sini.</Subtitle>
+                    <Subtitle>
+                        Kelola jenis kehadiran dan tipe pembayaran di sini.
+                    </Subtitle>
                 </div>
                 <Link href="/attendances/types/new">
                     <Button>

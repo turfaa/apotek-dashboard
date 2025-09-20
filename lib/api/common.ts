@@ -1,7 +1,4 @@
-export function buildDateRangeQueryParams(
-    from?: string,
-    to?: string,
-): string {
+export function buildDateRangeQueryParams(from?: string, to?: string): string {
     if (!from) {
         return ""
     }

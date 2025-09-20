@@ -11,7 +11,11 @@ import { getStockOpnames } from "@/lib/api/stock-opname"
 import { rupiah } from "@/lib/rupiah"
 import { SearchParams } from "@/types/search-params"
 
-export default async function StockOpnamesReportTable({ searchParams }: { searchParams: SearchParams }): Promise<React.ReactElement> {
+export default async function StockOpnamesReportTable({
+    searchParams,
+}: {
+    searchParams: SearchParams
+}): Promise<React.ReactElement> {
     const { from, until } = await searchParams
     const { stockOpnames } = await getStockOpnames(from, until)
 

@@ -11,7 +11,9 @@ export default async function InvoiceCalculator(): Promise<React.ReactElement> {
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <div className="mb-4">
                 <Title>Kalkulator Faktur</Title>
-                <Subtitle>Hitung jumlah faktur yang harus di-input ke sistem</Subtitle>
+                <Subtitle>
+                    Hitung jumlah faktur yang harus di-input ke sistem
+                </Subtitle>
             </div>
 
             <CalculatorSelector calculators={calculators} />

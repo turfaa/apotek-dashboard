@@ -11,7 +11,11 @@ import {
 } from "@/components/ui/table"
 import { SearchParams } from "@/types/search-params"
 
-export default async function CompactedStockOpnameTable({ searchParams }: { searchParams: SearchParams }): Promise<React.ReactElement> {
+export default async function CompactedStockOpnameTable({
+    searchParams,
+}: {
+    searchParams: SearchParams
+}): Promise<React.ReactElement> {
     const { from, until } = await searchParams
     const { stockOpnames } = await getCompactedStockOpnames(from, until)
     const totalHppDifference = stockOpnames.reduce(
@@ -48,9 +52,9 @@ export default async function CompactedStockOpnameTable({ searchParams }: { sear
                         <TableCell className="flex flex-col items-start">
                             {row.changes.map((change, changeIndex) => (
                                 <span key={changeIndex}>
-                                    {change.initialQuantity} {row.unit}{" "}
-                                    {"->"} {change.realQuantity} {row.unit}{" "}
-                                    [{change.batchCode}]{" "}
+                                    {change.initialQuantity} {row.unit} {"->"}{" "}
+                                    {change.realQuantity} {row.unit} [
+                                    {change.batchCode}]{" "}
                                 </span>
                             ))}
                         </TableCell>

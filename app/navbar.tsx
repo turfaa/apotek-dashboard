@@ -6,7 +6,11 @@ import { Role } from "@/lib/api/auth"
 import { useNavigation } from "@/lib/navigation"
 import { usePrintMode } from "@/lib/print-mode"
 import PrintButton from "@/components/print-button"
-import { HamburgerMenuIcon, Cross1Icon, ChevronDownIcon } from "@radix-ui/react-icons"
+import {
+    HamburgerMenuIcon,
+    Cross1Icon,
+    ChevronDownIcon,
+} from "@radix-ui/react-icons"
 import { Session } from "next-auth"
 import { signIn, signOut } from "next-auth/react"
 import Image from "next/image"
@@ -28,7 +32,11 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 import Link from "next/link"
 
 const rolesAllowedToPrint = [Role.ADMIN, Role.STAFF]
@@ -118,18 +126,28 @@ export function InnerNavbar({
 
                                 return (
                                     <DropdownMenu key={item.name}>
-                                        <DropdownMenuTrigger className={classNames(
-                                            item.target.some(page => page.href === pathname)
-                                                ? "border-slate-500 text-gray-900"
-                                                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
-                                            "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium",
-                                        )}>
+                                        <DropdownMenuTrigger
+                                            className={classNames(
+                                                item.target.some(
+                                                    (page) =>
+                                                        page.href === pathname,
+                                                )
+                                                    ? "border-slate-500 text-gray-900"
+                                                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
+                                                "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium",
+                                            )}
+                                        >
                                             {item.name}
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent>
-                                            {item.target.map(page => (
-                                                <DropdownMenuItem key={page.href} asChild>
-                                                    <a href={page.href}>{page.name}</a>
+                                            {item.target.map((page) => (
+                                                <DropdownMenuItem
+                                                    key={page.href}
+                                                    asChild
+                                                >
+                                                    <a href={page.href}>
+                                                        {page.name}
+                                                    </a>
                                                 </DropdownMenuItem>
                                             ))}
                                         </DropdownMenuContent>
@@ -156,17 +174,27 @@ export function InnerNavbar({
                             <DropdownMenuContent align="end">
                                 {session?.user ? (
                                     <>
-                                        <DropdownMenuLabel>{session?.user?.name}</DropdownMenuLabel>
-                                        <DropdownMenuLabel className="text-sm text-gray-500 font-normal mt-0 pt-0">{session?.user?.email}</DropdownMenuLabel>
+                                        <DropdownMenuLabel>
+                                            {session?.user?.name}
+                                        </DropdownMenuLabel>
+                                        <DropdownMenuLabel className="text-sm text-gray-500 font-normal mt-0 pt-0">
+                                            {session?.user?.email}
+                                        </DropdownMenuLabel>
                                         <DropdownMenuSeparator />
-                                        <DropdownMenuItem onClick={() => signOut()}>
+                                        <DropdownMenuItem
+                                            onClick={() => signOut()}
+                                        >
                                             Sign out
                                         </DropdownMenuItem>
                                     </>
                                 ) : (
                                     <>
-                                        <DropdownMenuLabel>Tamu</DropdownMenuLabel>
-                                        <DropdownMenuItem onClick={() => signIn("google")}>
+                                        <DropdownMenuLabel>
+                                            Tamu
+                                        </DropdownMenuLabel>
+                                        <DropdownMenuItem
+                                            onClick={() => signIn("google")}
+                                        >
                                             Sign in
                                         </DropdownMenuItem>
                                     </>
@@ -177,7 +205,11 @@ export function InnerNavbar({
                     <div className="-mr-2 flex items-center sm:hidden">
                         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                             <SheetTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-10 w-10">
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-10 w-10"
+                                >
                                     {isSheetOpen ? (
                                         <Cross1Icon className="h-6 w-6" />
                                     ) : (
@@ -190,18 +222,25 @@ export function InnerNavbar({
                                 <SheetHeader>
                                     <div className="space-y-1 pt-2 pb-3">
                                         {navigations.map((item) => {
-                                            if (typeof item.target === "string") {
+                                            if (
+                                                typeof item.target === "string"
+                                            ) {
                                                 return (
                                                     <Link
                                                         key={item.name}
                                                         href={item.target}
                                                         className={classNames(
-                                                            pathname === item.target
+                                                            pathname ===
+                                                                item.target
                                                                 ? "bg-slate-50 border-slate-500 text-slate-700"
                                                                 : "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800",
                                                             "block pl-3 pr-4 py-2 border-l-4 text-base font-medium",
                                                         )}
-                                                        onClick={() => setIsSheetOpen(false)}
+                                                        onClick={() =>
+                                                            setIsSheetOpen(
+                                                                false,
+                                                            )
+                                                        }
                                                     >
                                                         {item.name}
                                                     </Link>
@@ -211,25 +250,38 @@ export function InnerNavbar({
                                             return (
                                                 <Collapsible key={item.name}>
                                                     <CollapsibleTrigger className="flex w-full items-center pl-3 pr-4 py-2 text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-800 border-l-4 border-transparent">
-                                                        <span className="grow">{item.name}</span>
+                                                        <span className="grow">
+                                                            {item.name}
+                                                        </span>
                                                         <ChevronDownIcon className="h-4 w-4" />
                                                     </CollapsibleTrigger>
                                                     <CollapsibleContent>
-                                                        {item.target.map((page) => (
-                                                            <Link
-                                                                key={page.name}
-                                                                href={page.href}
-                                                                className={classNames(
-                                                                    pathname === page.href
-                                                                        ? "bg-slate-50 border-slate-500 text-slate-700"
-                                                                        : "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800",
-                                                                    "block pl-8 pr-4 py-2 border-l-4 text-base font-medium",
-                                                                )}
-                                                                onClick={() => setIsSheetOpen(false)}
-                                                            >
-                                                                {page.name}
-                                                            </Link>
-                                                        ))}
+                                                        {item.target.map(
+                                                            (page) => (
+                                                                <Link
+                                                                    key={
+                                                                        page.name
+                                                                    }
+                                                                    href={
+                                                                        page.href
+                                                                    }
+                                                                    className={classNames(
+                                                                        pathname ===
+                                                                            page.href
+                                                                            ? "bg-slate-50 border-slate-500 text-slate-700"
+                                                                            : "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800",
+                                                                        "block pl-8 pr-4 py-2 border-l-4 text-base font-medium",
+                                                                    )}
+                                                                    onClick={() =>
+                                                                        setIsSheetOpen(
+                                                                            false,
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    {page.name}
+                                                                </Link>
+                                                            ),
+                                                        )}
                                                     </CollapsibleContent>
                                                 </Collapsible>
                                             )
@@ -242,7 +294,11 @@ export function InnerNavbar({
                                                     <div className="shrink-0">
                                                         <Image
                                                             className="h-8 w-8 rounded-full"
-                                                            src={session?.user?.image ?? Anonymous}
+                                                            src={
+                                                                session?.user
+                                                                    ?.image ??
+                                                                Anonymous
+                                                            }
                                                             height={32}
                                                             width={32}
                                                             alt={`${session?.user?.name} avatar`}
@@ -250,16 +306,24 @@ export function InnerNavbar({
                                                     </div>
                                                     <div className="ml-3">
                                                         <div className="text-base font-medium text-gray-800">
-                                                            {session?.user?.name ?? session?.user?.role ?? "User"}
+                                                            {session?.user
+                                                                ?.name ??
+                                                                session?.user
+                                                                    ?.role ??
+                                                                "User"}
                                                         </div>
                                                         <div className="text-sm font-medium text-gray-500">
-                                                            {session?.user?.email ?? "(no email)"}
+                                                            {session?.user
+                                                                ?.email ??
+                                                                "(no email)"}
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div className="mt-3 space-y-1">
                                                     <Button
-                                                        onClick={() => signOut()}
+                                                        onClick={() =>
+                                                            signOut()
+                                                        }
                                                         variant="ghost"
                                                         className="w-full justify-start"
                                                     >
@@ -270,7 +334,9 @@ export function InnerNavbar({
                                         ) : (
                                             <div className="mt-3 space-y-1">
                                                 <Button
-                                                    onClick={() => signIn("google")}
+                                                    onClick={() =>
+                                                        signIn("google")
+                                                    }
                                                     variant="ghost"
                                                     className="w-full justify-start"
                                                 >

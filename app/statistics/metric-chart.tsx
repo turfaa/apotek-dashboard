@@ -23,21 +23,21 @@ export default function MetricChart(
         ((value: number) => value.toLocaleString("id-ID"))
 
     const data = props.data
-        .map((datum, index, self) => (
+        .map((datum, index, self) =>
             // Convert the datum to a chart.js data point.
             // The y value is the difference between the current datum and the previous datum if they're in the same date.
-            {
+            ({
                 x: datum.timestamp,
                 y: Math.max(
                     0,
                     index == 0 ||
                         datum.timestamp.toDateString() !=
-                        self[index - 1].timestamp.toDateString()
+                            self[index - 1].timestamp.toDateString()
                         ? datum.value
                         : datum.value - self[index - 1].value,
                 ),
-            }
-        ))
+            }),
+        )
         .filter(
             (datum, index, self) =>
                 // Filter out a datum if it's the same as the next datum.
@@ -48,8 +48,8 @@ export default function MetricChart(
         data.length < 2
             ? "hour"
             : data[1].x.toDateString() === data[0].x.toDateString()
-                ? "hour"
-                : "day"
+              ? "hour"
+              : "day"
 
     return (
         <Card className="p-6">

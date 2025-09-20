@@ -27,24 +27,30 @@ interface SalaryPageClientProps {
     }>
 }
 
-export function SalaryPageClient({ 
-    employeesPromise, 
+export function SalaryPageClient({
+    employeesPromise,
     sessionPromise,
-    searchParamsPromise
+    searchParamsPromise,
 }: SalaryPageClientProps): React.ReactElement {
     const employees = use(employeesPromise)
     const session = use(sessionPromise)
     const searchParams = use(searchParamsPromise)
-    
+
     const [salary, setSalary] = useState<Salary | null>(null)
     const [loading, setLoading] = useState(false)
-    
-    const selectedEmployee = searchParams.employeeID ? employees.find(emp => emp.id.toString() === searchParams.employeeID) : null
-    
+
+    const selectedEmployee = searchParams.employeeID
+        ? employees.find((emp) => emp.id.toString() === searchParams.employeeID)
+        : null
+
     useEffect(() => {
         if (searchParams.month && searchParams.employeeID && session) {
             setLoading(true)
-            getSalary(parseInt(searchParams.employeeID), searchParams.month, session)
+            getSalary(
+                parseInt(searchParams.employeeID),
+                searchParams.month,
+                session,
+            )
                 .then(setSalary)
                 .catch(console.error)
                 .finally(() => setLoading(false))
@@ -61,11 +67,15 @@ export function SalaryPageClient({
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row gap-4">
                 <div className="flex-1">
-                    <label className="text-sm font-medium mb-2 block">Bulan</label>
+                    <label className="text-sm font-medium mb-2 block">
+                        Bulan
+                    </label>
                     <MonthPicker />
                 </div>
                 <div className="flex-1">
-                    <label className="text-sm font-medium mb-2 block">Karyawan</label>
+                    <label className="text-sm font-medium mb-2 block">
+                        Karyawan
+                    </label>
                     <EmployeePicker employees={employees} />
                 </div>
             </div>
@@ -116,7 +126,9 @@ function SalaryTable({ salary }: SalaryTableProps): React.ReactElement {
                     <TableRow>
                         <TableHead>Komponen</TableHead>
                         <TableHead className="text-right">Jumlah</TableHead>
-                        <TableHead className="text-right">Fee / (Penalti)</TableHead>
+                        <TableHead className="text-right">
+                            Fee / (Penalti)
+                        </TableHead>
                         <TableHead className="text-right">Total</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -125,24 +137,24 @@ function SalaryTable({ salary }: SalaryTableProps): React.ReactElement {
                         <TableRow key={index}>
                             <TableCell>{component.description}</TableCell>
                             <TableCell className="text-right">
-                                {component.multiplier.toLocaleString('id-ID')}
+                                {component.multiplier.toLocaleString("id-ID")}
                             </TableCell>
                             <TableCell className="text-right">
-                                Rp {component.amount.toLocaleString('id-ID')}
+                                Rp {component.amount.toLocaleString("id-ID")}
                             </TableCell>
                             <TableCell className="text-right font-medium">
-                                Rp {component.total.toLocaleString('id-ID')}
+                                Rp {component.total.toLocaleString("id-ID")}
                             </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
-            
+
             <div className="border-t pt-4">
                 <div className="flex justify-between items-center">
                     <span className="text-lg font-semibold">Total Gaji:</span>
                     <span className="text-lg font-bold">
-                        Rp {salary.total.toLocaleString('id-ID')}
+                        Rp {salary.total.toLocaleString("id-ID")}
                     </span>
                 </div>
             </div>

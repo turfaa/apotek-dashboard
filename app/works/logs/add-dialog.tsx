@@ -44,16 +44,20 @@ const formSchema = z.object({
     patientName: z.string().min(1, {
         message: "Masukkan nama pasien",
     }),
-    units: z.array(z.object({
-        workTypeID: z.coerce.number({
-            error: "Pilih jenis pekerjaan",
+    units: z
+        .array(
+            z.object({
+                workTypeID: z.coerce.number({
+                    error: "Pilih jenis pekerjaan",
+                }),
+                workOutcome: z.string().min(1, {
+                    message: "Masukkan hasil pekerjaan",
+                }),
+            }),
+        )
+        .min(1, {
+            message: "Tambahkan minimal 1 pekerjaan",
         }),
-        workOutcome: z.string().min(1, {
-            message: "Masukkan hasil pekerjaan",
-        }),
-    })).min(1, {
-        message: "Tambahkan minimal 1 pekerjaan",
-    }),
 })
 
 type FormData = z.infer<typeof formSchema>
@@ -65,7 +69,12 @@ interface AddWorkLogDialogProps {
     workTypesPromise: Promise<WorkType[]>
 }
 
-export function AddWorkLogDialog({ children, sessionPromise, employeesPromise, workTypesPromise }: AddWorkLogDialogProps) {
+export function AddWorkLogDialog({
+    children,
+    sessionPromise,
+    employeesPromise,
+    workTypesPromise,
+}: AddWorkLogDialogProps) {
     const router = useRouter()
     const [open, setOpen] = useState(false)
     const patientNameRef = useRef<HTMLInputElement>(null)
@@ -90,10 +99,12 @@ export function AddWorkLogDialog({ children, sessionPromise, employeesPromise, w
         name: "units",
     })
 
-
     // Update refs array when fields change
     useEffect(() => {
-        workOutcomeRefs.current = workOutcomeRefs.current.slice(0, fields.length)
+        workOutcomeRefs.current = workOutcomeRefs.current.slice(
+            0,
+            fields.length,
+        )
     }, [fields.length])
 
     const handleEmployeeChange = (value: string) => {
@@ -121,7 +132,7 @@ export function AddWorkLogDialog({ children, sessionPromise, employeesPromise, w
             const request: CreateWorkLogRequest = {
                 employeeID: values.employeeID,
                 patientName: values.patientName,
-                units: values.units.map(unit => ({
+                units: values.units.map((unit) => ({
                     workTypeID: unit.workTypeID,
                     workOutcome: unit.workOutcome,
                 })),
@@ -139,15 +150,16 @@ export function AddWorkLogDialog({ children, sessionPromise, employeesPromise, w
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                {children}
-            </DialogTrigger>
+            <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="max-w-2xl">
                 <DialogHeader>
                     <DialogTitle>Tambah Laporan Pekerjaan</DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <form
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        className="space-y-8"
+                    >
                         <FormField
                             control={form.control}
                             name="employeeID"
@@ -186,10 +198,13 @@ export function AddWorkLogDialog({ children, sessionPromise, employeesPromise, w
                                 <FormItem>
                                     <FormLabel>Nama Pasien</FormLabel>
                                     <FormControl>
-                                        <Input 
+                                        <Input
                                             {...field}
                                             ref={(el) => {
-                                                if (typeof field.ref === 'function') {
+                                                if (
+                                                    typeof field.ref ===
+                                                    "function"
+                                                ) {
                                                     field.ref(el)
                                                 }
                                                 patientNameRef.current = el
@@ -208,24 +223,38 @@ export function AddWorkLogDialog({ children, sessionPromise, employeesPromise, w
                                     type="button"
                                     variant="outline"
                                     size="sm"
-                                    onClick={() => append({
-                                        workTypeID: 0,
-                                        workOutcome: "",
-                                    })}
+                                    onClick={() =>
+                                        append({
+                                            workTypeID: 0,
+                                            workOutcome: "",
+                                        })
+                                    }
                                 >
                                     Tambah Pekerjaan
                                 </Button>
                             </div>
                             {fields.map((field, index) => (
-                                <div key={field.id} className="flex gap-4 items-start">
+                                <div
+                                    key={field.id}
+                                    className="flex gap-4 items-start"
+                                >
                                     <div className="flex-1 space-y-4">
                                         <FormField
                                             control={form.control}
                                             name={`units.${index}.workTypeID`}
-                                            render={({ field: { value, ...field } }) => (
+                                            render={({
+                                                field: { value, ...field },
+                                            }) => (
                                                 <FormItem>
                                                     <Select
-                                                        onValueChange={(value) => handleWorkTypeChange(value, index)}
+                                                        onValueChange={(
+                                                            value,
+                                                        ) =>
+                                                            handleWorkTypeChange(
+                                                                value,
+                                                                index,
+                                                            )
+                                                        }
                                                         value={value?.toString()}
                                                         {...field}
                                                     >
@@ -235,14 +264,20 @@ export function AddWorkLogDialog({ children, sessionPromise, employeesPromise, w
                                                             </SelectTrigger>
                                                         </FormControl>
                                                         <SelectContent>
-                                                            {workTypes.map((workType) => (
-                                                                <SelectItem
-                                                                    key={workType.id}
-                                                                    value={workType.id.toString()}
-                                                                >
-                                                                    {workType.name}
-                                                                </SelectItem>
-                                                            ))}
+                                                            {workTypes.map(
+                                                                (workType) => (
+                                                                    <SelectItem
+                                                                        key={
+                                                                            workType.id
+                                                                        }
+                                                                        value={workType.id.toString()}
+                                                                    >
+                                                                        {
+                                                                            workType.name
+                                                                        }
+                                                                    </SelectItem>
+                                                                ),
+                                                            )}
                                                         </SelectContent>
                                                     </Select>
                                                     <FormMessage />
@@ -258,14 +293,29 @@ export function AddWorkLogDialog({ children, sessionPromise, employeesPromise, w
                                                         <Input
                                                             {...field}
                                                             ref={(el) => {
-                                                                if (typeof field.ref === 'function') {
-                                                                    field.ref(el)
+                                                                if (
+                                                                    typeof field.ref ===
+                                                                    "function"
+                                                                ) {
+                                                                    field.ref(
+                                                                        el,
+                                                                    )
                                                                 }
-                                                                workOutcomeRefs.current[index] = el
+                                                                workOutcomeRefs.current[
+                                                                    index
+                                                                ] = el
                                                             }}
-                                                            placeholder={`Masukkan ${workTypes.find(
-                                                                wt => wt.id === form.watch(`units.${index}.workTypeID`)
-                                                            )?.outcomeUnit || 'data'}`}
+                                                            placeholder={`Masukkan ${
+                                                                workTypes.find(
+                                                                    (wt) =>
+                                                                        wt.id ===
+                                                                        form.watch(
+                                                                            `units.${index}.workTypeID`,
+                                                                        ),
+                                                                )
+                                                                    ?.outcomeUnit ||
+                                                                "data"
+                                                            }`}
                                                         />
                                                     </FormControl>
                                                     <FormMessage />
@@ -306,4 +356,4 @@ export function AddWorkLogDialog({ children, sessionPromise, employeesPromise, w
             </DialogContent>
         </Dialog>
     )
-} 
+}

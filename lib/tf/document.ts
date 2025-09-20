@@ -70,7 +70,10 @@ function calculateTermFrequencies(tokens: Token[]): Map<string, number> {
 function calculateTermFirstPositions(tokens: Token[]): Map<string, number> {
     const termFirstPositions = new Map()
     tokens.forEach((token) => {
-        if (!termFirstPositions.has(token.text) || token.index < termFirstPositions.get(token.text)) {
+        if (
+            !termFirstPositions.has(token.text) ||
+            token.index < termFirstPositions.get(token.text)
+        ) {
             termFirstPositions.set(token.text, token.index)
         }
     })

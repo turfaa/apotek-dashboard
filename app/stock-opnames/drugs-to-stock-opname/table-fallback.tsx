@@ -23,11 +23,15 @@ export default function DrugsToStockOpnameTableFallback(): React.ReactElement {
                 {Array.from({ length: 5 }).map((_, index) => (
                     <TableRow key={index}>
                         <TableHead>{index + 1}</TableHead>
-                        <TableCell><Skeleton className="h-4 w-[250px]" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-[200px]" /></TableCell>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[250px]" />
+                        </TableCell>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[200px]" />
+                        </TableCell>
                     </TableRow>
                 ))}
             </TableBody>
         </Table>
     )
-} 
+}
