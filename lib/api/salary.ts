@@ -3,7 +3,9 @@ import { fetchAPI } from "./base"
 
 export interface Salary {
     components: SalaryComponent[]
+    totalWithoutDebt: number
     total: number
+    extraInfos: SalaryExtraInfo[]
 }
 
 export interface SalaryComponent {
@@ -13,9 +15,21 @@ export interface SalaryComponent {
     total: number
 }
 
+export interface SalaryExtraInfo {
+    id: number
+    employeeID: number
+    month: string
+    title: string
+    description: string
+    createdAt: Date
+}
+
 export interface UnderlyingSalary {
     components: UnderlyingSalaryComponent[]
+    totalWithoutDebt: string
     total: string
+    extraInfos: UnderlyingSalaryExtraInfo[]
+
 }
 
 export interface UnderlyingSalaryComponent {
@@ -25,6 +39,15 @@ export interface UnderlyingSalaryComponent {
     total: string
 }
 
+export interface UnderlyingSalaryExtraInfo {
+    id: number
+    employeeID: number
+    month: string
+    title: string
+    description: string
+    createdAt: string
+}
+
 export function convertUnderlyingSalary(
     underlyingSalary: UnderlyingSalary,
 ): Salary {
@@ -32,7 +55,11 @@ export function convertUnderlyingSalary(
         components: underlyingSalary.components.map(
             convertUnderlyingSalaryComponent,
         ),
+        totalWithoutDebt: parseFloat(underlyingSalary.totalWithoutDebt),
         total: parseFloat(underlyingSalary.total),
+        extraInfos: underlyingSalary.extraInfos.map(
+            convertUnderlyingSalaryExtraInfo,
+        ),
     }
 }
 
@@ -44,6 +71,15 @@ export function convertUnderlyingSalaryComponent(
         multiplier: parseFloat(underlyingSalaryComponent.multiplier),
         amount: parseFloat(underlyingSalaryComponent.amount),
         total: parseFloat(underlyingSalaryComponent.total),
+    }
+}
+
+export function convertUnderlyingSalaryExtraInfo(
+    underlyingSalaryExtraInfo: UnderlyingSalaryExtraInfo,
+): SalaryExtraInfo {
+    return {
+        ...underlyingSalaryExtraInfo,
+        createdAt: new Date(underlyingSalaryExtraInfo.createdAt),
     }
 }
 
