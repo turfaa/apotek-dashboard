@@ -11,7 +11,6 @@ import { usePrintMode } from "@/lib/print-mode"
 import { rupiah } from "@/lib/rupiah"
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Card } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function ClientSide(): React.ReactElement {

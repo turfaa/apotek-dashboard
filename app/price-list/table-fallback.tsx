@@ -5,7 +5,6 @@ import {
     TableCell,
     TableRow
 } from "@/components/ui/table"
-import { ReloadIcon } from "@radix-ui/react-icons"
 
 export default function PriceListTableFallback(): React.ReactElement {
     return (

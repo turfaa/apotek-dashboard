@@ -15,7 +15,7 @@ export interface DrugSelectorHook {
 }
 
 export function useDrugSelector(drugs: Drug[]): DrugSelectorHook {
-    const [isPending, startTransition] = useTransition()
+    const [, startTransition] = useTransition()
     const { push } = useRouter()
     const pathname: string = usePathname()
     const searchParams: ReadonlyURLSearchParams = useSearchParams()

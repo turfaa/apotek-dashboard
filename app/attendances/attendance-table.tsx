@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation"
 import { useEffect, useState, useMemo, useCallback } from "react"
-import { format, isSameMonth, addMonths, subMonths, parseISO } from "date-fns"
+import { format, addMonths, subMonths, parseISO } from "date-fns"
 import { id } from "date-fns/locale"
 import { 
     Table, 
@@ -312,7 +312,7 @@ export function AttendanceTable({
                                     // Format detailed benefits
                                     const benefitEntries = Object.entries(summary.daysByBenefit)
                                         .filter(([_, count]) => count > 0)
-                                        .sort(([a, countA], [b, countB]) => a < b ? -1 : 1) // Sort by benefit name
+                                        .sort(([a], [b]) => a < b ? -1 : 1) // Sort by benefit name
                                     
                                     return (
                                         <TableCell key={employee.id} className="text-center text-sm">

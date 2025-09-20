@@ -13,7 +13,6 @@ import {
 } from "next/navigation"
 import React, { useTransition } from "react"
 import { Card } from "@/components/ui/card"
-import Loading from "@/components/loading"
 import { usePrintMode } from "@/lib/print-mode"
 
 export interface TabLabel {

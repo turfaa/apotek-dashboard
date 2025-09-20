@@ -2,7 +2,7 @@
 
 import { Drug, getDrugs } from "@/lib/api/drugv2"
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
-import { Text, Bold } from "@/components/typography"
+import { Bold } from "@/components/typography"
 import { useMemo, useState, useEffect, use } from "react"
 import { useTf } from "@/lib/tf/hook"
 import useSearch from "@/lib/search-hook"

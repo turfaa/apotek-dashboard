@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card"
-import { Text, Metric, Subtitle } from "@/components/typography"
+import { Metric, Subtitle } from "@/components/typography"
 import { Skeleton } from "@/components/ui/skeleton"
 
 export interface MetricCardProps {

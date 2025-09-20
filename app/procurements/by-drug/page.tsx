@@ -1,5 +1,4 @@
 import React, { Suspense } from "react"
-import { Card } from "@/components/ui/card"
 import { Title } from "@/components/typography/v2"
 import { Metadata } from "next"
 import DrugSelector from "@/components/drug-selector"

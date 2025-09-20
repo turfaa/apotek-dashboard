@@ -7,7 +7,7 @@ import {
 import { useCalculator } from "./calculator-hook"
 import InvoiceCard from "./invoice-card"
 import { rupiah } from "@/lib/rupiah"
-import { PlusIcon, ReloadIcon } from "@radix-ui/react-icons"
+import { PlusIcon } from "@radix-ui/react-icons"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Title, Text, Bold, Metric } from "@/components/typography"

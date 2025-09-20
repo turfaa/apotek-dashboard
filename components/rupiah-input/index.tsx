@@ -22,7 +22,7 @@ export interface RupiahInputProps
 }
 
 const RupiahInput = React.forwardRef<HTMLInputElement, RupiahInputProps>(
-    ({ className, value, onChange, onInput, ...props }, ref) => {
+    ({ className, value, onChange, onInput, ...props }, _ref) => {
         const rupiahMask = useMaskito({ options: maskitoOptions })
 
         const formattedValue = typeof value === "number"

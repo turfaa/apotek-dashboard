@@ -6,9 +6,8 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { WorkLog } from "@/lib/api/work"
-import { use } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { CollapsibleHeader } from "./collapsible-header"
 import { Badge } from "@/components/ui/badge"

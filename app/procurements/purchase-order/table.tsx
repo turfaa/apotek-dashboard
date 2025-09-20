@@ -4,7 +4,7 @@ import { usePurchaseOrders } from "@/lib/api/hooks"
 import { ProcurementRecommendation } from "@/lib/api/procurement-recommendation"
 import { usePrintMode } from "@/lib/print-mode"
 import useSearch from "@/lib/search-hook"
-import { ExclamationTriangleIcon, ReloadIcon } from "@radix-ui/react-icons"
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons"
 import { useEffect, useState } from "react"
 import {
     Table,

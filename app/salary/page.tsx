@@ -1,7 +1,6 @@
 import { Metadata } from "next"
 import { auth } from "@/lib/auth"
 import { getEmployees } from "@/lib/api/employee"
-import { getSalary } from "@/lib/api/salary"
 import { Title, Subtitle } from "@/components/typography/v2"
 import { SalaryPageClient } from "./salary-page-client"
 
