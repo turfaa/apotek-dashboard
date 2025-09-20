@@ -35,7 +35,7 @@ export default function useSearch(): SearchHook {
 
 function titleCase(str: string): string {
     const strs = str.toLowerCase().split(" ")
-    for (var i = 0; i < strs.length; i++) {
+    for (let i = 0; i < strs.length; i++) {
         strs[i] = strs[i].charAt(0).toUpperCase() + strs[i].slice(1)
     }
     return strs.join(" ")

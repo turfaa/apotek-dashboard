@@ -48,8 +48,8 @@ export default function MetricChart(
         data.length < 2
             ? "hour"
             : data[1].x.toDateString() === data[0].x.toDateString()
-              ? "hour"
-              : "day"
+                ? "hour"
+                : "day"
 
     return (
         <Card className="p-6">

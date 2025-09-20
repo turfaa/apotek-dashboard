@@ -28,9 +28,9 @@ const RupiahInput = React.forwardRef<HTMLInputElement, RupiahInputProps>(
         const formattedValue =
             typeof value === "number"
                 ? maskitoTransform(
-                      value.toString().replace(".", ","),
-                      maskitoOptions,
-                  )
+                    value.toString().replace(".", ","),
+                    maskitoOptions,
+                )
                 : value
 
         const handleInput = React.useCallback(

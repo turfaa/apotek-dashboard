@@ -10,7 +10,7 @@ export interface MetricCardProps {
 }
 
 export default function MetricCard(props: MetricCardProps): React.ReactElement {
-    let formatter =
+    const formatter =
         props.valueFormatter ??
         ((value: number) => value.toLocaleString("id-ID"))
 

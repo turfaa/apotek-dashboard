@@ -146,18 +146,18 @@ export function DateRangePicker(
                                     date.to &&
                                     date.to.toDateString() !==
                                         date.from.toDateString() ? (
-                                        <>
-                                            {format(date.from, "PPP", {
-                                                locale: id,
-                                            })}{" "}
-                                            -{" "}
-                                            {format(date.to, "PPP", {
-                                                locale: id,
-                                            })}
-                                        </>
-                                    ) : (
-                                        format(date.from, "PPP", { locale: id })
-                                    )
+                                            <>
+                                                {format(date.from, "PPP", {
+                                                    locale: id,
+                                                })}{" "}
+                                                -{" "}
+                                                {format(date.to, "PPP", {
+                                                    locale: id,
+                                                })}
+                                            </>
+                                        ) : (
+                                            format(date.from, "PPP", { locale: id })
+                                        )
                                 ) : (
                                     <span>Pick a date range</span>
                                 )}

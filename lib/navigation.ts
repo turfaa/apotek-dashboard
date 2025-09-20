@@ -164,10 +164,10 @@ export function allowedNavigations(role?: Role | null): NavigationItem[] {
                 typeof navigation.target === "string"
                     ? navigation.target
                     : navigation.target.filter(
-                          (page) =>
-                              !page.allowedRoles ||
+                        (page) =>
+                            !page.allowedRoles ||
                               page.allowedRoles.includes(role),
-                      ),
+                    ),
         }))
         .filter((navigation) => navigation.target.length > 0)
 

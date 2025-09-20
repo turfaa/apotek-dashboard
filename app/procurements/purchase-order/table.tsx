@@ -189,8 +189,8 @@ export default function PurchaseOrderTable(): React.ReactElement {
                                 column === "no."
                                     ? `${index + 1}`
                                     : columnConfig[column].formatter?.(
-                                          row[column],
-                                      ) || row[column]?.toString()
+                                        row[column],
+                                    ) || row[column]?.toString()
 
                             return (
                                 <TableCell
@@ -204,23 +204,23 @@ export default function PurchaseOrderTable(): React.ReactElement {
                                 >
                                     {!!columnConfig[column].onEdit &&
                                     !isPrintMode ? (
-                                        <Input
-                                            value={value}
-                                            onChange={(e) =>
-                                                setData(
-                                                    row.vmedisCode,
-                                                    columnConfig[
-                                                        column
-                                                    ].onEdit?.(
-                                                        row.raw,
-                                                        e.target.value,
-                                                    ) || row.raw,
-                                                )
-                                            }
-                                        />
-                                    ) : (
-                                        value
-                                    )}
+                                            <Input
+                                                value={value}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        row.vmedisCode,
+                                                        columnConfig[
+                                                            column
+                                                        ].onEdit?.(
+                                                            row.raw,
+                                                            e.target.value,
+                                                        ) || row.raw,
+                                                    )
+                                                }
+                                            />
+                                        ) : (
+                                            value
+                                        )}
                                 </TableCell>
                             )
                         })}
