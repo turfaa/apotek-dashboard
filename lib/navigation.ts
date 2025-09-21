@@ -103,6 +103,17 @@ const availableNavigations: NavigationItem[] = [
         ],
     },
     {
+        name: "Gaji",
+        target: [
+            {
+                name: "Kalkulator Gaji",
+                href: "/salary/calculator",
+                allowedRoles: [Role.ADMIN],
+            },
+        ],
+        allowedRoles: [Role.ADMIN],
+    },
+    {
         name: "HRIS",
         target: [
             {
@@ -118,11 +129,6 @@ const availableNavigations: NavigationItem[] = [
             {
                 name: "Jenis Kehadiran",
                 href: "/attendances/types",
-                allowedRoles: [Role.ADMIN],
-            },
-            {
-                name: "Gaji",
-                href: "/salary",
                 allowedRoles: [Role.ADMIN],
             },
         ],
