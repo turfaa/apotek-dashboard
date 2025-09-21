@@ -18,44 +18,56 @@ interface AddComponentDialogProps {
     open: boolean
     onOpenChange: (open: boolean) => void
     onAdd: (description: string, amount: number, multiplier: number) => void
+    title?: string
+    description?: string
 }
 
 export function AddComponentDialog({
     open,
     onOpenChange,
     onAdd,
+    title = "Tambah Komponen Gaji",
+    description = "Tambahkan komponen gaji baru untuk karyawan ini.",
 }: AddComponentDialogProps): React.ReactElement {
-    const [description, setDescription] = useState("")
-    const [amount, setAmount] = useState(0)
-    const [multiplier, setMultiplier] = useState(1)
+    const [formData, setFormData] = useState({
+        description: "",
+        amount: 0,
+        multiplier: 1,
+    })
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        if (description.trim() && amount > 0 && multiplier > 0) {
-            onAdd(description.trim(), amount, multiplier)
-            setDescription("")
-            setAmount(0)
-            setMultiplier(1)
+        if (formData.description.trim() && formData.amount > 0 && formData.multiplier > 0) {
+            onAdd(formData.description.trim(), formData.amount, formData.multiplier)
+            resetForm()
+            onOpenChange(false)
         }
+    }
+
+    const resetForm = () => {
+        setFormData({
+            description: "",
+            amount: 0,
+            multiplier: 1,
+        })
     }
 
     const handleOpenChange = (open: boolean) => {
         if (!open) {
-            // Reset form when closing
-            setDescription("")
-            setAmount(0)
-            setMultiplier(1)
+            resetForm()
         }
         onOpenChange(open)
     }
+
+    const isFormValid = formData.description.trim() && formData.amount > 0 && formData.multiplier > 0
 
     return (
         <Dialog open={open} onOpenChange={handleOpenChange}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Tambah Komponen Gaji Statis</DialogTitle>
+                    <DialogTitle>{title}</DialogTitle>
                     <DialogDescription>
-                        Tambahkan komponen gaji statis baru untuk karyawan ini.
+                        {description}
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit}>
@@ -64,8 +76,8 @@ export function AddComponentDialog({
                             <Label htmlFor="description">Deskripsi</Label>
                             <Input
                                 id="description"
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
+                                value={formData.description}
+                                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                                 placeholder="Contoh: Tunjangan Transport"
                                 required
                             />
@@ -77,8 +89,8 @@ export function AddComponentDialog({
                                 type="number"
                                 min="1"
                                 step="1"
-                                value={multiplier}
-                                onChange={(e) => setMultiplier(Number(e.target.value))}
+                                value={formData.multiplier}
+                                onChange={(e) => setFormData(prev => ({ ...prev, multiplier: Number(e.target.value) }))}
                                 required
                             />
                         </div>
@@ -86,8 +98,8 @@ export function AddComponentDialog({
                             <Label htmlFor="amount">Fee / (Penalti)</Label>
                             <RupiahInput
                                 id="amount"
-                                value={amount}
-                                onChange={setAmount}
+                                value={formData.amount}
+                                onChange={(amount) => setFormData(prev => ({ ...prev, amount }))}
                                 placeholder="Masukkan jumlah dalam rupiah"
                                 required
                             />
@@ -97,7 +109,7 @@ export function AddComponentDialog({
                         <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
                             Batal
                         </Button>
-                        <Button type="submit" disabled={!description.trim() || amount <= 0 || multiplier <= 0}>
+                        <Button type="submit" disabled={!isFormValid}>
                             Tambah Komponen
                         </Button>
                     </DialogFooter>

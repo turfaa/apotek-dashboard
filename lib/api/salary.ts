@@ -15,9 +15,29 @@ export interface SalaryComponent {
     total: number
 }
 
+/**
+ * The difference between Static Component and Additional Component
+ * is that Static Component is applicable every month,
+ * while Additional Component is applicable only for a specific month.
+ */
 export interface SalaryStaticComponent {
     id: number
     employeeID: number
+    description: string
+    amount: number
+    multiplier: number
+    total: number
+}
+
+/**
+ * The difference between Static Component and Additional Component
+ * is that Static Component is applicable every month,
+ * while Additional Component is applicable only for a specific month.
+ */
+export interface SalaryAdditionalComponent {
+    id: number
+    employeeID: number
+    month: string
     description: string
     amount: number
     multiplier: number
@@ -162,6 +182,65 @@ export async function deleteSalaryStaticComponent(
     await fetchAPI<void>(
         "DELETE",
         `/salary/${employeeID}/static-components/${componentID}`,
+        null,
+        {},
+        {
+            forHRIS: true,
+            session: session,
+        },
+    )
+}
+
+export async function getSalaryAdditionalComponents(
+    employeeID: number,
+    month: string,
+    session?: Session | null,
+): Promise<SalaryAdditionalComponent[]> {
+    return await fetchAPI<SalaryAdditionalComponent[]>(
+        "GET",
+        `/salary/${month}/${employeeID}/additional-components`,
+        null,
+        {
+            next: {
+                revalidate: 0, // Don't cache, always revalidate.
+            },
+        },
+        {
+            forHRIS: true,
+            session: session,
+        },
+    )
+}
+
+export async function createSalaryAdditionalComponent(
+    employeeID: number,
+    month: string,
+    description: string,
+    amount: number,
+    multiplier: number,
+    session?: Session | null,
+): Promise<SalaryAdditionalComponent> {
+    return await fetchAPI<SalaryAdditionalComponent>(
+        "POST",
+        `/salary/${month}/${employeeID}/additional-components`,
+        { description, amount, multiplier },
+        {},
+        {
+            forHRIS: true,
+            session: session,
+        },
+    )
+}
+
+export async function deleteSalaryAdditionalComponent(
+    employeeID: number,
+    month: string,
+    componentID: number,
+    session?: Session | null,
+): Promise<void> {
+    await fetchAPI<void>(
+        "DELETE",
+        `/salary/${month}/${employeeID}/additional-components/${componentID}`,
         null,
         {},
         {

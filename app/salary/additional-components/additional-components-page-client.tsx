@@ -1,109 +1,121 @@
 "use client"
 
 import { use, useEffect, useState, useCallback } from "react"
+import MonthPicker from "@/components/month-picker"
 import { EmployeePicker } from "@/components/employee-picker"
 import { Employee } from "@/lib/api/employee"
 import { 
-    SalaryStaticComponent, 
-    getSalaryStaticComponents,
-    createSalaryStaticComponent,
-    deleteSalaryStaticComponent
+    SalaryAdditionalComponent, 
+    SalaryStaticComponent,
+    getSalaryAdditionalComponents,
+    createSalaryAdditionalComponent,
+    deleteSalaryAdditionalComponent
 } from "@/lib/api/salary"
 import { Session } from "next-auth"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
+import { format } from "date-fns"
+import { id } from "date-fns/locale"
 import { SalaryComponentsTable } from "../components/salary-components-table"
 import { AddComponentDialog } from "../components/add-component-dialog"
 import { DeleteConfirmDialog } from "../components/delete-confirm-dialog"
 
-interface StaticComponentsPageClientProps {
+interface AdditionalComponentsPageClientProps {
     employeesPromise: Promise<Employee[]>
     sessionPromise: Promise<Session | null>
     searchParamsPromise: Promise<{
         employeeID?: string
+        month: string
     }>
 }
 
-export function StaticComponentsPageClient({
+export function AdditionalComponentsPageClient({
     employeesPromise,
     sessionPromise,
     searchParamsPromise,
-}: StaticComponentsPageClientProps): React.ReactElement {
+}: AdditionalComponentsPageClientProps): React.ReactElement {
     const employees = use(employeesPromise)
     const session = use(sessionPromise)
     const searchParams = use(searchParamsPromise)
 
-    const [staticComponents, setStaticComponents] = useState<SalaryStaticComponent[]>([])
+    const [additionalComponents, setAdditionalComponents] = useState<SalaryAdditionalComponent[]>([])
     const [loading, setLoading] = useState(false)
     const [showAddDialog, setShowAddDialog] = useState(false)
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-    const [componentToDelete, setComponentToDelete] = useState<SalaryStaticComponent | null>(null)
+    const [componentToDelete, setComponentToDelete] = useState<SalaryAdditionalComponent | null>(null)
 
     const selectedEmployee = searchParams.employeeID
         ? employees.find((emp) => emp.id.toString() === searchParams.employeeID)
         : null
 
-    const loadStaticComponents = useCallback(async () => {
-        if (searchParams.employeeID && session) {
+    // Parse month for display
+    const monthDate = new Date(searchParams.month + "-01")
+    const monthDisplay = format(monthDate, "MMMM yyyy", { locale: id })
+
+    const loadAdditionalComponents = useCallback(async () => {
+        if (searchParams.employeeID && searchParams.month && session) {
             setLoading(true)
             try {
-                const components = await getSalaryStaticComponents(
+                const components = await getSalaryAdditionalComponents(
                     parseInt(searchParams.employeeID),
+                    searchParams.month,
                     session
                 )
-                setStaticComponents(components)
+                setAdditionalComponents(components)
             } catch (error) {
-                console.error("Failed to load static components:", error)
+                console.error("Failed to load additional components:", error)
             } finally {
                 setLoading(false)
             }
         } else {
-            setStaticComponents([])
+            setAdditionalComponents([])
         }
-    }, [searchParams.employeeID, session])
+    }, [searchParams.employeeID, searchParams.month, session])
 
     useEffect(() => {
-        loadStaticComponents()
-    }, [searchParams.employeeID, session, loadStaticComponents])
+        loadAdditionalComponents()
+    }, [loadAdditionalComponents])
 
     const handleAddComponent = async (description: string, amount: number, multiplier: number) => {
-        if (!searchParams.employeeID || !session) return
+        if (!searchParams.employeeID || !searchParams.month || !session) return
 
         try {
-            await createSalaryStaticComponent(
+            await createSalaryAdditionalComponent(
                 parseInt(searchParams.employeeID),
+                searchParams.month,
                 description,
                 amount,
                 multiplier,
                 session
             )
-            await loadStaticComponents() // Reload the list
+            await loadAdditionalComponents() // Reload the list
             setShowAddDialog(false)
         } catch (error) {
-            console.error("Failed to create static component:", error)
+            console.error("Failed to create additional component:", error)
         }
     }
 
     const handleDeleteComponent = async () => {
-        if (!componentToDelete || !searchParams.employeeID || !session) return
+        if (!componentToDelete || !searchParams.employeeID || !searchParams.month || !session) return
 
         try {
-            await deleteSalaryStaticComponent(
+            await deleteSalaryAdditionalComponent(
                 parseInt(searchParams.employeeID),
+                searchParams.month,
                 componentToDelete.id,
                 session
             )
-            await loadStaticComponents() // Reload the list
+            await loadAdditionalComponents() // Reload the list
             setShowDeleteDialog(false)
             setComponentToDelete(null)
         } catch (error) {
-            console.error("Failed to delete static component:", error)
+            console.error("Failed to delete additional component:", error)
         }
     }
 
-    const openDeleteDialog = (component: SalaryStaticComponent) => {
-        setComponentToDelete(component)
+    const openDeleteDialog = (component: SalaryStaticComponent | SalaryAdditionalComponent) => {
+        setComponentToDelete(component as SalaryAdditionalComponent)
         setShowDeleteDialog(true)
     }
 
@@ -112,18 +124,24 @@ export function StaticComponentsPageClient({
             <div className="flex flex-col sm:flex-row gap-4">
                 <div className="flex-1">
                     <label className="text-sm font-medium mb-2 block">
+                        Bulan
+                    </label>
+                    <MonthPicker />
+                </div>
+                <div className="flex-1">
+                    <label className="text-sm font-medium mb-2 block">
                         Karyawan
                     </label>
                     <EmployeePicker employees={employees} />
                 </div>
             </div>
 
-            {selectedEmployee && (
+            {selectedEmployee && searchParams.month && (
                 <Card>
                     <CardHeader>
                         <div className="flex justify-between items-center">
                             <CardTitle>
-                                Komponen Gaji Statis - {selectedEmployee.name}
+                                Komponen Gaji Tambahan - {selectedEmployee.name} - {monthDisplay}
                             </CardTitle>
                             <Button onClick={() => setShowAddDialog(true)}>
                                 <Plus className="h-4 w-4 mr-2" />
@@ -134,13 +152,13 @@ export function StaticComponentsPageClient({
                     <CardContent>
                         {loading ? (
                             <div className="text-center text-muted-foreground py-8">
-                                Memuat komponen gaji statis...
+                                Memuat komponen gaji tambahan...
                             </div>
                         ) : (
                             <SalaryComponentsTable 
-                                components={staticComponents}
+                                components={additionalComponents}
                                 onDelete={openDeleteDialog}
-                                emptyMessage="Belum ada komponen gaji statis untuk karyawan ini"
+                                emptyMessage="Belum ada komponen gaji tambahan untuk karyawan ini pada bulan ini"
                             />
                         )}
                     </CardContent>
@@ -150,7 +168,7 @@ export function StaticComponentsPageClient({
             {!selectedEmployee && (
                 <Card>
                     <CardContent className="text-center text-muted-foreground py-8">
-                        Pilih karyawan untuk melihat komponen gaji statis
+                        Pilih karyawan untuk melihat komponen gaji tambahan
                     </CardContent>
                 </Card>
             )}
@@ -159,8 +177,8 @@ export function StaticComponentsPageClient({
                 open={showAddDialog}
                 onOpenChange={setShowAddDialog}
                 onAdd={handleAddComponent}
-                title="Tambah Komponen Gaji Statis"
-                description="Tambahkan komponen gaji statis baru untuk karyawan ini."
+                title="Tambah Komponen Gaji Tambahan"
+                description="Tambahkan komponen gaji tambahan baru untuk karyawan ini pada bulan ini."
             />
 
             <DeleteConfirmDialog
@@ -168,8 +186,8 @@ export function StaticComponentsPageClient({
                 onOpenChange={setShowDeleteDialog}
                 component={componentToDelete}
                 onConfirm={handleDeleteComponent}
-                title="Hapus Komponen Gaji Statis"
-                description="Apakah Anda yakin ingin menghapus komponen gaji statis ini? Tindakan ini tidak dapat dibatalkan."
+                title="Hapus Komponen Gaji Tambahan"
+                description="Apakah Anda yakin ingin menghapus komponen gaji tambahan ini? Tindakan ini tidak dapat dibatalkan."
             />
         </div>
     )

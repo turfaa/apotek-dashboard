@@ -1,6 +1,4 @@
-"use client"
-
-import { SalaryStaticComponent } from "@/lib/api/salary"
+import { SalaryStaticComponent, SalaryAdditionalComponent } from "@/lib/api/salary"
 import { rupiah } from "@/lib/rupiah"
 import {
     Dialog,
@@ -15,8 +13,10 @@ import { Button } from "@/components/ui/button"
 interface DeleteConfirmDialogProps {
     open: boolean
     onOpenChange: (open: boolean) => void
-    component: SalaryStaticComponent | null
+    component: (SalaryStaticComponent | SalaryAdditionalComponent) | null
     onConfirm: () => void
+    title?: string
+    description?: string
 }
 
 export function DeleteConfirmDialog({
@@ -24,6 +24,8 @@ export function DeleteConfirmDialog({
     onOpenChange,
     component,
     onConfirm,
+    title = "Hapus Komponen Gaji",
+    description = "Apakah Anda yakin ingin menghapus komponen gaji ini? Tindakan ini tidak dapat dibatalkan.",
 }: DeleteConfirmDialogProps): React.ReactElement {
     const handleConfirm = () => {
         onConfirm()
@@ -33,10 +35,9 @@ export function DeleteConfirmDialog({
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Hapus Komponen Gaji Statis</DialogTitle>
+                    <DialogTitle>{title}</DialogTitle>
                     <DialogDescription>
-                        Apakah Anda yakin ingin menghapus komponen gaji statis ini?
-                        Tindakan ini tidak dapat dibatalkan.
+                        {description}
                     </DialogDescription>
                 </DialogHeader>
                 

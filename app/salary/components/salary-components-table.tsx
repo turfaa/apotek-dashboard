@@ -1,6 +1,4 @@
-"use client"
-
-import { SalaryStaticComponent } from "@/lib/api/salary"
+import { SalaryStaticComponent, SalaryAdditionalComponent } from "@/lib/api/salary"
 import { rupiah } from "@/lib/rupiah"
 import {
     Table,
@@ -13,19 +11,21 @@ import {
 import { Button } from "@/components/ui/button"
 import { Trash2 } from "lucide-react"
 
-interface StaticComponentsTableProps {
-    components: SalaryStaticComponent[]
-    onDelete: (component: SalaryStaticComponent) => void
+interface SalaryComponentsTableProps {
+    components: (SalaryStaticComponent | SalaryAdditionalComponent)[]
+    onDelete: (component: SalaryStaticComponent | SalaryAdditionalComponent) => void
+    emptyMessage?: string
 }
 
-export function StaticComponentsTable({ 
+export function SalaryComponentsTable({ 
     components, 
-    onDelete 
-}: StaticComponentsTableProps): React.ReactElement {
+    onDelete,
+    emptyMessage = "Belum ada komponen gaji untuk karyawan ini"
+}: SalaryComponentsTableProps): React.ReactElement {
     if (components.length === 0) {
         return (
             <div className="text-center text-muted-foreground py-8">
-                Belum ada komponen gaji statis untuk karyawan ini
+                {emptyMessage}
             </div>
         )
     }
