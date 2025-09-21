@@ -17,6 +17,7 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { rupiah } from "@/lib/rupiah"
 
 interface SalaryPageClientProps {
     employeesPromise: Promise<Employee[]>
@@ -140,10 +141,10 @@ function SalaryTable({ salary }: SalaryTableProps): React.ReactElement {
                                 {component.multiplier.toLocaleString("id-ID")}
                             </TableCell>
                             <TableCell className="text-right">
-                                Rp {component.amount.toLocaleString("id-ID")}
+                                {rupiah.format(component.amount)}
                             </TableCell>
                             <TableCell className="text-right font-medium">
-                                Rp {component.total.toLocaleString("id-ID")}
+                                {rupiah.format(component.total)}
                             </TableCell>
                         </TableRow>
                     ))}
@@ -151,16 +152,18 @@ function SalaryTable({ salary }: SalaryTableProps): React.ReactElement {
             </Table>
 
             <div className="border-t pt-4 space-y-4">
-                <div className="flex justify-between items-center">
-                    <span className="text-lg font-semibold">Total Gaji (Tanpa Hutang):</span>
-                    <span className="text-lg font-bold">
-                        Rp {salary.totalWithoutDebt.toLocaleString("id-ID")}
-                    </span>
-                </div>
+                {salary.totalWithoutDebt !== salary.total && (
+                    <div className="flex justify-between items-center">
+                        <span className="text-lg font-semibold">Total Gaji (Tanpa Utang):</span>
+                        <span className="text-lg font-bold">
+                            {rupiah.format(salary.totalWithoutDebt)}
+                        </span>
+                    </div>
+                )}
                 <div className="flex justify-between items-center">
                     <span className="text-lg font-semibold">Total Gaji:</span>
                     <span className="text-lg font-bold">
-                        Rp {salary.total.toLocaleString("id-ID")}
+                        {rupiah.format(salary.total)}
                     </span>
                 </div>
             </div>
