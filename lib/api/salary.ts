@@ -15,6 +15,15 @@ export interface SalaryComponent {
     total: number
 }
 
+export interface SalaryStaticComponent {
+    id: number
+    employeeID: number
+    description: string
+    amount: number
+    multiplier: number
+    total: number
+}
+
 export interface SalaryExtraInfo {
     id: number
     employeeID: number
@@ -104,4 +113,60 @@ export async function getSalary(
     )
 
     return convertUnderlyingSalary(underlying)
+}
+
+export async function getSalaryStaticComponents(
+    employeeID: number,
+    session?: Session | null,
+): Promise<SalaryStaticComponent[]> {
+    return await fetchAPI<SalaryStaticComponent[]>(
+        "GET",
+        `/salary/${employeeID}/static-components`,
+        null,
+        {
+            next: {
+                revalidate: 0, // Don't cache, always revalidate.
+            },
+        },
+        {
+            forHRIS: true,
+            session: session,
+        },
+    )
+}
+
+export async function createSalaryStaticComponent(
+    employeeID: number,
+    description: string,
+    amount: number,
+    multiplier: number,
+    session?: Session | null,
+): Promise<SalaryStaticComponent> {
+    return await fetchAPI<SalaryStaticComponent>(
+        "POST",
+        `/salary/${employeeID}/static-components`,
+        { description, amount, multiplier },
+        {},
+        {
+            forHRIS: true,
+            session: session,
+        },
+    )
+}
+
+export async function deleteSalaryStaticComponent(
+    employeeID: number,
+    componentID: number,
+    session?: Session | null,
+): Promise<void> {
+    await fetchAPI<void>(
+        "DELETE",
+        `/salary/${employeeID}/static-components/${componentID}`,
+        null,
+        {},
+        {
+            forHRIS: true,
+            session: session,
+        },
+    )
 }

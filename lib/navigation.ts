@@ -110,6 +110,11 @@ const availableNavigations: NavigationItem[] = [
                 href: "/salary/calculator",
                 allowedRoles: [Role.ADMIN],
             },
+            {
+                name: "Komponen Gaji Statis",
+                href: "/salary/static-components",
+                allowedRoles: [Role.ADMIN],
+            },
         ],
         allowedRoles: [Role.ADMIN],
     },
