@@ -32,7 +32,7 @@ export function SalaryCard({ salary, employeeName, monthDisplay }: SalaryCardPro
                                 <TableHead>Komponen</TableHead>
                                 <TableHead className="text-right">Jumlah</TableHead>
                                 <TableHead className="text-right">
-                                    Fee / (Penalti)
+                                    Fee / -Penalti
                                 </TableHead>
                                 <TableHead className="text-right">Total</TableHead>
                             </TableRow>

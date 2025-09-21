@@ -37,7 +37,7 @@ export function AddComponentDialog({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        if (formData.description.trim() && formData.amount > 0 && formData.multiplier > 0) {
+        if (formData.description.trim() && formData.amount != 0 && formData.multiplier > 0) {
             onAdd(formData.description.trim(), formData.amount, formData.multiplier)
             resetForm()
             onOpenChange(false)
@@ -59,7 +59,7 @@ export function AddComponentDialog({
         onOpenChange(open)
     }
 
-    const isFormValid = formData.description.trim() && formData.amount > 0 && formData.multiplier > 0
+    const isFormValid = formData.description.trim() && formData.amount != 0 && formData.multiplier > 0
 
     return (
         <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -95,7 +95,7 @@ export function AddComponentDialog({
                             />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="amount">Fee / (Penalti)</Label>
+                            <Label htmlFor="amount">Fee / -Penalti</Label>
                             <RupiahInput
                                 id="amount"
                                 value={formData.amount}

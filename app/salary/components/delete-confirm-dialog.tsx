@@ -47,7 +47,7 @@ export function DeleteConfirmDialog({
                             <h4 className="font-medium mb-2">{component.description}</h4>
                             <div className="text-sm text-muted-foreground space-y-1">
                                 <div>Jumlah: {component.multiplier.toLocaleString("id-ID")}</div>
-                                <div>Fee / (Penalti): {rupiah.format(component.amount)}</div>
+                                <div>Fee / -Penalti: {rupiah.format(component.amount)}</div>
                                 <div>Total: {rupiah.format(component.total)}</div>
                             </div>
                         </div>

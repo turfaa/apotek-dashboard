@@ -36,7 +36,7 @@ export function SalaryComponentsTable({
                 <TableRow>
                     <TableHead>Deskripsi</TableHead>
                     <TableHead className="text-right">Jumlah</TableHead>
-                    <TableHead className="text-right">Fee / (Penalti)</TableHead>
+                    <TableHead className="text-right">Fee / -Penalti</TableHead>
                     <TableHead className="text-right">Total</TableHead>
                     <TableHead className="text-right">Aksi</TableHead>
                 </TableRow>
