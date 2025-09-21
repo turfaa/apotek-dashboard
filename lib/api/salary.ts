@@ -249,3 +249,61 @@ export async function deleteSalaryAdditionalComponent(
         },
     )
 }
+
+export async function getSalaryExtraInfos(
+    employeeID: number,
+    month: string,
+    session?: Session | null,
+): Promise<SalaryExtraInfo[]> {
+    return await fetchAPI<SalaryExtraInfo[]>(
+        "GET",
+        `/salary/${month}/${employeeID}/extra-infos`,
+        null,
+        {
+            next: {
+                revalidate: 0, // Don't cache, always revalidate.
+            },
+        },
+        {
+            forHRIS: true,
+            session: session,
+        },
+    )
+}
+
+export async function createSalaryExtraInfo(
+    employeeID: number,
+    month: string,
+    title: string,
+    description: string,
+    session?: Session | null,
+): Promise<SalaryExtraInfo> {
+    return await fetchAPI<SalaryExtraInfo>(
+        "POST",
+        `/salary/${month}/${employeeID}/extra-infos`,
+        { title, description },
+        {},
+        {
+            forHRIS: true,
+            session: session,
+        },
+    )
+}
+
+export async function deleteSalaryExtraInfo(
+    employeeID: number,
+    month: string,
+    infoID: number,
+    session?: Session | null,
+): Promise<void> {
+    await fetchAPI<void>(
+        "DELETE",
+        `/salary/${month}/${employeeID}/extra-infos/${infoID}`,
+        null,
+        {},
+        {
+            forHRIS: true,
+            session: session,
+        },
+    )
+}

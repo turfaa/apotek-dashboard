@@ -120,6 +120,11 @@ const availableNavigations: NavigationItem[] = [
                 href: "/salary/additional-components",
                 allowedRoles: [Role.ADMIN],
             },
+            {
+                name: "Informasi Tambahan",
+                href: "/salary/extra-infos",
+                allowedRoles: [Role.ADMIN],
+            },
         ],
         allowedRoles: [Role.ADMIN],
     },
