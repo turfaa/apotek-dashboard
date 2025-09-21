@@ -75,16 +75,20 @@ export function SalaryCard({ salary, employeeName, monthDisplay }: SalaryCardPro
                     {salary.extraInfos.length > 0 && (
                         <div className="border-t pt-4">
                             <h3 className="text-lg font-semibold mb-4">Informasi Tambahan</h3>
-                            <div className="space-y-3">
-                                {salary.extraInfos.map((extraInfo) => (
-                                    <div key={extraInfo.id} className="p-4 border rounded-lg bg-muted/50">
-                                        <div className="flex justify-between items-center">
-                                            <h4 className="font-medium text-sm">{extraInfo.title}</h4>
-                                            <p className="text-sm text-muted-foreground">{extraInfo.description}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
+                            <Table>
+                                <TableBody>
+                                    {salary.extraInfos.map((extraInfo) => (
+                                        <TableRow key={extraInfo.id}>
+                                            <TableCell className="font-medium">
+                                                {extraInfo.title}
+                                            </TableCell>
+                                            <TableCell className="text-right">
+                                                {extraInfo.description}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
                         </div>
                     )}
                 </div>
