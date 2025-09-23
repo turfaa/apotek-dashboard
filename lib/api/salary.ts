@@ -1,5 +1,14 @@
 import { Session } from "next-auth"
 import { fetchAPI } from "./base"
+import { buildQueryParams } from "./common"
+
+export interface SalarySnapshot {
+    id: number
+    employeeID: number
+    month: string
+    salary: Salary
+    createdAt: Date
+}
 
 export interface Salary {
     components: SalaryComponent[]
@@ -53,6 +62,14 @@ export interface SalaryExtraInfo {
     createdAt: Date
 }
 
+export interface UnderlyingSalarySnapshot {
+    id: number
+    employeeID: number
+    month: string
+    salary: UnderlyingSalary
+    createdAt: string
+}
+
 export interface UnderlyingSalary {
     components: UnderlyingSalaryComponent[]
     totalWithoutDebt: string
@@ -75,6 +92,21 @@ export interface UnderlyingSalaryExtraInfo {
     title: string
     description: string
     createdAt: string
+}
+
+export interface GetSalarySnapshotsRequest {
+    month?: string
+    employeeID?: number
+}
+
+export function convertUnderlyingSalarySnapshot(
+    underlyingSalarySnapshot: UnderlyingSalarySnapshot,
+): SalarySnapshot {
+    return {
+        ...underlyingSalarySnapshot,
+        salary: convertUnderlyingSalary(underlyingSalarySnapshot.salary),
+        createdAt: new Date(underlyingSalarySnapshot.createdAt),
+    }
 }
 
 export function convertUnderlyingSalary(
@@ -299,6 +331,63 @@ export async function deleteSalaryExtraInfo(
     await fetchAPI<void>(
         "DELETE",
         `/salary/${month}/${employeeID}/extra-infos/${infoID}`,
+        null,
+        {},
+        {
+            forHRIS: true,
+            session: session,
+        },
+    )
+}
+
+export async function getSalarySnapshots(
+    request: GetSalarySnapshotsRequest,
+    session?: Session | null,
+): Promise<SalarySnapshot[]> {
+    const queryParams = buildQueryParams(request)
+
+    const underlying = await fetchAPI<UnderlyingSalarySnapshot[]>(
+        "GET",
+        `/salary/snapshots?${queryParams}`,
+        null,
+        {
+            next: {
+                revalidate: 0, // Don't cache, always revalidate.
+            },
+        },
+        {
+            forHRIS: true,
+            session: session,
+        },
+    )
+
+    return underlying.map(convertUnderlyingSalarySnapshot)
+}
+
+export async function createSalarySnapshot(
+    employeeID: number,
+    month: string,
+    session?: Session | null,
+): Promise<SalarySnapshot> {
+    return await fetchAPI<SalarySnapshot>(
+        "POST",
+        `/salary/snapshots`,
+        { employeeID, month },
+        {},
+        {
+            forHRIS: true,
+            session: session,
+        },
+    )
+}
+
+export async function deleteSalarySnapshot(
+    snapshotID: number,
+    session?: Session | null,
+): Promise<void> {
+    await fetchAPI<void>(
+        "DELETE",
+        `/salary/snapshots/${snapshotID}`,
         null,
         {},
         {

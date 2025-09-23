@@ -10,7 +10,7 @@ import {
     useRouter,
     useSearchParams,
 } from "next/navigation"
-import { useTransition, useRef, useEffect } from "react"
+import { useTransition, useRef, useEffect, useMemo } from "react"
 import { CalendarIcon } from "@radix-ui/react-icons"
 import { format } from "date-fns"
 import { Button } from "@/components/ui/button"
@@ -34,8 +34,11 @@ export function MonthPicker(props: MonthCalProps): React.ReactElement {
 
     const monthFromParams = searchParams.get("month")
     // Default to previous month if no month parameter
-    const defaultMonth = new Date()
-    defaultMonth.setMonth(defaultMonth.getMonth() - 1)
+    const defaultMonth = useMemo(() => {
+        const date = new Date()
+        date.setMonth(date.getMonth() - 1)
+        return date
+    }, [])
     const selectedMonth = monthFromParams
         ? new Date(monthFromParams)
         : defaultMonth

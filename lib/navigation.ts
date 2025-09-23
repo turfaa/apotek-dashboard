@@ -125,6 +125,11 @@ const availableNavigations: NavigationItem[] = [
                 href: "/salary/extra-infos",
                 allowedRoles: [Role.ADMIN],
             },
+            {
+                name: "Snapshot Gaji",
+                href: "/salary/snapshots",
+                allowedRoles: [Role.ADMIN],
+            },
         ],
         allowedRoles: [Role.ADMIN],
     },

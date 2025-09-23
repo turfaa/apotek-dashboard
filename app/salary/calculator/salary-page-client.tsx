@@ -4,12 +4,15 @@ import { use, useEffect, useState } from "react"
 import MonthPicker from "@/components/month-picker"
 import { EmployeePicker } from "@/components/employee-picker"
 import { Employee } from "@/lib/api/employee"
-import { Salary, getSalary } from "@/lib/api/salary"
+import { Salary, getSalary, createSalarySnapshot } from "@/lib/api/salary"
 import { format } from "date-fns"
 import { id } from "date-fns/locale"
 import { Session } from "next-auth"
 import { Card, CardContent } from "@/components/ui/card"
 import { SalaryCard } from "../components/salary-card"
+import { Button } from "@/components/ui/button"
+import { Camera } from "lucide-react"
+import { toast } from "sonner"
 
 interface SalaryPageClientProps {
     employeesPromise: Promise<Employee[]>
@@ -31,6 +34,7 @@ export function SalaryPageClient({
 
     const [salary, setSalary] = useState<Salary | null>(null)
     const [loading, setLoading] = useState(false)
+    const [creatingSnapshot, setCreatingSnapshot] = useState(false)
 
     const selectedEmployee = searchParams.employeeID
         ? employees.find((emp) => emp.id.toString() === searchParams.employeeID)
@@ -52,6 +56,28 @@ export function SalaryPageClient({
         }
     }, [searchParams.month, searchParams.employeeID, session])
 
+    const handleCreateSnapshot = async () => {
+        if (!searchParams.employeeID || !searchParams.month || !session) {
+            toast.error("Pilih karyawan dan bulan terlebih dahulu")
+            return
+        }
+
+        setCreatingSnapshot(true)
+        try {
+            await createSalarySnapshot(
+                parseInt(searchParams.employeeID),
+                searchParams.month,
+                session
+            )
+            toast.success("Snapshot gaji berhasil dibuat")
+        } catch (error) {
+            console.error("Failed to create snapshot:", error)
+            toast.error("Gagal membuat snapshot gaji")
+        } finally {
+            setCreatingSnapshot(false)
+        }
+    }
+
     // Parse month for display
     const monthDate = new Date(searchParams.month + "-01")
     const monthDisplay = format(monthDate, "MMMM yyyy", { locale: id })
@@ -70,6 +96,15 @@ export function SalaryPageClient({
                         Karyawan
                     </label>
                     <EmployeePicker employees={employees} />
+                </div>
+                <div className="flex items-end">
+                    <Button 
+                        onClick={handleCreateSnapshot}
+                        disabled={creatingSnapshot || !selectedEmployee || !searchParams.month}
+                    >
+                        <Camera className="h-4 w-4 mr-2" />
+                        {creatingSnapshot ? "Membuat..." : "Buat Snapshot"}
+                    </Button>
                 </div>
             </div>
 
