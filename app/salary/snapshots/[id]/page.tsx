@@ -15,19 +15,13 @@ interface SnapshotDetailPageProps {
     params: Promise<{
         id: string
     }>
-    searchParams: Promise<{
-        print?: string
-    }>
 }
 
 export default async function SnapshotDetailPage({
     params,
-    searchParams,
 }: SnapshotDetailPageProps): Promise<React.ReactElement> {
     const sessionPromise = auth()
     const { id } = await params
-    const { print } = await searchParams
-    const isPrintMode = print === "true"
 
     const session = await sessionPromise
     if (!session) {
@@ -46,16 +40,7 @@ export default async function SnapshotDetailPage({
     const employeesPromise = getEmployees(session)
 
     return (
-        <main className="p-4 md:p-10 mx-auto max-w-7xl">
-            {!isPrintMode && (
-                <div className="mb-6">
-                    <Title>Detail Snapshot Gaji</Title>
-                    <Subtitle>
-                        Lihat detail snapshot gaji karyawan.
-                    </Subtitle>
-                </div>
-            )}
-
+        <main className="p-4 md:p-10 mx-auto max-w-7xl"> 
             <SnapshotDetailClient
                 snapshot={snapshot}
                 employeesPromise={employeesPromise}
