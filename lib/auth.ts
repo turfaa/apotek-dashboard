@@ -4,6 +4,8 @@ import { JWT } from "next-auth/jwt"
 import google from "next-auth/providers/google"
 
 export const authConfig: NextAuthConfig = {
+    debug: true,
+    
     providers: [google],
 
     callbacks: {
