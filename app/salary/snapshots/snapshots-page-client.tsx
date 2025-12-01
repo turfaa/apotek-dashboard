@@ -26,6 +26,8 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import { RupiahFormatProvider, useRupiahFormat } from "@/lib/rupiah-format-context"
+import { RupiahFormatToggle } from "@/components/rupiah-format-toggle"
 
 interface SnapshotsPageClientProps {
     employeesPromise: Promise<Employee[]>
@@ -36,7 +38,7 @@ interface SnapshotsPageClientProps {
     }>
 }
 
-export function SnapshotsPageClient({
+function SnapshotsPageClientContent({
     employeesPromise,
     sessionPromise,
     searchParamsPromise,
@@ -45,6 +47,7 @@ export function SnapshotsPageClient({
     const session = use(sessionPromise)
     const searchParams = use(searchParamsPromise)
     const router = useRouter()
+    const { format: rupiahFormat } = useRupiahFormat()
 
     const [snapshots, setSnapshots] = useState<SalarySnapshot[]>([])
     const [loading, setLoading] = useState(false)
@@ -116,7 +119,10 @@ export function SnapshotsPageClient({
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Daftar Snapshot Gaji</CardTitle>
+                    <div className="flex items-center justify-between">
+                        <CardTitle>Daftar Snapshot Gaji</CardTitle>
+                        <RupiahFormatToggle />
+                    </div>
                 </CardHeader>
                 <CardContent>
                     {loading ? (
@@ -152,10 +158,10 @@ export function SnapshotsPageClient({
                                             </TableCell>
                                             <TableCell>{monthDisplay}</TableCell>
                                             <TableCell className="text-right">
-                                                {rupiah.format(snapshot.salary.totalWithoutDebt)}
+                                                {rupiah.format(snapshot.salary.totalWithoutDebt, rupiahFormat)}
                                             </TableCell>
                                             <TableCell className="text-right">
-                                                {rupiah.format(snapshot.salary.total)}
+                                                {rupiah.format(snapshot.salary.total, rupiahFormat)}
                                             </TableCell>
                                             <TableCell>
                                                 {format(snapshot.createdAt, "dd MMM yyyy HH:mm", { locale: id })}
@@ -194,5 +200,21 @@ export function SnapshotsPageClient({
                 onConfirm={handleDeleteSnapshot}
             />
         </div>
+    )
+}
+
+export function SnapshotsPageClient({
+    employeesPromise,
+    sessionPromise,
+    searchParamsPromise,
+}: SnapshotsPageClientProps): React.ReactElement {
+    return (
+        <RupiahFormatProvider>
+            <SnapshotsPageClientContent
+                employeesPromise={employeesPromise}
+                sessionPromise={sessionPromise}
+                searchParamsPromise={searchParamsPromise}
+            />
+        </RupiahFormatProvider>
     )
 }
