@@ -13,16 +13,17 @@ import { SalaryCard } from "../../components/salary-card"
 import { usePrintMode } from "@/lib/print-mode"
 
 interface SnapshotDetailClientProps {
-    snapshot: SalarySnapshot
+    snapshotPromise: Promise<SalarySnapshot>
     employeesPromise: Promise<Employee[]>
     sessionPromise: Promise<Session | null>
 }
 
 export function SnapshotDetailClient({
-    snapshot,
+    snapshotPromise,
     employeesPromise,
     sessionPromise,
 }: SnapshotDetailClientProps): React.ReactElement {
+    const snapshot = use(snapshotPromise)
     const employees = use(employeesPromise)
     const router = useRouter()
     const session = use(sessionPromise)

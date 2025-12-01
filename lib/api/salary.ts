@@ -364,6 +364,28 @@ export async function getSalarySnapshots(
     return underlying.map(convertUnderlyingSalarySnapshot)
 }
 
+export async function getSalarySnapshot(
+    snapshotID: number,
+    session?: Session | null,
+): Promise<SalarySnapshot> {
+    const underlying = await fetchAPI<UnderlyingSalarySnapshot>(
+        "GET",
+        `/salary/snapshots/${snapshotID}`,
+        null,
+        {
+            next: {
+                revalidate: 0, // Don't cache, always revalidate.
+            },
+        },
+        {
+            forHRIS: true,
+            session: session,
+        },
+    )
+
+    return convertUnderlyingSalarySnapshot(underlying)
+}
+
 export async function createSalarySnapshot(
     employeeID: number,
     month: string,
