@@ -1,18 +1,25 @@
 "use client"
 
-import { use, useEffect, useState } from "react"
+import { use, useEffect, useState, useCallback } from "react"
 import MonthPicker from "@/components/month-picker"
 import { EmployeePicker } from "@/components/employee-picker"
 import { Employee } from "@/lib/api/employee"
-import { Salary, getSalary, createSalarySnapshot } from "@/lib/api/salary"
+import { 
+    Salary, 
+    getSalary, 
+    createSalarySnapshot
+} from "@/lib/api/salary"
 import { format } from "date-fns"
 import { id } from "date-fns/locale"
 import { Session } from "next-auth"
 import { Card, CardContent } from "@/components/ui/card"
 import { SalaryCard } from "../components/salary-card"
 import { Button } from "@/components/ui/button"
-import { Camera } from "lucide-react"
+import { Camera, Plus } from "lucide-react"
 import { toast } from "sonner"
+import { AddComponentDialog } from "../components/add-component-dialog"
+import { AddExtraInfoDialog } from "../components/add-extra-info-dialog"
+import { useSalaryMutations } from "../hooks"
 
 interface SalaryPageClientProps {
     employeesPromise: Promise<Employee[]>
@@ -35,26 +42,59 @@ export function SalaryPageClient({
     const [salary, setSalary] = useState<Salary | null>(null)
     const [loading, setLoading] = useState(false)
     const [creatingSnapshot, setCreatingSnapshot] = useState(false)
+    const [showAddComponentDialog, setShowAddComponentDialog] = useState(false)
+    const [showAddExtraInfoDialog, setShowAddExtraInfoDialog] = useState(false)
 
     const selectedEmployee = searchParams.employeeID
         ? employees.find((emp) => emp.id.toString() === searchParams.employeeID)
         : null
 
-    useEffect(() => {
+    const loadSalary = useCallback(async () => {
         if (searchParams.month && searchParams.employeeID && session) {
             setLoading(true)
-            getSalary(
-                parseInt(searchParams.employeeID),
-                searchParams.month,
-                session,
-            )
-                .then(setSalary)
-                .catch(console.error)
-                .finally(() => setLoading(false))
+            try {
+                const salaryData = await getSalary(
+                    parseInt(searchParams.employeeID),
+                    searchParams.month,
+                    session,
+                )
+                setSalary(salaryData)
+            } catch (error) {
+                console.error("Failed to load salary:", error)
+            } finally {
+                setLoading(false)
+            }
         } else {
             setSalary(null)
         }
     }, [searchParams.month, searchParams.employeeID, session])
+
+    useEffect(() => {
+        loadSalary()
+    }, [loadSalary])
+
+    const { handleAddAdditionalComponent: handleAddComponent, handleAddExtraInfo } = useSalaryMutations({
+        employeeID: searchParams.employeeID,
+        month: searchParams.month,
+        session,
+        onSuccess: async () => {
+            await loadSalary()
+        },
+    })
+
+    const handleAddAdditionalComponent = async (
+        description: string,
+        amount: number,
+        multiplier: number
+    ) => {
+        await handleAddComponent(description, amount, multiplier)
+        setShowAddComponentDialog(false)
+    }
+
+    const handleAddAdditionalInfo = async (title: string, description: string) => {
+        await handleAddExtraInfo(title, description)
+        setShowAddExtraInfoDialog(false)
+    }
 
     const handleCreateSnapshot = async () => {
         if (!searchParams.employeeID || !searchParams.month || !session) {
@@ -109,6 +149,25 @@ export function SalaryPageClient({
             </div>
 
             {selectedEmployee && searchParams.month && (
+                <div className="flex gap-4">
+                    <Button
+                        onClick={() => setShowAddComponentDialog(true)}
+                        variant="outline"
+                    >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Tambah Komponen Tambahan
+                    </Button>
+                    <Button
+                        onClick={() => setShowAddExtraInfoDialog(true)}
+                        variant="outline"
+                    >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Tambah Info Tambahan
+                    </Button>
+                </div>
+            )}
+
+            {selectedEmployee && searchParams.month && (
                 <>
                     {loading ? (
                         <Card>
@@ -139,6 +198,22 @@ export function SalaryPageClient({
                     </CardContent>
                 </Card>
             )}
+
+            <AddComponentDialog
+                open={showAddComponentDialog}
+                onOpenChange={setShowAddComponentDialog}
+                onAdd={handleAddAdditionalComponent}
+                title="Tambah Komponen Gaji Tambahan"
+                description="Tambahkan komponen gaji tambahan baru untuk karyawan ini pada bulan ini."
+            />
+
+            <AddExtraInfoDialog
+                open={showAddExtraInfoDialog}
+                onOpenChange={setShowAddExtraInfoDialog}
+                onAdd={handleAddAdditionalInfo}
+                title="Tambah Informasi Tambahan"
+                description="Tambahkan informasi tambahan baru untuk karyawan ini pada bulan ini."
+            />
         </div>
     )
 }

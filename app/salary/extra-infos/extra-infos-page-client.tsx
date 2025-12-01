@@ -7,7 +7,6 @@ import { Employee } from "@/lib/api/employee"
 import { 
     SalaryExtraInfo, 
     getSalaryExtraInfos,
-    createSalaryExtraInfo,
     deleteSalaryExtraInfo
 } from "@/lib/api/salary"
 import { Session } from "next-auth"
@@ -19,6 +18,7 @@ import { id } from "date-fns/locale"
 import { ExtraInfosTable } from "../components/extra-infos-table"
 import { AddExtraInfoDialog } from "../components/add-extra-info-dialog"
 import { DeleteExtraInfoDialog } from "../components/delete-extra-info-dialog"
+import { useSalaryMutations } from "../hooks"
 
 interface ExtraInfosPageClientProps {
     employeesPromise: Promise<Employee[]>
@@ -76,22 +76,18 @@ export function ExtraInfosPageClient({
         loadExtraInfos()
     }, [loadExtraInfos])
 
-    const handleAddExtraInfo = async (title: string, description: string) => {
-        if (!searchParams.employeeID || !searchParams.month || !session) return
+    const { handleAddExtraInfo: handleAddExtraInfoMutation } = useSalaryMutations({
+        employeeID: searchParams.employeeID,
+        month: searchParams.month,
+        session,
+        onSuccess: async () => {
+            await loadExtraInfos()
+        },
+    })
 
-        try {
-            await createSalaryExtraInfo(
-                parseInt(searchParams.employeeID),
-                searchParams.month,
-                title,
-                description,
-                session
-            )
-            await loadExtraInfos() // Reload the list
-            setShowAddDialog(false)
-        } catch (error) {
-            console.error("Failed to create extra info:", error)
-        }
+    const handleAddExtraInfo = async (title: string, description: string) => {
+        await handleAddExtraInfoMutation(title, description)
+        setShowAddDialog(false)
     }
 
     const handleDeleteExtraInfo = async () => {

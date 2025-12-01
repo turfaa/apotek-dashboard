@@ -8,7 +8,6 @@ import {
     SalaryAdditionalComponent, 
     SalaryStaticComponent,
     getSalaryAdditionalComponents,
-    createSalaryAdditionalComponent,
     deleteSalaryAdditionalComponent
 } from "@/lib/api/salary"
 import { Session } from "next-auth"
@@ -20,6 +19,7 @@ import { id } from "date-fns/locale"
 import { SalaryComponentsTable } from "../components/salary-components-table"
 import { AddComponentDialog } from "../components/add-component-dialog"
 import { DeleteConfirmDialog } from "../components/delete-confirm-dialog"
+import { useSalaryMutations } from "../hooks"
 
 interface AdditionalComponentsPageClientProps {
     employeesPromise: Promise<Employee[]>
@@ -77,23 +77,18 @@ export function AdditionalComponentsPageClient({
         loadAdditionalComponents()
     }, [loadAdditionalComponents])
 
-    const handleAddComponent = async (description: string, amount: number, multiplier: number) => {
-        if (!searchParams.employeeID || !searchParams.month || !session) return
+    const { handleAddAdditionalComponent } = useSalaryMutations({
+        employeeID: searchParams.employeeID,
+        month: searchParams.month,
+        session,
+        onSuccess: async () => {
+            await loadAdditionalComponents()
+        },
+    })
 
-        try {
-            await createSalaryAdditionalComponent(
-                parseInt(searchParams.employeeID),
-                searchParams.month,
-                description,
-                amount,
-                multiplier,
-                session
-            )
-            await loadAdditionalComponents() // Reload the list
-            setShowAddDialog(false)
-        } catch (error) {
-            console.error("Failed to create additional component:", error)
-        }
+    const handleAddComponent = async (description: string, amount: number, multiplier: number) => {
+        await handleAddAdditionalComponent(description, amount, multiplier)
+        setShowAddDialog(false)
     }
 
     const handleDeleteComponent = async () => {
