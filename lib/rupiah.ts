@@ -23,10 +23,10 @@ class RupiahFormatter {
     }
 
     private formatUS = (value: number, isNegative: boolean): string => {
-        // US format: Rp1,000,000 (no decimals)
-        const integerPart = Math.round(value).toString()
+        // US format: Rp1,000,000.00
+        const [integerPart, decimalPart = "00"] = value.toFixed(2).split(".")
         const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-        const formattedValue = `Rp${formattedInteger}`
+        const formattedValue = `Rp${formattedInteger}.${decimalPart}`
         return isNegative ? `(${formattedValue})` : formattedValue
     }
 
