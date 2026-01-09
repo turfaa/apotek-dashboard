@@ -154,6 +154,11 @@ const availableNavigations: NavigationItem[] = [
         ],
         allowedRoles: [Role.ADMIN, Role.STAFF],
     },
+    {
+        name: "Manajemen Token",
+        target: "/tokens",
+        allowedRoles: [Role.ADMIN, Role.STAFF],
+    },
 ]
 
 export function useNavigation(role?: Role | null): NavigationHook {

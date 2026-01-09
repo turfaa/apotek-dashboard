@@ -68,6 +68,11 @@ const rewrites = [
         destination: `${process.env.HRIS_PROXY_URL}/v1/salary`,
         allowedRoles: [Role.ADMIN],
     },
+    {
+        source: "/api/tokens",
+        destination: `${process.env.VMEDIS_PROXY_URL}/v2/vmedis/tokens`,
+        allowedRoles: [Role.ADMIN, Role.STAFF],
+    },
 ] satisfies RewriteRule[]
 
 export default auth(async function middleware(

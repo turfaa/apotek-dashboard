@@ -4,7 +4,10 @@
       "Bash(jj status:*)",
       "Bash(jj diff:*)",
       "Bash(jj log:*)",
-      "Bash(jj bookmark:*)"
+      "Bash(jj bookmark:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(mkdir:*)",
+      "Bash(cat:*)"
     ]
   }
 }
