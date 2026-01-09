@@ -155,8 +155,14 @@ const availableNavigations: NavigationItem[] = [
         allowedRoles: [Role.ADMIN, Role.STAFF],
     },
     {
-        name: "Manajemen Token",
-        target: "/tokens",
+        name: "Vmedis",
+        target: [
+            {
+                name: "Manajemen Token",
+                href: "/vmedis/tokens",
+                allowedRoles: [Role.ADMIN, Role.STAFF],
+            },
+        ],
         allowedRoles: [Role.ADMIN, Role.STAFF],
     },
 ]
