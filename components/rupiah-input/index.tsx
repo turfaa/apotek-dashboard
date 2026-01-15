@@ -11,8 +11,8 @@ const maskitoOptions = maskitoNumberOptionsGenerator({
     prefix: "Rp ",
     decimalSeparator: ",",
     thousandSeparator: ".",
-    precision: 2,
-    decimalZeroPadding: true,
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 2,
 })
 
 export interface RupiahInputProps
@@ -39,7 +39,7 @@ const RupiahInput = React.forwardRef<HTMLInputElement, RupiahInputProps>(
                 onInput?.(e)
                 if (!onChange) return
 
-                let amount = maskitoParseNumber(e.currentTarget.value, ",")
+                let amount = maskitoParseNumber(e.currentTarget.value, { decimalSeparator: "," })
                 if (isNaN(amount)) {
                     amount = 0
                 }

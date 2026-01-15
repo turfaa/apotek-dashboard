@@ -20,6 +20,8 @@ const nextConfig = {
         // ppr: true,
         // dynamicIO: true,
     },
+    // Empty turbopack config to silence webpack config warning
+    turbopack: {},
 }
 
 module.exports = withPWA(nextConfig)

@@ -26,8 +26,8 @@ const maskitoOptions = maskitoNumberOptionsGenerator({
     prefix: "Rp ",
     decimalSeparator: ",",
     thousandSeparator: ".",
-    precision: 2,
-    decimalZeroPadding: true,
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 2,
 })
 
 export default function InvoiceCard({
@@ -79,7 +79,7 @@ export default function InvoiceCard({
                         onInput={(e) => {
                             let amount = maskitoParseNumber(
                                 e.currentTarget.value,
-                                ",",
+                                { decimalSeparator: "," },
                             )
                             if (isNaN(amount)) {
                                 amount = 0

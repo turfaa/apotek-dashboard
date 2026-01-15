@@ -8,7 +8,9 @@
       "WebFetch(domain:github.com)",
       "Bash(mkdir:*)",
       "Bash(cat:*)",
-      "Bash(jj show:*)"
+      "Bash(jj show:*)",
+      "Bash(npm run build:*)",
+      "Bash(jj new:*)"
     ]
   }
 }
