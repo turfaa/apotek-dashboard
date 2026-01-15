@@ -131,8 +131,9 @@ export const usePurchaseOrders = create<PurchaseOrdersHook>()(
                 },
                 deleteData: (key) => {
                     set((state) => {
-                        const { [key]: _, ...rest } = state.data ?? {}
-                        return { data: rest }
+                        const newData = { ...state.data }
+                        delete newData[key]
+                        return { data: newData }
                     })
                 },
             }),

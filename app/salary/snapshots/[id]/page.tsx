@@ -3,7 +3,6 @@ import { getEmployees } from "@/lib/api/employee"
 import { getSalarySnapshot } from "@/lib/api/salary"
 import { SnapshotDetailClient } from "./snapshot-detail-client"
 import { Metadata } from "next"
-import { notFound } from "next/navigation"
 
 export const metadata: Metadata = {
     title: "Detail Snapshot Gaji",

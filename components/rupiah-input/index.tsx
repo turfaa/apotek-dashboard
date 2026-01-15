@@ -22,7 +22,8 @@ export interface RupiahInputProps
 }
 
 const RupiahInput = React.forwardRef<HTMLInputElement, RupiahInputProps>(
-    ({ className, value, onChange, onInput, ...props }, _ref) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    ({ className, value, onChange, onInput, ...props }, _) => {
         const rupiahMask = useMaskito({ options: maskitoOptions })
 
         const formattedValue =

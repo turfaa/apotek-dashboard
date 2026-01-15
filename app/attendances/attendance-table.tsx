@@ -208,7 +208,7 @@ export function AttendanceTable({
                 toast.error("Gagal memperbarui kehadiran. Silakan coba lagi.")
             }
         },
-        [currentMonth],
+        [currentMonth, session],
     )
 
     if (isLoading) {
@@ -427,7 +427,7 @@ export function AttendanceTable({
                                         const benefitEntries = Object.entries(
                                             summary.daysByBenefit,
                                         )
-                                            .filter(([_, count]) => count > 0)
+                                            .filter((entry) => entry[1] > 0)
                                             .sort(([a], [b]) =>
                                                 a < b ? -1 : 1,
                                             ) // Sort by benefit name
