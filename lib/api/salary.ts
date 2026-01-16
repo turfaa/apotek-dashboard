@@ -282,6 +282,45 @@ export async function deleteSalaryAdditionalComponent(
     )
 }
 
+export interface BulkCreateAdditionalComponentRequest {
+    month: string
+    employeeIDs: number[]
+    component: {
+        description: string
+        amount: string
+        multiplier: string
+    }
+}
+
+export async function bulkCreateSalaryAdditionalComponents(
+    month: string,
+    employeeIDs: number[],
+    description: string,
+    amount: number,
+    multiplier: number,
+    session?: Session | null,
+): Promise<SalaryAdditionalComponent[]> {
+    const request: BulkCreateAdditionalComponentRequest = {
+        month,
+        employeeIDs,
+        component: {
+            description,
+            amount: amount.toString(),
+            multiplier: multiplier.toString(),
+        },
+    }
+    return await fetchAPI<SalaryAdditionalComponent[]>(
+        "POST",
+        `/salary/${month}/additional-components/bulk`,
+        request,
+        {},
+        {
+            forHRIS: true,
+            session: session,
+        },
+    )
+}
+
 export async function getSalaryExtraInfos(
     employeeID: number,
     month: string,

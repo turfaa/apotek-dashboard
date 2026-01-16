@@ -6,6 +6,7 @@ import { toast } from "sonner"
 import {
     createSalaryAdditionalComponent,
     createSalaryExtraInfo,
+    bulkCreateSalaryAdditionalComponents,
 } from "@/lib/api/salary"
 
 interface UseSalaryMutationsParams {
@@ -80,9 +81,48 @@ export function useSalaryMutations({
         [employeeID, month, session, onSuccess]
     )
 
+    const handleBulkAddAdditionalComponent = useCallback(
+        async (
+            employeeIDs: number[],
+            description: string,
+            amount: number,
+            multiplier: number
+        ) => {
+            if (!month || !session) {
+                toast.error("Pilih bulan terlebih dahulu")
+                return
+            }
+
+            if (employeeIDs.length === 0) {
+                toast.error("Pilih minimal satu karyawan")
+                return
+            }
+
+            try {
+                await bulkCreateSalaryAdditionalComponents(
+                    month,
+                    employeeIDs,
+                    description,
+                    amount,
+                    multiplier,
+                    session
+                )
+                toast.success(
+                    `Komponen gaji tambahan berhasil ditambahkan untuk ${employeeIDs.length} karyawan`
+                )
+                await onSuccess?.()
+            } catch (error) {
+                console.error("Failed to bulk create additional components:", error)
+                toast.error("Gagal menambahkan komponen gaji tambahan secara massal")
+            }
+        },
+        [month, session, onSuccess]
+    )
+
     return {
         handleAddAdditionalComponent,
         handleAddExtraInfo,
+        handleBulkAddAdditionalComponent,
     }
 }
 

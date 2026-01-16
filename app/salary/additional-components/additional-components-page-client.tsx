@@ -13,11 +13,12 @@ import {
 import { Session } from "next-auth"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
+import { Plus, Users } from "lucide-react"
 import { format } from "date-fns"
 import { id } from "date-fns/locale"
 import { SalaryComponentsTable } from "../components/salary-components-table"
 import { AddComponentDialog } from "../components/add-component-dialog"
+import { BulkAddComponentDialog } from "../components/bulk-add-component-dialog"
 import { DeleteConfirmDialog } from "../components/delete-confirm-dialog"
 import { useSalaryMutations } from "../hooks"
 
@@ -42,6 +43,7 @@ export function AdditionalComponentsPageClient({
     const [additionalComponents, setAdditionalComponents] = useState<SalaryAdditionalComponent[]>([])
     const [loading, setLoading] = useState(false)
     const [showAddDialog, setShowAddDialog] = useState(false)
+    const [showBulkAddDialog, setShowBulkAddDialog] = useState(false)
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
     const [componentToDelete, setComponentToDelete] = useState<SalaryAdditionalComponent | null>(null)
 
@@ -77,7 +79,7 @@ export function AdditionalComponentsPageClient({
         loadAdditionalComponents()
     }, [loadAdditionalComponents])
 
-    const { handleAddAdditionalComponent } = useSalaryMutations({
+    const { handleAddAdditionalComponent, handleBulkAddAdditionalComponent } = useSalaryMutations({
         employeeID: searchParams.employeeID,
         month: searchParams.month,
         session,
@@ -89,6 +91,16 @@ export function AdditionalComponentsPageClient({
     const handleAddComponent = async (description: string, amount: number, multiplier: number) => {
         await handleAddAdditionalComponent(description, amount, multiplier)
         setShowAddDialog(false)
+    }
+
+    const handleBulkAddComponent = async (
+        employeeIDs: number[],
+        description: string,
+        amount: number,
+        multiplier: number
+    ) => {
+        await handleBulkAddAdditionalComponent(employeeIDs, description, amount, multiplier)
+        setShowBulkAddDialog(false)
     }
 
     const handleDeleteComponent = async () => {
@@ -116,7 +128,7 @@ export function AdditionalComponentsPageClient({
 
     return (
         <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 items-end">
                 <div className="flex-1">
                     <label className="text-sm font-medium mb-2 block">
                         Bulan
@@ -129,6 +141,10 @@ export function AdditionalComponentsPageClient({
                     </label>
                     <EmployeePicker employees={employees} />
                 </div>
+                <Button variant="outline" onClick={() => setShowBulkAddDialog(true)}>
+                    <Users className="h-4 w-4 mr-2" />
+                    Tambah Massal
+                </Button>
             </div>
 
             {selectedEmployee && searchParams.month && (
@@ -183,6 +199,15 @@ export function AdditionalComponentsPageClient({
                 onConfirm={handleDeleteComponent}
                 title="Hapus Komponen Gaji Tambahan"
                 description="Apakah Anda yakin ingin menghapus komponen gaji tambahan ini? Tindakan ini tidak dapat dibatalkan."
+            />
+
+            <BulkAddComponentDialog
+                open={showBulkAddDialog}
+                onOpenChange={setShowBulkAddDialog}
+                onAdd={handleBulkAddComponent}
+                employees={employees}
+                title="Tambah Komponen Gaji Massal"
+                description={`Tambahkan komponen gaji tambahan untuk beberapa karyawan sekaligus pada bulan ${monthDisplay}.`}
             />
         </div>
     )
