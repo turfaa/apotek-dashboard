@@ -19,11 +19,13 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { SalaryCard } from "../components/salary-card"
 import { Button } from "@/components/ui/button"
-import { Camera, Plus, Info, Trash2, ExternalLink } from "lucide-react"
+import { Camera, Plus, Info, Trash2, ExternalLink, Minus } from "lucide-react"
 import { toast } from "sonner"
 import { AddComponentDialog } from "../components/add-component-dialog"
 import { AddExtraInfoDialog } from "../components/add-extra-info-dialog"
 import { DeleteSnapshotDialog } from "../snapshots/delete-snapshot-dialog"
+import { RemoveAdditionalComponentsDialog } from "../components/remove-additional-components-dialog"
+import { RemoveExtraInfosDialog } from "../components/remove-extra-infos-dialog"
 import { useSalaryMutations } from "../hooks"
 
 interface SalaryPageClientProps {
@@ -52,6 +54,8 @@ export function SalaryPageClient({
     const [existingSnapshot, setExistingSnapshot] = useState<SalarySnapshot | null>(null)
     const [showDeleteSnapshotDialog, setShowDeleteSnapshotDialog] = useState(false)
     const [deletingSnapshot, setDeletingSnapshot] = useState(false)
+    const [showRemoveComponentsDialog, setShowRemoveComponentsDialog] = useState(false)
+    const [showRemoveExtraInfosDialog, setShowRemoveExtraInfosDialog] = useState(false)
 
     const selectedEmployee = searchParams.employeeID
         ? employees.find((emp) => emp.id.toString() === searchParams.employeeID)
@@ -236,7 +240,7 @@ export function SalaryPageClient({
             )}
 
             {selectedEmployee && searchParams.month && !hasSnapshot && (
-                <div className="flex gap-4">
+                <div className="flex flex-wrap gap-4">
                     <Button
                         onClick={() => setShowAddComponentDialog(true)}
                         variant="outline"
@@ -250,6 +254,20 @@ export function SalaryPageClient({
                     >
                         <Plus className="h-4 w-4 mr-2" />
                         Tambah Info Tambahan
+                    </Button>
+                    <Button
+                        onClick={() => setShowRemoveComponentsDialog(true)}
+                        variant="outline"
+                    >
+                        <Minus className="h-4 w-4 mr-2" />
+                        Hapus Komponen Tambahan
+                    </Button>
+                    <Button
+                        onClick={() => setShowRemoveExtraInfosDialog(true)}
+                        variant="outline"
+                    >
+                        <Minus className="h-4 w-4 mr-2" />
+                        Hapus Info Tambahan
                     </Button>
                 </div>
             )}
@@ -308,6 +326,28 @@ export function SalaryPageClient({
                 snapshot={existingSnapshot}
                 onConfirm={handleDeleteSnapshot}
             />
+
+            {searchParams.employeeID && searchParams.month && (
+                <>
+                    <RemoveAdditionalComponentsDialog
+                        open={showRemoveComponentsDialog}
+                        onOpenChange={setShowRemoveComponentsDialog}
+                        employeeID={parseInt(searchParams.employeeID)}
+                        month={searchParams.month}
+                        session={session}
+                        onSuccess={loadSalary}
+                    />
+
+                    <RemoveExtraInfosDialog
+                        open={showRemoveExtraInfosDialog}
+                        onOpenChange={setShowRemoveExtraInfosDialog}
+                        employeeID={parseInt(searchParams.employeeID)}
+                        month={searchParams.month}
+                        session={session}
+                        onSuccess={loadSalary}
+                    />
+                </>
+            )}
         </div>
     )
 }
