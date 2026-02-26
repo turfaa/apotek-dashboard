@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -21,6 +22,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { Switch } from "@/components/ui/switch"
 import { createAttendanceType, PayableType } from "@/lib/api/attendance"
 import { toast } from "sonner"
 import { Session } from "next-auth"
@@ -32,6 +34,7 @@ const formSchema = z.object({
     payableType: z.nativeEnum(PayableType, {
         message: "Tipe pembayaran harus dipilih.",
     }),
+    hasQuota: z.boolean(),
 })
 
 interface AttendanceTypeFormProps {
@@ -45,6 +48,7 @@ export function AttendanceTypeForm({ session }: AttendanceTypeFormProps) {
         defaultValues: {
             name: "",
             payableType: PayableType.Working,
+            hasQuota: false,
         },
     })
 
@@ -54,6 +58,7 @@ export function AttendanceTypeForm({ session }: AttendanceTypeFormProps) {
                 {
                     name: values.name,
                     payableType: values.payableType,
+                    hasQuota: values.hasQuota,
                 },
                 session,
             )
@@ -113,6 +118,29 @@ export function AttendanceTypeForm({ session }: AttendanceTypeFormProps) {
                                 </SelectContent>
                             </Select>
                             <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="hasQuota"
+                    render={({ field }) => (
+                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                            <div className="space-y-0.5">
+                                <FormLabel className="text-base">
+                                    Kuota
+                                </FormLabel>
+                                <FormDescription>
+                                    Aktifkan jika jenis kehadiran ini memiliki
+                                    batasan kuota per karyawan.
+                                </FormDescription>
+                            </div>
+                            <FormControl>
+                                <Switch
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                />
+                            </FormControl>
                         </FormItem>
                     )}
                 />
