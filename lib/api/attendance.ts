@@ -44,6 +44,7 @@ export interface AttendanceType {
     id: number
     name: string
     payableType: PayableType
+    hasQuota: boolean
 }
 
 export interface UpsertAttendanceRequest {
@@ -56,6 +57,7 @@ export interface UpsertAttendanceRequest {
 export interface CreateAttendanceTypeRequest {
     name: string
     payableType: PayableType
+    hasQuota: boolean
 }
 
 export enum PayableType {
@@ -132,6 +134,22 @@ export async function getAttendanceTypes(
                 revalidate: 0, // Don't cache, always revalidate.
             },
         },
+        {
+            forHRIS: true,
+            session: session,
+        },
+    )
+}
+
+export async function enableAttendanceTypeQuota(
+    typeID: number,
+    session?: Session | null,
+): Promise<void> {
+    await fetchAPI<void>(
+        "POST",
+        `/attendances/types/${typeID}/enable-quota`,
+        null,
+        {},
         {
             forHRIS: true,
             session: session,
