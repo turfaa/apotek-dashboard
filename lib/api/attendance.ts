@@ -156,3 +156,94 @@ export async function enableAttendanceTypeQuota(
         },
     )
 }
+
+// Attendance Quota types and functions
+
+export interface AttendanceTypeQuotaPage {
+    attendanceType: AttendanceType
+    employeeQuotas: EmployeeAttendanceQuota[]
+}
+
+export interface EmployeeAttendanceQuota {
+    id: number
+    employeeID: number
+    attendanceType: AttendanceType
+    remainingQuota: number
+    createdAt: string
+    updatedAt: string
+}
+
+export interface SetEmployeeAttendanceQuotaRequest {
+    remainingQuota: number
+}
+
+export interface QuotaAuditLog {
+    id: number
+    employeeID: number
+    attendanceType: AttendanceType
+    previousQuota: number
+    newQuota: number
+    reason: QuotaAuditLogReason
+    createdAt: string
+}
+
+export type QuotaAuditLogReason =
+    | "manual_set"
+    | "attendance_deduction"
+    | "attendance_restoration"
+
+export async function getAttendanceQuotas(
+    session?: Session | null,
+): Promise<AttendanceTypeQuotaPage[]> {
+    return await fetchAPI<AttendanceTypeQuotaPage[]>(
+        "GET",
+        "/attendances/quotas",
+        null,
+        {
+            next: {
+                revalidate: 0,
+            },
+        },
+        {
+            forHRIS: true,
+            session: session,
+        },
+    )
+}
+
+export async function setEmployeeAttendanceQuota(
+    employeeID: number,
+    typeID: number,
+    remainingQuota: number,
+    session?: Session | null,
+): Promise<EmployeeAttendanceQuota> {
+    return await fetchAPI<EmployeeAttendanceQuota>(
+        "PUT",
+        `/attendances/quotas/${employeeID}/${typeID}`,
+        { remainingQuota },
+        {},
+        {
+            forHRIS: true,
+            session: session,
+        },
+    )
+}
+
+export async function getQuotaAuditLogs(
+    session?: Session | null,
+): Promise<QuotaAuditLog[]> {
+    return await fetchAPI<QuotaAuditLog[]>(
+        "GET",
+        "/attendances/quotas/audit-logs",
+        null,
+        {
+            next: {
+                revalidate: 0,
+            },
+        },
+        {
+            forHRIS: true,
+            session: session,
+        },
+    )
+}
