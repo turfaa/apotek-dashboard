@@ -151,6 +151,11 @@ const availableNavigations: NavigationItem[] = [
                 href: "/attendances/types",
                 allowedRoles: [Role.ADMIN],
             },
+            {
+                name: "Kuota Kehadiran",
+                href: "/attendances/quotas",
+                allowedRoles: [Role.ADMIN],
+            },
         ],
         allowedRoles: [Role.ADMIN, Role.STAFF],
     },
