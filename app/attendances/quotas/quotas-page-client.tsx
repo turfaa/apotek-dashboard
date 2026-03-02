@@ -150,7 +150,7 @@ function QuotaCard({ page, employeeMap }: QuotaCardProps) {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    {page.employeeQuotas.length === 0 ? (
+                    {page.quotas.length === 0 ? (
                         <p className="text-muted-foreground text-sm">
                             Belum ada kuota yang ditetapkan untuk karyawan.
                         </p>
@@ -169,7 +169,7 @@ function QuotaCard({ page, employeeMap }: QuotaCardProps) {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {page.employeeQuotas.map((quota) => {
+                                    {page.quotas.map((quota) => {
                                         const employee = employeeMap.get(
                                             quota.employeeID,
                                         )

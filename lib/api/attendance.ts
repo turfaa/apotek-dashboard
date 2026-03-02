@@ -161,7 +161,7 @@ export async function enableAttendanceTypeQuota(
 
 export interface AttendanceTypeQuotaPage {
     attendanceType: AttendanceType
-    employeeQuotas: EmployeeAttendanceQuota[]
+    quotas: EmployeeAttendanceQuota[]
 }
 
 export interface EmployeeAttendanceQuota {
