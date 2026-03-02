@@ -2,7 +2,7 @@ name: Create and publish a Docker image
 
 on:
   push:
-    tags: [ 'v*.*.*' ]
+    tags: ["v*.*.*"]
 
 env:
   REGISTRY: ghcr.io
@@ -44,7 +44,7 @@ jobs:
         uses: tailscale/github-action@v2
         with:
           oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
-          oauth-secret  : ${{ secrets.TS_OAUTH_SECRET }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
           tags: tag:ci
 
       - name: Set up Docker Buildx
@@ -53,8 +53,8 @@ jobs:
         with:
           buildkitd-config-inline: |
             [dns]
-              nameservers = ["100.110.60.40"]
-      
+              nameservers = ["100.100.100.100"]
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
@@ -68,7 +68,7 @@ jobs:
           TAG: ${{ github.ref_name }}
         run: |
           echo $TAG > ./tag
-        
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
