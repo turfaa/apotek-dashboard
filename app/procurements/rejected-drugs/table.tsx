@@ -31,8 +31,6 @@ export default async function RejectedDrugsTable(
                 {
                     query: params.query,
                     resolutions: params.resolutions,
-                    from: params.from,
-                    until: params.until,
                 },
                 session,
             ),

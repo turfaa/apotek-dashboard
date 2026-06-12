@@ -42,7 +42,6 @@ export default async function RejectedDrugsPage(
             </div>
 
             <div className="flex flex-col gap-2 mb-6">
-                <DateRangePicker />
                 <div className="flex flex-col sm:flex-row gap-2">
                     <SearchFilter />
                     <Suspense fallback={<ResolutionFilterFallback />}>
