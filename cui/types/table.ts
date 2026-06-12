@@ -1,5 +1,5 @@
 export interface Table {
-    header: string[]
+    header?: string[]
     rows: Row[]
 }
 

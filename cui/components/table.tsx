@@ -20,16 +20,18 @@ export default function Table({
     table,
     rowActions,
 }: TableProps): React.ReactElement {
-    if (table.header.length == 0 && table.rows.length == 0) {
+    const tableHeader = table.header ?? []
+
+    if (tableHeader.length == 0 && table.rows.length == 0) {
         return <></>
     }
 
     return (
         <TableComp>
-            {table.header.length > 0 && (
+            {tableHeader.length > 0 && (
                 <TableHeader>
                     <TableRow>
-                        {table.header.map((header) => (
+                        {tableHeader.map((header) => (
                             <TableHead key={header}>{header}</TableHead>
                         ))}
                     </TableRow>
