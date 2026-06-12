@@ -62,6 +62,11 @@ const availableNavigations: NavigationItem[] = [
                 href: "/procurements/invoice-calculator",
                 allowedRoles: [Role.ADMIN, Role.STAFF],
             },
+            {
+                name: "Obat Tertolak",
+                href: "/procurements/rejected-drugs",
+                allowedRoles: [Role.ADMIN, Role.STAFF],
+            },
         ],
         allowedRoles: [Role.ADMIN, Role.STAFF],
     },
