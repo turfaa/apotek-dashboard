@@ -84,7 +84,7 @@ export default function Form({
                             value={values[field.id] ?? ""}
                             disabled={disabled}
                             onChange={(value) => setValue(field.id, value)}
-                            inputRef={(idx === 0 && firstFieldRef.current) ? firstFieldRef as React.RefObject<HTMLInputElement | HTMLTextAreaElement> : undefined}
+                            inputRef={(idx === 0) ? firstFieldRef as React.RefObject<HTMLInputElement | HTMLTextAreaElement> : undefined}
                         />
                         {missingField === field.id && (
                             <p className="text-sm text-destructive">
