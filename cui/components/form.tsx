@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -33,6 +33,19 @@ export default function Form({
     )
     const [missingField, setMissingField] = useState<string | null>(null)
 
+    // For focusing the first input field
+    const firstFieldRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null)
+
+    useEffect(() => {
+        if (firstFieldRef.current) {
+            firstFieldRef.current.focus()
+            // For text input, also select text if there is a value
+            if ("select" in firstFieldRef.current && firstFieldRef.current.value) {
+                firstFieldRef.current.select()
+            }
+        }
+    }, [])
+
     const setValue = (id: string, value: string) => {
         setValues((prev) => ({ ...prev, [id]: value }))
         if (missingField === id && value.trim() !== "") {
@@ -58,7 +71,7 @@ export default function Form({
     return (
         <form onSubmit={handleSubmit}>
             <div className="grid gap-4 py-4">
-                {form.fields.map((field) => (
+                {form.fields.map((field, idx) => (
                     <div key={field.id} className="grid gap-2">
                         <Label htmlFor={field.id}>
                             {field.label}
@@ -71,6 +84,7 @@ export default function Form({
                             value={values[field.id] ?? ""}
                             disabled={disabled}
                             onChange={(value) => setValue(field.id, value)}
+                            inputRef={idx === 0 ? firstFieldRef : undefined}
                         />
                         {missingField === field.id && (
                             <p className="text-sm text-destructive">
@@ -91,6 +105,7 @@ interface FormFieldInputProps {
     value: string
     disabled?: boolean
     onChange: (value: string) => void
+    inputRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement>
 }
 
 function FormFieldInput({
@@ -98,6 +113,7 @@ function FormFieldInput({
     value,
     disabled,
     onChange,
+    inputRef,
 }: FormFieldInputProps): React.ReactElement {
     switch (field.type) {
         case "TEXTAREA":
@@ -107,6 +123,7 @@ function FormFieldInput({
                     value={value}
                     disabled={disabled}
                     onChange={(e) => onChange(e.target.value)}
+                    ref={inputRef as React.Ref<HTMLTextAreaElement> | undefined}
                 />
             )
 
@@ -140,6 +157,7 @@ function FormFieldInput({
                     value={value}
                     disabled={disabled}
                     onChange={(e) => onChange(e.target.value)}
+                    ref={inputRef as React.Ref<HTMLInputElement> | undefined}
                 />
             )
     }
