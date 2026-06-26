@@ -1,3 +1,5 @@
+import GenerateButton from "@/app/procurements/purchase-order/generate-button"
+import GeneratingCallout from "@/app/procurements/purchase-order/generating-callout"
 import NewDrugButton from "@/app/procurements/purchase-order/new-drug-button"
 import RefreshButton from "@/app/procurements/purchase-order/refresh-button"
 import PurchaseOrderTable from "@/app/procurements/purchase-order/table"
@@ -44,9 +46,12 @@ export default function PurchaseOrder() {
 
                 <div className="justify-self-end flex gap-4">
                     <NewDrugButton />
+                    <GenerateButton />
                     <RefreshButton />
                 </div>
             </div>
+
+            <GeneratingCallout />
 
             <Card className="mt-4">
                 <CardContent className="mt-2">

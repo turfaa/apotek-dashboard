@@ -37,3 +37,42 @@ export async function getProcurementRecommendations(): Promise<ProcurementRecomm
         computedAt: new Date(underlying.computedAt),
     }
 }
+
+export enum ProcurementRecommendationStatus {
+    Idle = "IDLE",
+    Generating = "GENERATING",
+}
+
+export interface ProcurementRecommendationStatusResponse {
+    status: ProcurementRecommendationStatus
+}
+
+export async function getProcurementRecommendationStatus(): Promise<ProcurementRecommendationStatusResponse> {
+    return fetchAPI<ProcurementRecommendationStatusResponse>(
+        "GET",
+        "/procurements/recommendations/status",
+        null,
+        {
+            next: {
+                revalidate: 0, // Don't cache, always revalidate.
+            },
+        },
+    )
+}
+
+export interface MessageResponse {
+    message: string
+}
+
+export async function dumpProcurementRecommendations(): Promise<MessageResponse> {
+    return fetchAPI<MessageResponse>(
+        "POST",
+        "/procurements/recommendations/dump",
+        null,
+        {
+            next: {
+                revalidate: 0, // Don't cache, always revalidate.
+            },
+        },
+    )
+}

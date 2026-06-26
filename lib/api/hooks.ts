@@ -6,7 +6,10 @@ import {
 } from "./drugv2"
 import {
     ProcurementRecommendation,
+    ProcurementRecommendationStatus,
     ProcurementRecommendationsResponse,
+    dumpProcurementRecommendations,
+    getProcurementRecommendationStatus,
     getProcurementRecommendations,
 } from "@/lib/api/procurement-recommendation"
 import {
@@ -14,6 +17,7 @@ import {
     getSalesStatistics,
 } from "@/lib/api/sale-statistics"
 import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation"
+import { useState } from "react"
 import superjson from "superjson"
 import useSWR from "swr"
 import { create } from "zustand"
@@ -63,6 +67,53 @@ export function useSalesStatistics(): SalesStatisticsHook {
         data,
         isLoading,
         error,
+    }
+}
+
+export interface ProcurementRecommendationStatusHook {
+    isGenerating: boolean
+    isLoading: boolean
+    error?: Error
+    // Whether a generation request triggered from this client is in flight.
+    isStarting: boolean
+    generate: () => Promise<void>
+}
+
+export function useProcurementRecommendationStatus(): ProcurementRecommendationStatusHook {
+    const { data, error, isLoading, mutate } = useSWR(
+        "/v1/procurements/recommendations/status",
+        getProcurementRecommendationStatus,
+        {
+            // Generation takes at most 10 minutes. Poll frequently while it is
+            // running so the warning clears soon after the backend finishes,
+            // and back off when idle.
+            refreshInterval: (latest) =>
+                latest?.status === ProcurementRecommendationStatus.Generating
+                    ? 10 * 1000
+                    : 60 * 1000,
+        },
+    )
+
+    const [isStarting, setIsStarting] = useState(false)
+
+    const generate = async (): Promise<void> => {
+        setIsStarting(true)
+        try {
+            await dumpProcurementRecommendations()
+            // Refresh the status so the UI reflects the in-progress generation.
+            await mutate()
+        } finally {
+            setIsStarting(false)
+        }
+    }
+
+    return {
+        isGenerating:
+            data?.status === ProcurementRecommendationStatus.Generating,
+        isLoading,
+        error,
+        isStarting,
+        generate,
     }
 }
 
