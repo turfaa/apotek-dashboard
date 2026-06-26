@@ -133,6 +133,9 @@ export function ClientPageComponent({ dataPromise }) {
 - **VMEDIS_PROXY_URL**: Pharmacy/sales/inventory (v1 and v2 APIs)
 - **HRIS_PROXY_URL**: HR/employee/salary management (v1 API)
 
+**VMEDIS OpenAPI Spec**: https://raw.githubusercontent.com/turfaa/vmedis-proxy-api/refs/heads/main/docs/openapi.yaml
+- Always fetch this spec when working on VMEDIS/pharmacy-related features to check for the latest API contracts
+
 **HRIS OpenAPI Spec**: https://raw.githubusercontent.com/turfaa/apotek-hris/refs/heads/master/docs/openapi.yaml
 - Always fetch this spec when working on HRIS-related features to check for the latest API contracts
 
