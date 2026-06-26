@@ -5,7 +5,7 @@ import { usePrintMode } from "@/lib/print-mode"
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons"
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
 
-export default function GeneratingCallout(): React.ReactElement {
+export default function GeneratingAlert(): React.ReactElement {
     const { isGenerating } = useProcurementRecommendationStatus()
     const { isPrintMode } = usePrintMode()
 
