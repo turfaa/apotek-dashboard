@@ -16,8 +16,17 @@ import {
     SalesStatisticsResponse,
     getSalesStatistics,
 } from "@/lib/api/sale-statistics"
-import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation"
-import { useState } from "react"
+import {
+    ShiftDumpStatus,
+    dumpShifts,
+    getShiftDumpStatus,
+} from "@/lib/api/shift"
+import {
+    ReadonlyURLSearchParams,
+    useRouter,
+    useSearchParams,
+} from "next/navigation"
+import { useEffect, useRef, useState } from "react"
 import superjson from "superjson"
 import useSWR from "swr"
 import { create } from "zustand"
@@ -114,6 +123,68 @@ export function useProcurementRecommendationStatus(): ProcurementRecommendationS
         error,
         isStarting,
         generate,
+    }
+}
+
+export interface ShiftDumpStatusHook {
+    isDumping: boolean
+    isLoading: boolean
+    error?: Error
+    // Whether a dump request triggered from this client is in flight.
+    isStarting: boolean
+    fetchLatest: () => Promise<void>
+}
+
+export function useShiftDumpStatus(): ShiftDumpStatusHook {
+    const router = useRouter()
+    const searchParams: ReadonlyURLSearchParams = useSearchParams()
+    const from = searchParams.get("from") ?? undefined
+    const until = searchParams.get("until") ?? undefined
+
+    const { data, error, isLoading, mutate } = useSWR(
+        "/v2/shifts/dump/status",
+        getShiftDumpStatus,
+        {
+            // The dump usually finishes in a few seconds, so poll frequently
+            // while it is running and back off when idle.
+            refreshInterval: (latest) =>
+                latest?.status === ShiftDumpStatus.Dumping
+                    ? 2 * 1000
+                    : 30 * 1000,
+        },
+    )
+
+    const isDumping = data?.status === ShiftDumpStatus.Dumping
+
+    // When a dump finishes, refresh the server-rendered table so the latest
+    // shifts are shown without a manual page reload.
+    const wasDumping = useRef(false)
+    useEffect(() => {
+        if (wasDumping.current && !isDumping) {
+            router.refresh()
+        }
+        wasDumping.current = isDumping
+    }, [isDumping, router])
+
+    const [isStarting, setIsStarting] = useState(false)
+
+    const fetchLatest = async (): Promise<void> => {
+        setIsStarting(true)
+        try {
+            await dumpShifts(from, until)
+            // Refresh the status so the UI reflects the in-progress dump.
+            await mutate()
+        } finally {
+            setIsStarting(false)
+        }
+    }
+
+    return {
+        isDumping,
+        isLoading,
+        error,
+        isStarting,
+        fetchLatest,
     }
 }
 
