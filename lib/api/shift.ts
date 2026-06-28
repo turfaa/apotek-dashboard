@@ -23,3 +23,51 @@ export async function getShifts(
         },
     )
 }
+
+export enum ShiftDumpStatus {
+    Idle = "IDLE",
+    Dumping = "DUMPING",
+}
+
+export interface ShiftDumpStatusResponse {
+    status: ShiftDumpStatus
+}
+
+export async function getShiftDumpStatus(): Promise<ShiftDumpStatusResponse> {
+    return fetchAPI<ShiftDumpStatusResponse>(
+        "GET",
+        "/shifts/dump/status",
+        null,
+        {
+            next: {
+                revalidate: 0, // Don't cache, always revalidate.
+            },
+        },
+        {
+            version: "v2",
+        },
+    )
+}
+
+export interface MessageResponse {
+    message: string
+}
+
+export async function dumpShifts(
+    from?: string,
+    to?: string,
+): Promise<MessageResponse> {
+    return fetchAPI<MessageResponse>(
+        "POST",
+        "/shifts/dump",
+        { from, to },
+        {
+            next: {
+                revalidate: 0, // Don't cache, always revalidate.
+            },
+        },
+        {
+            version: "v2",
+        },
+    )
+}
