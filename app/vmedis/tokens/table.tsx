@@ -30,6 +30,7 @@ export function TokensTableFallback(): React.ReactElement {
         <TableComp>
             <TableHeader>
                 <TableRow>
+                    <TableHead>No</TableHead>
                     <TableHead>Diinput</TableHead>
                     <TableHead>Terakhir Diperbarui</TableHead>
                     <TableHead>Token</TableHead>
@@ -41,6 +42,9 @@ export function TokensTableFallback(): React.ReactElement {
             <TableBody>
                 {Array.from({ length: 5 }).map((_, index) => (
                     <TableRow key={index}>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[30px]" />
+                        </TableCell>
                         <TableCell>
                             <Skeleton className="h-4 w-[150px]" />
                         </TableCell>

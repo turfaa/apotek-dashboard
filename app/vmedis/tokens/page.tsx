@@ -3,6 +3,8 @@ import { Suspense } from "react"
 import { Title, Subtitle } from "@/components/typography/v2"
 import TokensTable, { TokensTableFallback } from "./table"
 import { CreateTokenDialog } from "./create-token-dialog"
+import { RefreshTokensButton } from "./refresh-tokens-button"
+import { DeleteExpiredTokensButton } from "./delete-expired-tokens-button"
 
 export const metadata: Metadata = {
     title: "Manajemen Token",
@@ -12,12 +14,16 @@ export const metadata: Metadata = {
 export default async function TokensPage(): Promise<React.ReactElement> {
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-col gap-4 md:flex-row md:justify-between md:items-center mb-6">
                 <div>
                     <Title>Manajemen Token</Title>
                     <Subtitle>Kelola token akses API di sini.</Subtitle>
                 </div>
-                <CreateTokenDialog />
+                <div className="flex flex-wrap gap-2">
+                    <RefreshTokensButton />
+                    <DeleteExpiredTokensButton />
+                    <CreateTokenDialog />
+                </div>
             </div>
 
             <div className="rounded-md border">
