@@ -22,6 +22,11 @@ import {
     getShiftDumpStatus,
 } from "@/lib/api/shift"
 import {
+    TokenRefreshStatus,
+    getTokenRefreshStatus,
+    refreshTokens,
+} from "@/lib/api/token"
+import {
     ReadonlyURLSearchParams,
     useRouter,
     useSearchParams,
@@ -185,6 +190,65 @@ export function useShiftDumpStatus(): ShiftDumpStatusHook {
         error,
         isStarting,
         fetchLatest,
+    }
+}
+
+export interface TokenRefreshStatusHook {
+    isRefreshing: boolean
+    isLoading: boolean
+    error?: Error
+    // Whether a refresh request triggered from this client is in flight.
+    isStarting: boolean
+    refresh: () => Promise<void>
+}
+
+export function useTokenRefreshStatus(): TokenRefreshStatusHook {
+    const router = useRouter()
+
+    const { data, error, isLoading, mutate } = useSWR(
+        "/v2/vmedis/tokens/refresh/status",
+        getTokenRefreshStatus,
+        {
+            // The refresh finishes fairly quickly, so poll frequently while it
+            // is running and back off when idle.
+            refreshInterval: (latest) =>
+                latest?.status === TokenRefreshStatus.Refreshing
+                    ? 2 * 1000
+                    : 30 * 1000,
+        },
+    )
+
+    const isRefreshing = data?.status === TokenRefreshStatus.Refreshing
+
+    // When a refresh finishes, refresh the server-rendered table so the latest
+    // token statuses are shown without a manual page reload.
+    const wasRefreshing = useRef(false)
+    useEffect(() => {
+        if (wasRefreshing.current && !isRefreshing) {
+            router.refresh()
+        }
+        wasRefreshing.current = isRefreshing
+    }, [isRefreshing, router])
+
+    const [isStarting, setIsStarting] = useState(false)
+
+    const refresh = async (): Promise<void> => {
+        setIsStarting(true)
+        try {
+            await refreshTokens()
+            // Refresh the status so the UI reflects the in-progress refresh.
+            await mutate()
+        } finally {
+            setIsStarting(false)
+        }
+    }
+
+    return {
+        isRefreshing,
+        isLoading,
+        error,
+        isStarting,
+        refresh,
     }
 }
 
