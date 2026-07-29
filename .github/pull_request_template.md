@@ -6,6 +6,14 @@ Title should follow Conventional Commits, e.g. feat(procurements): add supplier 
 
 <!-- What this changes and why, in a few sentences. -->
 
+## AI attribution
+
+<!--
+Required. If any part of this change was written by an AI model, name the model here —
+the same name used in the commit's Co-Authored-By trailer, e.g. "Claude Opus 5".
+Name every model if more than one was used. Write "None" if written entirely by hand.
+-->
+
 ## Changes
 
 <!-- One bullet per file or area touched, with a short note on what changed there. -->
