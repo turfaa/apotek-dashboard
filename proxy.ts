@@ -59,6 +59,11 @@ const rewrites = [
         allowedRoles: [Role.ADMIN, Role.STAFF, Role.RESELLER, Role.GUEST],
     },
     {
+        source: "/api/procurements/suppliers",
+        destination: `${process.env.VMEDIS_PROXY_URL}/v2/procurements/suppliers`,
+        allowedRoles: [Role.ADMIN, Role.STAFF],
+    },
+    {
         source: "/api/shifts",
         destination: `${process.env.VMEDIS_PROXY_URL}/v2/shifts`,
         allowedRoles: [Role.ADMIN, Role.STAFF],

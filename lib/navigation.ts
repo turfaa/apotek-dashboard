@@ -58,6 +58,11 @@ const availableNavigations: NavigationItem[] = [
                 allowedRoles: [Role.ADMIN, Role.STAFF],
             },
             {
+                name: "Rekap Pembelian per Supplier",
+                href: "/procurements/by-supplier",
+                allowedRoles: [Role.ADMIN, Role.STAFF],
+            },
+            {
                 name: "Kalkulator Faktur",
                 href: "/procurements/invoice-calculator",
                 allowedRoles: [Role.ADMIN, Role.STAFF],
