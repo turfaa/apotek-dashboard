@@ -3,6 +3,7 @@ import {
     Table as TableComp,
     TableBody,
     TableCell,
+    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
@@ -21,6 +22,7 @@ export default function Table({
     rowActions,
 }: TableProps): React.ReactElement {
     const tableHeader = table.header ?? []
+    const tableFooter = table.footer ?? []
 
     if (tableHeader.length == 0 && table.rows.length == 0) {
         return <></>
@@ -53,6 +55,17 @@ export default function Table({
                         </TableRow>
                     ))}
                 </TableBody>
+            )}
+
+            {tableFooter.length > 0 && (
+                <TableFooter>
+                    <TableRow>
+                        {tableFooter.map((column, index) => (
+                            <TableCell key={index}>{column}</TableCell>
+                        ))}
+                        {rowActions && rowActions.length > 0 && <TableCell />}
+                    </TableRow>
+                </TableFooter>
             )}
         </TableComp>
     )
