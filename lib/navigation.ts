@@ -41,6 +41,11 @@ const availableNavigations: NavigationItem[] = [
                 href: "/sold-drugs",
                 allowedRoles: [Role.ADMIN, Role.STAFF],
             },
+            {
+                name: "Harga Jual Obat Terakhir",
+                href: "/sales/by-drug",
+                allowedRoles: [Role.ADMIN, Role.STAFF],
+            },
         ],
         allowedRoles: [Role.ADMIN, Role.STAFF, Role.RESELLER, Role.GUEST],
     },
