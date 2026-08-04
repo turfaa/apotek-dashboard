@@ -58,6 +58,13 @@ const rewrites = [
         destination: `${process.env.VMEDIS_PROXY_URL}/v2/procurements/drugs`,
         allowedRoles: [Role.ADMIN, Role.STAFF, Role.RESELLER, Role.GUEST],
     },
+    // The trailing slash keeps this rule from swallowing /api/sales/drugs,
+    // which is the v1 sold drugs report.
+    {
+        source: "/api/sales/drugs/",
+        destination: `${process.env.VMEDIS_PROXY_URL}/v2/sales/drugs/`,
+        allowedRoles: [Role.ADMIN, Role.STAFF],
+    },
     {
         source: "/api/procurements/suppliers",
         destination: `${process.env.VMEDIS_PROXY_URL}/v2/procurements/suppliers`,

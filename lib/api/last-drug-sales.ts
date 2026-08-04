@@ -1,0 +1,24 @@
+import { Table } from "@/cui/types"
+import { fetchAPI } from "./base"
+import { Session } from "next-auth"
+
+export async function getLastDrugSales(
+    drugCode: string,
+    limit: number = 5,
+    session?: Session | null,
+): Promise<Table> {
+    return fetchAPI(
+        "GET",
+        `/sales/drugs/${drugCode}/last?limit=${limit}`,
+        null,
+        {
+            next: {
+                revalidate: 0, // Don't cache, always revalidate.
+            },
+        },
+        {
+            version: "v2",
+            session: session,
+        },
+    )
+}

@@ -12,6 +12,7 @@ import { Role } from "@/lib/api/auth"
 import PriceListTableFallback from "./table-fallback"
 import PriceListCard from "./card"
 import LastProcurementsDialog from "./last-procurements-dialog"
+import LastSalesDialog from "./last-sales-dialog"
 
 const rolesAllowedToSeeDrugCost = [Role.ADMIN, Role.STAFF]
 const refreshInterval = 10000 // 10 seconds
@@ -95,10 +96,16 @@ export default function PriceListTableClient({
                             </div>
 
                             {allowedToSeeDrugCost && (
-                                <LastProcurementsDialog
-                                    drugCode={drug.vmedisCode}
-                                    session={session}
-                                />
+                                <div className="flex flex-col sm:flex-row sm:gap-6">
+                                    <LastProcurementsDialog
+                                        drugCode={drug.vmedisCode}
+                                        session={session}
+                                    />
+                                    <LastSalesDialog
+                                        drugCode={drug.vmedisCode}
+                                        session={session}
+                                    />
+                                </div>
                             )}
                         </TableCell>
                     </TableRow>
