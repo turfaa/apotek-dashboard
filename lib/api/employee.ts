@@ -53,6 +53,28 @@ export function convertUnderlyingEmployee(
     }
 }
 
+export async function getEmployee(
+    id: number,
+    session?: Session | null,
+): Promise<Employee> {
+    const underlyingEmployee = await fetchAPI<UnderlyingEmployee>(
+        "GET",
+        `/employees/${id}`,
+        null,
+        {
+            next: {
+                revalidate: 0, // Don't cache, always revalidate.
+            },
+        },
+        {
+            forHRIS: true,
+            session: session,
+        },
+    )
+
+    return convertUnderlyingEmployee(underlyingEmployee)
+}
+
 export async function createEmployee(
     name: string,
     shiftFee: number,
@@ -68,4 +90,25 @@ export async function createEmployee(
             session: session,
         },
     )
+}
+
+export async function updateEmployee(
+    id: number,
+    name: string,
+    shiftFee: number,
+    showInAttendances: boolean,
+    session?: Session | null,
+): Promise<Employee> {
+    const underlyingEmployee = await fetchAPI<UnderlyingEmployee>(
+        "PUT",
+        `/employees/${id}`,
+        { name, shiftFee, showInAttendances },
+        {},
+        {
+            forHRIS: true,
+            session: session,
+        },
+    )
+
+    return convertUnderlyingEmployee(underlyingEmployee)
 }
