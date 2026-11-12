@@ -66,7 +66,6 @@ function Calendar({
         weekdays: "flex flex-row",
         weekday: "w-8 text-[0.8rem] font-normal text-muted-foreground",
         month: "w-full gap-y-4 overflow-x-hidden",
-        caption: "relative flex items-center justify-center pt-1",
         caption_label: "truncate text-sm font-medium",
         button_next: cn(
           buttonVariants({

@@ -64,7 +64,7 @@ npm run generate-pwa-icons     # Generate PWA icons
 
 ## Architecture Overview
 
-This is a Next.js 15.5.2 dashboard application (apotek-dashboard) for pharmacy management with HR features, built using:
+This is a Next.js 16 dashboard application (apotek-dashboard) for pharmacy management with HR features, built using:
 
 - **Next.js App Router** with React Server Components (RSC)
 - **Turbopack** for faster development builds

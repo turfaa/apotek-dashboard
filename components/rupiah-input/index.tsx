@@ -35,7 +35,7 @@ const RupiahInput = React.forwardRef<HTMLInputElement, RupiahInputProps>(
                 : value
 
         const handleInput = React.useCallback(
-            (e: React.FormEvent<HTMLInputElement>) => {
+            (e: React.InputEvent<HTMLInputElement>) => {
                 onInput?.(e)
                 if (!onChange) return
 
