@@ -75,6 +75,7 @@ This is a Next.js 16 dashboard application (apotek-dashboard) for pharmacy manag
 - **SWR** for client-side data fetching with caching
 - **Zustand** for complex client state management with persistence
 - **shadcn/ui** components built on Radix UI primitives
+- **React Compiler** enabled (`reactCompiler: true` in `next.config.js`) for automatic memoization; oxlint `react/*` compiler rules flag code it cannot optimize
 
 ## Key Architectural Patterns
 

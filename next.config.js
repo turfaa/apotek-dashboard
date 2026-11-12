@@ -20,6 +20,7 @@ const nextConfig = {
         // ppr: true,
         // dynamicIO: true,
     },
+    reactCompiler: true,
     // Empty turbopack config to silence webpack config warning
     turbopack: {},
 }
