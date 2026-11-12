@@ -14,7 +14,7 @@ import useSearch from "@/lib/search-hook"
 import { use, useMemo } from "react"
 import { useDebounce } from "use-debounce"
 
-const headers = ["Nama", "Alamat", "Telepon"]
+const headers = ["No", "Kode", "Nama", "Alamat", "Telepon"]
 
 export interface SuppliersTableProps {
     suppliersPromise: Promise<Supplier[]>
@@ -30,7 +30,7 @@ export default function SuppliersTable({
     const searchTexts = useMemo(
         () =>
             suppliers.map((s) =>
-                [s.name, s.address, s.city, s.phone, s.mobilePhone]
+                [s.code, s.name, s.address, s.city, s.phone, s.mobilePhone]
                     .join(" ")
                     .toLowerCase(),
             ),
@@ -96,8 +96,14 @@ export default function SuppliersTable({
                         </TableRow>
                     )}
 
-                    {filtered.map((supplier) => (
+                    {filtered.map((supplier, index) => (
                         <TableRow key={supplier.vmedisId}>
+                            <TableCell className="w-12 text-muted-foreground">
+                                {index + 1}
+                            </TableCell>
+                            <TableCell className="whitespace-nowrap">
+                                {supplier.code}
+                            </TableCell>
                             <TableCell className="font-medium">
                                 {supplier.name}
                             </TableCell>
