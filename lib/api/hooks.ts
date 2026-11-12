@@ -22,6 +22,11 @@ import {
     getShiftDumpStatus,
 } from "@/lib/api/shift"
 import {
+    SupplierDumpStatus,
+    dumpSuppliers,
+    getSupplierDumpStatus,
+} from "@/lib/api/supplier"
+import {
     TokenRefreshStatus,
     getTokenRefreshStatus,
     refreshTokens,
@@ -190,6 +195,66 @@ export function useShiftDumpStatus(): ShiftDumpStatusHook {
         error,
         isStarting,
         fetchLatest,
+    }
+}
+
+export interface SupplierDumpStatusHook {
+    isDumping: boolean
+    isLoading: boolean
+    error?: Error
+    // Whether a sync request triggered from this client is in flight.
+    isStarting: boolean
+    sync: () => Promise<void>
+}
+
+export function useSupplierDumpStatus(): SupplierDumpStatusHook {
+    const router = useRouter()
+
+    const { data, error, isLoading, mutate } = useSWR(
+        "/v1/suppliers/dump/status",
+        getSupplierDumpStatus,
+        {
+            // The sync usually finishes in a few seconds, so poll frequently
+            // while it is running and back off when idle.
+            refreshInterval: (latest) =>
+                latest?.status === SupplierDumpStatus.Dumping
+                    ? 2 * 1000
+                    : 30 * 1000,
+        },
+    )
+
+    const isDumping = data?.status === SupplierDumpStatus.Dumping
+
+    // When a sync finishes, refresh the server-rendered list so the latest
+    // suppliers are shown without a manual page reload.
+    const wasDumping = useRef(false)
+    useEffect(() => {
+        if (wasDumping.current && !isDumping) {
+            router.refresh()
+        }
+        wasDumping.current = isDumping
+    }, [isDumping, router])
+
+    const [isStarting, setIsStarting] = useState(false)
+
+    const sync = async (): Promise<void> => {
+        setIsStarting(true)
+        try {
+            await dumpSuppliers()
+        } finally {
+            // Refresh the status so the UI reflects the in-progress sync, also
+            // when it failed because another sync is already running.
+            await mutate()
+            setIsStarting(false)
+        }
+    }
+
+    return {
+        isDumping,
+        isLoading,
+        error,
+        isStarting,
+        sync,
     }
 }
 

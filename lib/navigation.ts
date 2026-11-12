@@ -77,6 +77,11 @@ const availableNavigations: NavigationItem[] = [
                 href: "/procurements/rejected-drugs",
                 allowedRoles: [Role.ADMIN, Role.STAFF],
             },
+            {
+                name: "Daftar Supplier",
+                href: "/procurements/suppliers",
+                allowedRoles: [Role.ADMIN, Role.STAFF],
+            },
         ],
         allowedRoles: [Role.ADMIN, Role.STAFF],
     },
