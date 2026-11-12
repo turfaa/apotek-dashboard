@@ -232,8 +232,8 @@ function QuotaCard({ page, employeeMap }: QuotaCardProps) {
                             <strong>
                                 {editingQuota
                                     ? (employeeMap.get(
-                                          editingQuota.employeeID,
-                                      )?.name ??
+                                        editingQuota.employeeID,
+                                    )?.name ??
                                       `Karyawan #${editingQuota.employeeID}`)
                                     : ""}
                             </strong>

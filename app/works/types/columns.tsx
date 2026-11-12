@@ -1,9 +1,9 @@
 "use client"
 
-import { ColumnDef } from "@tanstack/react-table"
+import { DataTableColumnDef } from "@/lib/data-table"
 import { WorkType } from "@/lib/api/work"
 
-export const columns: ColumnDef<WorkType>[] = [
+export const columns: DataTableColumnDef<WorkType>[] = [
     {
         accessorKey: "name",
         header: "Nama",

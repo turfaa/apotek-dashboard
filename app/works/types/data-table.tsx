@@ -1,12 +1,7 @@
 "use client"
 
-import {
-    ColumnDef,
-    flexRender,
-    getCoreRowModel,
-    useReactTable,
-    getPaginationRowModel,
-} from "@tanstack/react-table"
+import { flexRender, RowData, useTable } from "@tanstack/react-table"
+import { DataTableColumnDef, dataTableFeatures } from "@/lib/data-table"
 
 import {
     Table,
@@ -19,21 +14,20 @@ import {
 import { Button } from "@/components/ui/button"
 import { use } from "react"
 
-interface DataTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[]
+interface DataTableProps<TData extends RowData> {
+    columns: DataTableColumnDef<TData>[]
     dataPromise: Promise<TData[]>
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends RowData>({
     columns,
     dataPromise,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TData>) {
     const data = use(dataPromise)
-    const table = useReactTable({
+    const table = useTable({
+        features: dataTableFeatures,
         data,
         columns,
-        getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
     })
 
     return (

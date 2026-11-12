@@ -1,11 +1,11 @@
 "use client"
 
-import { ColumnDef } from "@tanstack/react-table"
+import { DataTableColumnDef } from "@/lib/data-table"
 import { AttendanceType, PayableType } from "@/lib/api/attendance"
 import { Badge } from "@/components/ui/badge"
 import { EnableQuotaButton } from "./enable-quota-button"
 
-export const columns: ColumnDef<AttendanceType>[] = [
+export const columns: DataTableColumnDef<AttendanceType>[] = [
     {
         accessorKey: "name",
         header: "Nama",
