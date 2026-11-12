@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^7.0.6",
+    "@maskito/core": "^5.6.1",
     "@maskito/kit": "^5.6.1",
     "@maskito/react": "^5.6.1",
     "@radix-ui/react-alert-dialog": "^1.2.1",
