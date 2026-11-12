@@ -17,6 +17,13 @@ import {
     getSalesStatistics,
 } from "@/lib/api/sale-statistics"
 import {
+    getSalary,
+    getSalaryAdditionalComponents,
+    getSalaryExtraInfos,
+    getSalarySnapshots,
+    getSalaryStaticComponents,
+} from "@/lib/api/salary"
+import {
     ShiftDumpStatus,
     dumpShifts,
     getShiftDumpStatus,
@@ -39,6 +46,7 @@ import {
 import { useEffect, useRef, useState } from "react"
 import superjson from "superjson"
 import useSWR from "swr"
+import { Session } from "next-auth"
 import { create } from "zustand"
 import { StorageValue, devtools, persist } from "zustand/middleware"
 
@@ -408,3 +416,100 @@ export const usePurchaseOrders = create<PurchaseOrdersHook>()(
         ),
     ),
 )
+
+// Salary hooks. Pass `undefined` for a required argument (or `enabled: false`) to skip fetching.
+// Keys are shared, so e.g. the remove-components dialog and the page reading the same
+// employee/month see the same cache.
+
+const salarySWRConfig = { revalidateOnFocus: false }
+
+export function useSalary(
+    employeeID: number | undefined,
+    month: string | undefined,
+    session: Session | null,
+) {
+    return useSWR(
+        employeeID !== undefined && month && session
+            ? ["salary", employeeID, month]
+            : null,
+        ([, employeeID, month]) => getSalary(employeeID, month, session),
+        {
+            ...salarySWRConfig,
+            onError: (error) => console.error("Failed to load salary:", error),
+        },
+    )
+}
+
+export function useSalaryStaticComponents(
+    employeeID: number | undefined,
+    session: Session | null,
+) {
+    return useSWR(
+        employeeID !== undefined && session
+            ? ["salary-static-components", employeeID]
+            : null,
+        ([, employeeID]) => getSalaryStaticComponents(employeeID, session),
+        {
+            ...salarySWRConfig,
+            onError: (error) =>
+                console.error("Failed to load static components:", error),
+        },
+    )
+}
+
+export function useSalaryAdditionalComponents(
+    employeeID: number | undefined,
+    month: string | undefined,
+    session: Session | null,
+    enabled = true,
+) {
+    return useSWR(
+        enabled && employeeID !== undefined && month && session
+            ? ["salary-additional-components", employeeID, month]
+            : null,
+        ([, employeeID, month]) =>
+            getSalaryAdditionalComponents(employeeID, month, session),
+        {
+            ...salarySWRConfig,
+            onError: (error) =>
+                console.error("Failed to load additional components:", error),
+        },
+    )
+}
+
+export function useSalaryExtraInfos(
+    employeeID: number | undefined,
+    month: string | undefined,
+    session: Session | null,
+    enabled = true,
+) {
+    return useSWR(
+        enabled && employeeID !== undefined && month && session
+            ? ["salary-extra-infos", employeeID, month]
+            : null,
+        ([, employeeID, month]) => getSalaryExtraInfos(employeeID, month, session),
+        {
+            ...salarySWRConfig,
+            onError: (error) => console.error("Failed to load extra infos:", error),
+        },
+    )
+}
+
+export function useSalarySnapshots(
+    month: string | undefined,
+    employeeID: number | undefined,
+    session: Session | null,
+) {
+    return useSWR(
+        month && session ? ["salary-snapshots", month, employeeID ?? null] : null,
+        ([, month, employeeID]) =>
+            getSalarySnapshots(
+                { month, employeeID: employeeID ?? undefined },
+                session,
+            ),
+        {
+            ...salarySWRConfig,
+            onError: (error) => console.error("Failed to load snapshots:", error),
+        },
+    )
+}

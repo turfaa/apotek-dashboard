@@ -29,16 +29,19 @@ export interface EditRejectedDrugDialogProps {
 export function EditRejectedDrugDialog({
     rejectedDrugId,
 }: EditRejectedDrugDialogProps): React.ReactElement {
-    const [open, setOpen] = useState(false)
+    const [open, setOpenState] = useState(false)
     const [form, setForm] = useState<FormType | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const router = useRouter()
 
+    // Drop the loaded form on close so the next open fetches a fresh one.
+    const setOpen = (next: boolean) => {
+        setOpenState(next)
+        if (!next) setForm(null)
+    }
+
     useEffect(() => {
-        if (!open) {
-            setForm(null)
-            return
-        }
+        if (!open) return
 
         let cancelled = false
         getUpdateRejectedDrugForm(Number(rejectedDrugId))

@@ -488,6 +488,7 @@ export function AttendanceTable({
 
             {selectedCell && (
                 <AttendanceEditDialog
+                    key={`${selectedCell.employeeID}-${selectedCell.date}`}
                     cellData={selectedCell}
                     attendanceTypes={attendanceTypes}
                     onSave={handleAttendanceUpdate}

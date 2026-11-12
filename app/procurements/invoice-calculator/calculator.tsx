@@ -11,7 +11,8 @@ import { PlusIcon } from "@radix-ui/react-icons"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Title, Text, Bold, Metric } from "@/components/typography"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo } from "react"
+import { useHydrated } from "@/lib/use-hydrated"
 import Loading from "@/components/loading"
 
 export default function Calculator(): React.ReactElement {
@@ -33,10 +34,7 @@ export default function Calculator(): React.ReactElement {
 
     const hasDiscount = totalDiscount != 0
 
-    const [hasHydrated, setHasHydrated] = useState(false)
-    useEffect(() => {
-        setHasHydrated(true)
-    }, [])
+    const hasHydrated = useHydrated()
 
     if (!hasHydrated) {
         return <Loading />

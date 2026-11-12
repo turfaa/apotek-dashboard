@@ -5,11 +5,10 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { usePurchaseOrders } from "@/lib/api/hooks"
 import { usePrintMode } from "@/lib/print-mode"
 import useSearch from "@/lib/search-hook"
-import { useEffect, useState } from "react"
+import { useHydrated } from "@/lib/use-hydrated"
 
 export default function PurchaseOrderTitle() {
-    const [ssrCompleted, setSsrCompleted] = useState(false)
-    useEffect(() => setSsrCompleted(true), [])
+    const ssrCompleted = useHydrated()
 
     const { isPrintMode } = usePrintMode()
     const { query } = useSearch()

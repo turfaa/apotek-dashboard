@@ -1,17 +1,14 @@
 "use client"
 
-import { use, useEffect, useState, useCallback } from "react"
+import { use, useState } from "react"
 import MonthPicker from "@/components/month-picker"
 import { EmployeePicker } from "@/components/employee-picker"
 import { Employee } from "@/lib/api/employee"
 import {
-    Salary,
-    SalarySnapshot,
-    getSalary,
-    getSalarySnapshots,
     createSalarySnapshot,
     deleteSalarySnapshot,
 } from "@/lib/api/salary"
+import { useSalary, useSalarySnapshots } from "@/lib/api/hooks"
 import { format } from "date-fns"
 import { id } from "date-fns/locale"
 import { Session } from "next-auth"
@@ -46,12 +43,9 @@ export function SalaryPageClient({
     const session = use(sessionPromise)
     const searchParams = use(searchParamsPromise)
 
-    const [salary, setSalary] = useState<Salary | null>(null)
-    const [loading, setLoading] = useState(false)
     const [creatingSnapshot, setCreatingSnapshot] = useState(false)
     const [showAddComponentDialog, setShowAddComponentDialog] = useState(false)
     const [showAddExtraInfoDialog, setShowAddExtraInfoDialog] = useState(false)
-    const [existingSnapshot, setExistingSnapshot] = useState<SalarySnapshot | null>(null)
     const [showDeleteSnapshotDialog, setShowDeleteSnapshotDialog] = useState(false)
     const [deletingSnapshot, setDeletingSnapshot] = useState(false)
     const [showRemoveComponentsDialog, setShowRemoveComponentsDialog] = useState(false)
@@ -61,57 +55,31 @@ export function SalaryPageClient({
         ? employees.find((emp) => emp.id.toString() === searchParams.employeeID)
         : null
 
-    const loadSalary = useCallback(async () => {
-        if (searchParams.month && searchParams.employeeID && session) {
-            setLoading(true)
-            try {
-                const salaryData = await getSalary(
-                    parseInt(searchParams.employeeID),
-                    searchParams.month,
-                    session,
-                )
-                setSalary(salaryData)
-            } catch (error) {
-                console.error("Failed to load salary:", error)
-            } finally {
-                setLoading(false)
-            }
-        } else {
-            setSalary(null)
-        }
-    }, [searchParams.month, searchParams.employeeID, session])
+    const employeeID = searchParams.employeeID
+        ? parseInt(searchParams.employeeID)
+        : undefined
 
-    const loadExistingSnapshot = useCallback(async () => {
-        if (searchParams.month && searchParams.employeeID && session) {
-            try {
-                const snapshots = await getSalarySnapshots(
-                    {
-                        month: searchParams.month,
-                        employeeID: parseInt(searchParams.employeeID),
-                    },
-                    session,
-                )
-                setExistingSnapshot(snapshots.length > 0 ? snapshots[0] : null)
-            } catch (error) {
-                console.error("Failed to check existing snapshot:", error)
-                setExistingSnapshot(null)
-            }
-        } else {
-            setExistingSnapshot(null)
-        }
-    }, [searchParams.month, searchParams.employeeID, session])
+    const {
+        data: salary = null,
+        isLoading: loading,
+        mutate: reloadSalary,
+    } = useSalary(employeeID, searchParams.month, session)
 
-    useEffect(() => {
-        loadSalary()
-        loadExistingSnapshot()
-    }, [loadSalary, loadExistingSnapshot])
+    // Only look up a snapshot once an employee is selected; without one the request
+    // would return snapshots for every employee.
+    const { data: snapshots, mutate: reloadSnapshots } = useSalarySnapshots(
+        employeeID !== undefined ? searchParams.month : undefined,
+        employeeID,
+        session,
+    )
+    const existingSnapshot = snapshots?.[0] ?? null
 
     const { handleAddAdditionalComponent: handleAddComponent, handleAddExtraInfo } = useSalaryMutations({
         employeeID: searchParams.employeeID,
         month: searchParams.month,
         session,
         onSuccess: async () => {
-            await loadSalary()
+            await reloadSalary()
         },
     })
 
@@ -143,7 +111,7 @@ export function SalaryPageClient({
                 session
             )
             toast.success("Snapshot gaji berhasil dibuat")
-            await loadExistingSnapshot()
+            await reloadSnapshots()
         } catch (error) {
             console.error("Failed to create snapshot:", error)
             toast.error("Gagal membuat snapshot gaji")
@@ -159,7 +127,7 @@ export function SalaryPageClient({
         try {
             await deleteSalarySnapshot(existingSnapshot.id, session)
             toast.success("Snapshot gaji berhasil dihapus")
-            setExistingSnapshot(null)
+            await reloadSnapshots()
             setShowDeleteSnapshotDialog(false)
         } catch (error) {
             console.error("Failed to delete snapshot:", error)
@@ -325,6 +293,7 @@ export function SalaryPageClient({
                 onOpenChange={setShowDeleteSnapshotDialog}
                 snapshot={existingSnapshot}
                 onConfirm={handleDeleteSnapshot}
+                deleting={deletingSnapshot}
             />
 
             {searchParams.employeeID && searchParams.month && (
@@ -335,7 +304,9 @@ export function SalaryPageClient({
                         employeeID={parseInt(searchParams.employeeID)}
                         month={searchParams.month}
                         session={session}
-                        onSuccess={loadSalary}
+                        onSuccess={async () => {
+                            await reloadSalary()
+                        }}
                     />
 
                     <RemoveExtraInfosDialog
@@ -344,7 +315,9 @@ export function SalaryPageClient({
                         employeeID={parseInt(searchParams.employeeID)}
                         month={searchParams.month}
                         session={session}
-                        onSuccess={loadSalary}
+                        onSuccess={async () => {
+                            await reloadSalary()
+                        }}
                     />
                 </>
             )}

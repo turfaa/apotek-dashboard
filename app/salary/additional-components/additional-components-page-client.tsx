@@ -1,15 +1,15 @@
 "use client"
 
-import { use, useEffect, useState, useCallback } from "react"
+import { use, useState } from "react"
 import MonthPicker from "@/components/month-picker"
 import { EmployeePicker } from "@/components/employee-picker"
 import { Employee } from "@/lib/api/employee"
 import { 
     SalaryAdditionalComponent, 
     SalaryStaticComponent,
-    getSalaryAdditionalComponents,
     deleteSalaryAdditionalComponent
 } from "@/lib/api/salary"
+import { useSalaryAdditionalComponents } from "@/lib/api/hooks"
 import { Session } from "next-auth"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -40,8 +40,6 @@ export function AdditionalComponentsPageClient({
     const session = use(sessionPromise)
     const searchParams = use(searchParamsPromise)
 
-    const [additionalComponents, setAdditionalComponents] = useState<SalaryAdditionalComponent[]>([])
-    const [loading, setLoading] = useState(false)
     const [showAddDialog, setShowAddDialog] = useState(false)
     const [showBulkAddDialog, setShowBulkAddDialog] = useState(false)
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
@@ -55,36 +53,22 @@ export function AdditionalComponentsPageClient({
     const monthDate = new Date(searchParams.month + "-01")
     const monthDisplay = format(monthDate, "MMMM yyyy", { locale: id })
 
-    const loadAdditionalComponents = useCallback(async () => {
-        if (searchParams.employeeID && searchParams.month && session) {
-            setLoading(true)
-            try {
-                const components = await getSalaryAdditionalComponents(
-                    parseInt(searchParams.employeeID),
-                    searchParams.month,
-                    session
-                )
-                setAdditionalComponents(components)
-            } catch (error) {
-                console.error("Failed to load additional components:", error)
-            } finally {
-                setLoading(false)
-            }
-        } else {
-            setAdditionalComponents([])
-        }
-    }, [searchParams.employeeID, searchParams.month, session])
-
-    useEffect(() => {
-        loadAdditionalComponents()
-    }, [loadAdditionalComponents])
+    const {
+        data: additionalComponents = [],
+        isLoading: loading,
+        mutate: reloadAdditionalComponents,
+    } = useSalaryAdditionalComponents(
+        searchParams.employeeID ? parseInt(searchParams.employeeID) : undefined,
+        searchParams.month,
+        session,
+    )
 
     const { handleAddAdditionalComponent, handleBulkAddAdditionalComponent } = useSalaryMutations({
         employeeID: searchParams.employeeID,
         month: searchParams.month,
         session,
         onSuccess: async () => {
-            await loadAdditionalComponents()
+            await reloadAdditionalComponents()
         },
     })
 
@@ -113,7 +97,7 @@ export function AdditionalComponentsPageClient({
                 componentToDelete.id,
                 session
             )
-            await loadAdditionalComponents() // Reload the list
+            await reloadAdditionalComponents() // Reload the list
             setShowDeleteDialog(false)
             setComponentToDelete(null)
         } catch (error) {

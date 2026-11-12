@@ -1,11 +1,11 @@
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
+import { useState } from "react"
 import {
     SalaryExtraInfo,
-    getSalaryExtraInfos,
     deleteSalaryExtraInfo,
 } from "@/lib/api/salary"
+import { useSalaryExtraInfos } from "@/lib/api/hooks"
 import { Session } from "next-auth"
 import {
     Dialog,
@@ -35,29 +35,14 @@ export function RemoveExtraInfosDialog({
     session,
     onSuccess,
 }: RemoveExtraInfosDialogProps): React.ReactElement {
-    const [extraInfos, setExtraInfos] = useState<SalaryExtraInfo[]>([])
-    const [loading, setLoading] = useState(false)
     const [extraInfoToDelete, setExtraInfoToDelete] = useState<SalaryExtraInfo | null>(null)
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
-    const loadExtraInfos = useCallback(async () => {
-        if (!session) return
-        setLoading(true)
-        try {
-            const data = await getSalaryExtraInfos(employeeID, month, session)
-            setExtraInfos(data)
-        } catch (error) {
-            console.error("Failed to load extra infos:", error)
-        } finally {
-            setLoading(false)
-        }
-    }, [employeeID, month, session])
-
-    useEffect(() => {
-        if (open) {
-            loadExtraInfos()
-        }
-    }, [open, loadExtraInfos])
+    const {
+        data: extraInfos = [],
+        isLoading: loading,
+        mutate: reloadExtraInfos,
+    } = useSalaryExtraInfos(employeeID, month, session, open)
 
     const handleDeleteClick = (extraInfo: SalaryExtraInfo) => {
         setExtraInfoToDelete(extraInfo)
@@ -71,7 +56,7 @@ export function RemoveExtraInfosDialog({
             toast.success("Informasi tambahan berhasil dihapus")
             setShowDeleteConfirm(false)
             setExtraInfoToDelete(null)
-            await loadExtraInfos()
+            await reloadExtraInfos()
             await onSuccess?.()
         } catch (error) {
             console.error("Failed to delete extra info:", error)

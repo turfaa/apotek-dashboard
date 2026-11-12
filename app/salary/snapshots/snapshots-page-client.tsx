@@ -1,14 +1,14 @@
 "use client"
 
-import { use, useEffect, useState, useCallback } from "react"
+import { use, useState } from "react"
 import MonthPicker from "@/components/month-picker"
 import { EmployeePicker } from "@/components/employee-picker"
 import { Employee } from "@/lib/api/employee"
 import { 
     SalarySnapshot, 
-    getSalarySnapshots,
     deleteSalarySnapshot
 } from "@/lib/api/salary"
+import { useSalarySnapshots } from "@/lib/api/hooks"
 import { Session } from "next-auth"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -49,41 +49,25 @@ function SnapshotsPageClientContent({
     const router = useRouter()
     const { format: rupiahFormat } = useRupiahFormat()
 
-    const [snapshots, setSnapshots] = useState<SalarySnapshot[]>([])
-    const [loading, setLoading] = useState(false)
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
     const [snapshotToDelete, setSnapshotToDelete] = useState<SalarySnapshot | null>(null)
 
-    const loadSnapshots = useCallback(async () => {
-        if (session && searchParams.month) {
-            setLoading(true)
-            try {
-                const request = {
-                    month: searchParams.month,
-                    employeeID: searchParams.employeeID ? parseInt(searchParams.employeeID) : undefined,
-                }
-                const snapshotList = await getSalarySnapshots(request, session)
-                setSnapshots(snapshotList)
-            } catch (error) {
-                console.error("Failed to load snapshots:", error)
-            } finally {
-                setLoading(false)
-            }
-        } else {
-            setSnapshots([])
-        }
-    }, [searchParams.month, searchParams.employeeID, session])
-
-    useEffect(() => {
-        loadSnapshots()
-    }, [loadSnapshots])
+    const {
+        data: snapshots = [],
+        isLoading: loading,
+        mutate: reloadSnapshots,
+    } = useSalarySnapshots(
+        searchParams.month,
+        searchParams.employeeID ? parseInt(searchParams.employeeID) : undefined,
+        session,
+    )
 
     const handleDeleteSnapshot = async () => {
         if (!snapshotToDelete || !session) return
 
         try {
             await deleteSalarySnapshot(snapshotToDelete.id, session)
-            await loadSnapshots() // Reload the list
+            await reloadSnapshots() // Reload the list
             setShowDeleteDialog(false)
             setSnapshotToDelete(null)
         } catch (error) {

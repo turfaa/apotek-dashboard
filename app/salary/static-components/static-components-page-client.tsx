@@ -1,14 +1,14 @@
 "use client"
 
-import { use, useEffect, useState, useCallback } from "react"
+import { use, useState } from "react"
 import { EmployeePicker } from "@/components/employee-picker"
 import { Employee } from "@/lib/api/employee"
 import { 
     SalaryStaticComponent, 
-    getSalaryStaticComponents,
     createSalaryStaticComponent,
     deleteSalaryStaticComponent
 } from "@/lib/api/salary"
+import { useSalaryStaticComponents } from "@/lib/api/hooks"
 import { Session } from "next-auth"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -34,8 +34,6 @@ export function StaticComponentsPageClient({
     const session = use(sessionPromise)
     const searchParams = use(searchParamsPromise)
 
-    const [staticComponents, setStaticComponents] = useState<SalaryStaticComponent[]>([])
-    const [loading, setLoading] = useState(false)
     const [showAddDialog, setShowAddDialog] = useState(false)
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
     const [componentToDelete, setComponentToDelete] = useState<SalaryStaticComponent | null>(null)
@@ -44,28 +42,14 @@ export function StaticComponentsPageClient({
         ? employees.find((emp) => emp.id.toString() === searchParams.employeeID)
         : null
 
-    const loadStaticComponents = useCallback(async () => {
-        if (searchParams.employeeID && session) {
-            setLoading(true)
-            try {
-                const components = await getSalaryStaticComponents(
-                    parseInt(searchParams.employeeID),
-                    session
-                )
-                setStaticComponents(components)
-            } catch (error) {
-                console.error("Failed to load static components:", error)
-            } finally {
-                setLoading(false)
-            }
-        } else {
-            setStaticComponents([])
-        }
-    }, [searchParams.employeeID, session])
-
-    useEffect(() => {
-        loadStaticComponents()
-    }, [searchParams.employeeID, session, loadStaticComponents])
+    const {
+        data: staticComponents = [],
+        isLoading: loading,
+        mutate: reloadStaticComponents,
+    } = useSalaryStaticComponents(
+        searchParams.employeeID ? parseInt(searchParams.employeeID) : undefined,
+        session,
+    )
 
     const handleAddComponent = async (description: string, amount: number, multiplier: number) => {
         if (!searchParams.employeeID || !session) return
@@ -78,7 +62,7 @@ export function StaticComponentsPageClient({
                 multiplier,
                 session
             )
-            await loadStaticComponents() // Reload the list
+            await reloadStaticComponents() // Reload the list
             setShowAddDialog(false)
         } catch (error) {
             console.error("Failed to create static component:", error)
@@ -94,7 +78,7 @@ export function StaticComponentsPageClient({
                 componentToDelete.id,
                 session
             )
-            await loadStaticComponents() // Reload the list
+            await reloadStaticComponents() // Reload the list
             setShowDeleteDialog(false)
             setComponentToDelete(null)
         } catch (error) {

@@ -16,6 +16,7 @@ import { signIn, signOut } from "next-auth/react"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
+import { useHydrated } from "@/lib/use-hydrated"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -53,9 +54,7 @@ export default function Navbar({
     const { isPrintMode, setPrintMode } = usePrintMode(
         session?.user?.role ?? Role.GUEST,
     )
-    const [pageLoadCompleted, setPageLoadCompleted] = useState(false)
-
-    useEffect(() => setPageLoadCompleted(true), [])
+    const pageLoadCompleted = useHydrated()
 
     useEffect(() => {
         if (isPrintMode && pageLoadCompleted) {

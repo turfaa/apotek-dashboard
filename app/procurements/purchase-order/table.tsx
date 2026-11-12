@@ -5,7 +5,8 @@ import { ProcurementRecommendation } from "@/lib/api/procurement-recommendation"
 import { usePrintMode } from "@/lib/print-mode"
 import useSearch from "@/lib/search-hook"
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons"
-import { useEffect, useState } from "react"
+import { useState } from "react"
+import { useHydrated } from "@/lib/use-hydrated"
 import {
     Table,
     TableHeader,
@@ -106,8 +107,7 @@ const columnConfig: Record<Column, ColumnConfig> = {
 type Column = keyof Row | "no."
 
 export default function PurchaseOrderTable(): React.ReactElement {
-    const [ssrCompleted, setSsrCompleted] = useState(false)
-    useEffect(() => setSsrCompleted(true), [])
+    const ssrCompleted = useHydrated()
 
     const [enabledColumns, setEnabledColumns] = useState<Column[]>([
         "no.",
