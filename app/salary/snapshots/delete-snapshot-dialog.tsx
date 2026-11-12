@@ -19,6 +19,8 @@ interface DeleteSnapshotDialogProps {
     onOpenChange: (open: boolean) => void
     snapshot: SalarySnapshot | null
     onConfirm: () => void
+    // Disables the buttons while the delete request is in flight.
+    deleting?: boolean
 }
 
 export function DeleteSnapshotDialog({
@@ -26,6 +28,7 @@ export function DeleteSnapshotDialog({
     onOpenChange,
     snapshot,
     onConfirm,
+    deleting = false,
 }: DeleteSnapshotDialogProps): React.ReactElement {
     const handleConfirm = () => {
         onConfirm()
@@ -57,11 +60,11 @@ export function DeleteSnapshotDialog({
                 )}
 
                 <DialogFooter>
-                    <Button variant="outline" onClick={() => onOpenChange(false)}>
+                    <Button variant="outline" onClick={() => onOpenChange(false)} disabled={deleting}>
                         Batal
                     </Button>
-                    <Button variant="destructive" onClick={handleConfirm}>
-                        Hapus
+                    <Button variant="destructive" onClick={handleConfirm} disabled={deleting}>
+                        {deleting ? "Menghapus..." : "Hapus"}
                     </Button>
                 </DialogFooter>
             </DialogContent>

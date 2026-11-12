@@ -4,6 +4,7 @@ import { Drug, getDrugs } from "@/lib/api/drugv2"
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
 import { Bold } from "@/components/typography"
 import { useMemo, useState, useEffect, use } from "react"
+import { useHydrated } from "@/lib/use-hydrated"
 import { useTf } from "@/lib/tf/hook"
 import useSearch from "@/lib/search-hook"
 import { Session } from "next-auth"
@@ -28,10 +29,9 @@ export default function PriceListTableClient({
 }: PriceListTableClientProps): React.ReactElement {
     const session = use(sessionPromise)
     const initialDrugs = use(initialDrugsPromise)
-    const [ssrCompleted, setSsrCompleted] = useState(false)
+    const ssrCompleted = useHydrated()
     const [drugs, setDrugs] = useState(initialDrugs)
 
-    useEffect(() => setSsrCompleted(true), [])
 
     useEffect(() => {
         const interval = setInterval(async () => {

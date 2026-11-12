@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm, useFieldArray } from "react-hook-form"
+import { useForm, useFieldArray, useWatch } from "react-hook-form"
 import * as z from "zod"
 import { createWorkLog, CreateWorkLogRequest } from "@/lib/api/work"
 import { toast } from "sonner"
@@ -98,6 +98,7 @@ export function AddWorkLogDialog({
         control: form.control,
         name: "units",
     })
+    const units = useWatch({ control: form.control, name: "units" })
 
     // Update refs array when fields change
     useEffect(() => {
@@ -309,9 +310,10 @@ export function AddWorkLogDialog({
                                                                 workTypes.find(
                                                                     (wt) =>
                                                                         wt.id ===
-                                                                        form.watch(
-                                                                            `units.${index}.workTypeID`,
-                                                                        ),
+                                                                        units[
+                                                                            index
+                                                                        ]
+                                                                            ?.workTypeID,
                                                                 )
                                                                     ?.outcomeUnit ||
                                                                 "data"

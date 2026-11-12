@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^7.0.6",
+    "@maskito/core": "^5.6.1",
     "@maskito/kit": "^5.6.1",
     "@maskito/react": "^5.6.1",
     "@radix-ui/react-alert-dialog": "^1.2.1",
@@ -66,17 +67,24 @@
     "zustand": "^5.1.0"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.7",
-    "@eslint/js": "^9.39.5",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/node": "26.6.6",
     "@typescript-eslint/parser": "^8.72.2",
-    "eslint": "^9.39.5",
+    "eslint": "^10.14.0",
     "eslint-config-next": "16.4.6",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3"
   },
   "overrides": {
-    "@types/react": "19.3.0"
+    "@types/react": "19.3.0",
+    "eslint-plugin-import": {
+      "eslint": "$eslint"
+    },
+    "eslint-plugin-jsx-a11y": {
+      "eslint": "$eslint"
+    },
+    "eslint-plugin-react": {
+      "eslint": "$eslint"
+    }
   }
 }

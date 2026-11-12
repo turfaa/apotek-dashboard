@@ -1,14 +1,14 @@
 "use client"
 
-import { use, useEffect, useState, useCallback } from "react"
+import { use, useState } from "react"
 import MonthPicker from "@/components/month-picker"
 import { EmployeePicker } from "@/components/employee-picker"
 import { Employee } from "@/lib/api/employee"
 import { 
     SalaryExtraInfo, 
-    getSalaryExtraInfos,
     deleteSalaryExtraInfo
 } from "@/lib/api/salary"
+import { useSalaryExtraInfos } from "@/lib/api/hooks"
 import { Session } from "next-auth"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -38,8 +38,6 @@ export function ExtraInfosPageClient({
     const session = use(sessionPromise)
     const searchParams = use(searchParamsPromise)
 
-    const [extraInfos, setExtraInfos] = useState<SalaryExtraInfo[]>([])
-    const [loading, setLoading] = useState(false)
     const [showAddDialog, setShowAddDialog] = useState(false)
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
     const [extraInfoToDelete, setExtraInfoToDelete] = useState<SalaryExtraInfo | null>(null)
@@ -52,36 +50,22 @@ export function ExtraInfosPageClient({
     const monthDate = new Date(searchParams.month + "-01")
     const monthDisplay = format(monthDate, "MMMM yyyy", { locale: id })
 
-    const loadExtraInfos = useCallback(async () => {
-        if (searchParams.employeeID && searchParams.month && session) {
-            setLoading(true)
-            try {
-                const infos = await getSalaryExtraInfos(
-                    parseInt(searchParams.employeeID),
-                    searchParams.month,
-                    session
-                )
-                setExtraInfos(infos)
-            } catch (error) {
-                console.error("Failed to load extra infos:", error)
-            } finally {
-                setLoading(false)
-            }
-        } else {
-            setExtraInfos([])
-        }
-    }, [searchParams.employeeID, searchParams.month, session])
-
-    useEffect(() => {
-        loadExtraInfos()
-    }, [loadExtraInfos])
+    const {
+        data: extraInfos = [],
+        isLoading: loading,
+        mutate: reloadExtraInfos,
+    } = useSalaryExtraInfos(
+        searchParams.employeeID ? parseInt(searchParams.employeeID) : undefined,
+        searchParams.month,
+        session,
+    )
 
     const { handleAddExtraInfo: handleAddExtraInfoMutation } = useSalaryMutations({
         employeeID: searchParams.employeeID,
         month: searchParams.month,
         session,
         onSuccess: async () => {
-            await loadExtraInfos()
+            await reloadExtraInfos()
         },
     })
 
@@ -100,7 +84,7 @@ export function ExtraInfosPageClient({
                 extraInfoToDelete.id,
                 session
             )
-            await loadExtraInfos() // Reload the list
+            await reloadExtraInfos() // Reload the list
             setShowDeleteDialog(false)
             setExtraInfoToDelete(null)
         } catch (error) {

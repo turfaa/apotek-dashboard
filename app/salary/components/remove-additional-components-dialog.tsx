@@ -1,12 +1,12 @@
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
+import { useState } from "react"
 import {
     SalaryAdditionalComponent,
     SalaryStaticComponent,
-    getSalaryAdditionalComponents,
     deleteSalaryAdditionalComponent,
 } from "@/lib/api/salary"
+import { useSalaryAdditionalComponents } from "@/lib/api/hooks"
 import { Session } from "next-auth"
 import {
     Dialog,
@@ -36,29 +36,14 @@ export function RemoveAdditionalComponentsDialog({
     session,
     onSuccess,
 }: RemoveAdditionalComponentsDialogProps): React.ReactElement {
-    const [components, setComponents] = useState<SalaryAdditionalComponent[]>([])
-    const [loading, setLoading] = useState(false)
     const [componentToDelete, setComponentToDelete] = useState<SalaryAdditionalComponent | null>(null)
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
-    const loadComponents = useCallback(async () => {
-        if (!session) return
-        setLoading(true)
-        try {
-            const data = await getSalaryAdditionalComponents(employeeID, month, session)
-            setComponents(data)
-        } catch (error) {
-            console.error("Failed to load additional components:", error)
-        } finally {
-            setLoading(false)
-        }
-    }, [employeeID, month, session])
-
-    useEffect(() => {
-        if (open) {
-            loadComponents()
-        }
-    }, [open, loadComponents])
+    const {
+        data: components = [],
+        isLoading: loading,
+        mutate: reloadComponents,
+    } = useSalaryAdditionalComponents(employeeID, month, session, open)
 
     const handleDeleteClick = (component: SalaryStaticComponent | SalaryAdditionalComponent) => {
         setComponentToDelete(component as SalaryAdditionalComponent)
@@ -72,7 +57,7 @@ export function RemoveAdditionalComponentsDialog({
             toast.success("Komponen gaji tambahan berhasil dihapus")
             setShowDeleteConfirm(false)
             setComponentToDelete(null)
-            await loadComponents()
+            await reloadComponents()
             await onSuccess?.()
         } catch (error) {
             console.error("Failed to delete additional component:", error)

@@ -23,8 +23,27 @@ export interface RupiahInputProps
 
 const RupiahInput = React.forwardRef<HTMLInputElement, RupiahInputProps>(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    ({ className, value, onChange, onInput, ...props }, _) => {
+    ({ className, value, onChange, onInput, onClick, onFocus, ...props }, _) => {
         const rupiahMask = useMaskito({ options: maskitoOptions })
+
+        // A zero amount ("Rp 0,00") has its caret land after the decimals, where typing
+        // is rejected. Select the whole text instead so typing replaces it.
+        const selectAllIfZero = (input: HTMLInputElement) => {
+            const amount = maskitoParseNumber(input.value, { decimalSeparator: "," })
+            if (!amount) {
+                input.select()
+            }
+        }
+
+        const handleClick = (e: React.MouseEvent<HTMLInputElement>) => {
+            onClick?.(e)
+            selectAllIfZero(e.currentTarget)
+        }
+
+        const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+            onFocus?.(e)
+            selectAllIfZero(e.currentTarget)
+        }
 
         const formattedValue =
             typeof value === "number"
@@ -56,6 +75,8 @@ const RupiahInput = React.forwardRef<HTMLInputElement, RupiahInputProps>(
                 className={cn("font-mono", className)}
                 value={formattedValue}
                 onInput={handleInput}
+                onClick={handleClick}
+                onFocus={handleFocus}
                 {...props}
             />
         )

@@ -47,8 +47,14 @@ export function AttendanceEditDialog({
     onClose,
 }: AttendanceEditDialogProps) {
     const [employeeName, setEmployeeName] = useState<string>("")
-    const [selectedTypeID, setSelectedTypeID] = useState<string>("")
-    const [overtimeHours, setOvertimeHours] = useState<string>("")
+    // Initial values come from the cell being edited. The dialog is keyed by cell, so these
+    // are re-initialized whenever a different cell is opened.
+    const [selectedTypeID, setSelectedTypeID] = useState<string>(
+        () => cellData.attendance?.type.id.toString() ?? "",
+    )
+    const [overtimeHours, setOvertimeHours] = useState<string>(
+        () => cellData.attendance?.overtimeHours.toString() ?? "0",
+    )
     const [isLoading, setIsLoading] = useState(false)
 
     // Load employee name
@@ -62,17 +68,6 @@ export function AttendanceEditDialog({
             }
         })
     }, [cellData.employeeID])
-
-    // Set initial values
-    useEffect(() => {
-        if (cellData.attendance) {
-            setSelectedTypeID(cellData.attendance.type.id.toString())
-            setOvertimeHours(cellData.attendance.overtimeHours.toString())
-        } else {
-            setSelectedTypeID("")
-            setOvertimeHours("0")
-        }
-    }, [cellData.attendance])
 
     const handleSave = () => {
         if (!selectedTypeID) return

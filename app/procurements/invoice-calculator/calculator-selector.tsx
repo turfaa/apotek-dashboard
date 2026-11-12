@@ -18,7 +18,8 @@ import {
 import { Button } from "@/components/ui/button"
 import { Check, ChevronsUpDown } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
+import { useHydrated } from "@/lib/use-hydrated"
 
 export interface CalculatorSelectorProps {
     calculators: InvoiceCalculator[]
@@ -42,10 +43,7 @@ export default function CalculatorSelector({
             )
         }, [calculators])
 
-    const [hasHydrated, setHasHydrated] = useState(false)
-    useEffect(() => {
-        setHasHydrated(true)
-    }, [])
+    const hasHydrated = useHydrated()
 
     if (!hasHydrated) {
         return <CalculatorSelectorPlaceholder />
