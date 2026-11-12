@@ -55,8 +55,9 @@ npm run build                  # Build production bundle
 npm start                      # Start production server
 
 # Code Quality
-npm run lint                   # Run ESLint
-npm run format                 # Auto-fix with ESLint
+npm run lint                   # Run oxlint (config: .oxlintrc.json)
+npm run format                 # Auto-fix with oxlint
+npm run typecheck              # Type-check with TypeScript 7 (tsc --noEmit)
 
 # Other
 npm run generate-pwa-icons     # Generate PWA icons
