@@ -1,6 +1,5 @@
 "use client"
 
-import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
     Table,
@@ -15,16 +14,7 @@ import useSearch from "@/lib/search-hook"
 import { use, useMemo } from "react"
 import { useDebounce } from "use-debounce"
 
-const headers = [
-    "Kode",
-    "Nama",
-    "Alamat",
-    "Telepon",
-    "No. Rekening",
-    "NPWP",
-    "Lead Time",
-    "Status",
-]
+const headers = ["Nama", "Alamat", "Telepon"]
 
 export interface SuppliersTableProps {
     suppliersPromise: Promise<Supplier[]>
@@ -40,7 +30,7 @@ export default function SuppliersTable({
     const searchTexts = useMemo(
         () =>
             suppliers.map((s) =>
-                [s.code, s.name, s.city, s.address, s.phone, s.mobilePhone]
+                [s.name, s.address, s.city, s.phone, s.mobilePhone]
                     .join(" ")
                     .toLowerCase(),
             ),
@@ -108,9 +98,6 @@ export default function SuppliersTable({
 
                     {filtered.map((supplier) => (
                         <TableRow key={supplier.vmedisId}>
-                            <TableCell className="whitespace-nowrap">
-                                {supplier.code}
-                            </TableCell>
                             <TableCell className="font-medium">
                                 {supplier.name}
                             </TableCell>
@@ -128,24 +115,6 @@ export default function SuppliersTable({
                                     .map((phone) => (
                                         <div key={phone}>{phone}</div>
                                     ))}
-                            </TableCell>
-                            <TableCell className="whitespace-nowrap">
-                                {supplier.bankAccountNumber}
-                            </TableCell>
-                            <TableCell className="whitespace-nowrap">
-                                {supplier.taxNumber}
-                            </TableCell>
-                            <TableCell className="whitespace-nowrap">
-                                {supplier.leadTimeDays > 0
-                                    ? `${supplier.leadTimeDays} hari`
-                                    : ""}
-                            </TableCell>
-                            <TableCell>
-                                {supplier.active ? (
-                                    <Badge variant="secondary">Aktif</Badge>
-                                ) : (
-                                    <Badge variant="outline">Nonaktif</Badge>
-                                )}
                             </TableCell>
                         </TableRow>
                     ))}

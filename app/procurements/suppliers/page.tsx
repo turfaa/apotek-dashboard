@@ -31,7 +31,7 @@ export default function SuppliersPage(): React.ReactElement {
                     <Suspense fallback={<SearchButtonFallback />}>
                         <SearchButton
                             className="w-full sm:w-[300px]"
-                            placeholder="Cari nama, kode, atau kota..."
+                            placeholder="Cari nama, alamat, atau telepon..."
                         />
                     </Suspense>
                     <SyncButton />
