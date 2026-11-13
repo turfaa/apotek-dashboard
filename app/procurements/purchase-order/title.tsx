@@ -6,9 +6,11 @@ import { usePurchaseOrders } from "@/lib/api/hooks"
 import { usePrintMode } from "@/lib/print-mode"
 import useSearch from "@/lib/search-hook"
 import { useHydrated } from "@/lib/use-hydrated"
+import { useState } from "react"
 
 export default function PurchaseOrderTitle() {
     const ssrCompleted = useHydrated()
+    const [today] = useState(() => new Date())
 
     const { isPrintMode } = usePrintMode()
     const { query } = useSearch()
@@ -28,7 +30,7 @@ export default function PurchaseOrderTitle() {
             <div className="flex flex-col items-start">
                 <Title>
                     Pesanan Apotek Aulia Farma (
-                    {new Date().toLocaleDateString("id-ID")})
+                    {today.toLocaleDateString("id-ID")})
                 </Title>
                 {showComputedAt && (
                     <Subtitle>

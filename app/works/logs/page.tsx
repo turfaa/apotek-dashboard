@@ -21,19 +21,27 @@ export interface WorkLogsProps {
     searchParams: SearchParams
 }
 
+// Returns the first and last day of the current month as YYYY-MM-DD.
+function currentMonthRange(): { from: string; until: string } {
+    const now = new Date()
+    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1)
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0)
+
+    return {
+        from: firstDay.toLocaleDateString("en-CA"),
+        until: lastDay.toLocaleDateString("en-CA"),
+    }
+}
+
 export default function WorkLogs(props: WorkLogsProps): React.ReactElement {
     const sessionPromise = auth()
 
     // If no dates provided, use current month
     const searchParams = props.searchParams.then((searchParams) => {
         if (!searchParams.from && !searchParams.until) {
-            const now = new Date()
-            const firstDay = new Date(now.getFullYear(), now.getMonth(), 1)
-            const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0)
-
-            // Convert to YYYY-MM-DD
-            searchParams.from = firstDay.toLocaleDateString("en-CA")
-            searchParams.until = lastDay.toLocaleDateString("en-CA")
+            const { from, until } = currentMonthRange()
+            searchParams.from = from
+            searchParams.until = until
         }
 
         return searchParams

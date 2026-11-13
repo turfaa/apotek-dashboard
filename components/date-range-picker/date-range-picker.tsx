@@ -109,11 +109,14 @@ export function DateRangePicker(
         ? options.find((opt) => opt.value === props.defaultDateRangeType)?.until
         : undefined
 
+    // Captured once per mount so the fallback date stays stable across renders.
+    const [now] = useState(() => new Date())
+
     const fromFromParams = searchParams.get("from") ?? defaultFrom
-    const from = fromFromParams ? new Date(fromFromParams) : new Date()
+    const from = fromFromParams ? new Date(fromFromParams) : now
 
     const untilFromParams = searchParams.get("until") ?? defaultUntil
-    const until = untilFromParams ? new Date(untilFromParams) : new Date()
+    const until = untilFromParams ? new Date(untilFromParams) : now
 
     const [date, setDate] = useState<DateRange | undefined>({
         from,

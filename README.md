@@ -38,7 +38,8 @@ A modern, full-featured pharmacy management dashboard with integrated HR capabil
 ### Core Framework
 - **Next.js 16.1.2** - React framework with App Router and Server Components
 - **React 19.2.3** - UI library with latest concurrent features
-- **TypeScript 5.9.3** - Type-safe JavaScript
+- **TypeScript 7** - Type-safe JavaScript (native Go compiler)
+- **oxlint** - Linting
 - **Turbopack** - Next-generation bundler for fast development
 
 ### Authentication & Authorization
@@ -123,9 +124,11 @@ The application will be available at [http://localhost:3000](http://localhost:30
 npm run dev          # Start dev server with Turbopack
 npm run build        # Build for production
 npm start            # Start production server
-npm run lint         # Run ESLint
-npm run format       # Auto-fix with ESLint
+npm run lint         # Run oxlint
+npm run format       # Auto-fix with oxlint
+npm run typecheck    # Type-check with TypeScript 7 (tsc --noEmit)
 npm run generate-pwa-icons  # Generate PWA icons
+npm run stub-api            # Fake VMEDIS/HRIS backends (see CLAUDE.md)
 ```
 
 ## Build

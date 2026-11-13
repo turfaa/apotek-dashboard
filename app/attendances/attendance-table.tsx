@@ -54,10 +54,13 @@ export function AttendanceTable({
     const searchParams = useSearchParams()
     const monthParam = searchParams.get("month")
 
+    // Captured once per mount so the fallback month stays stable across renders.
+    const [today] = useState(() => new Date())
+
     // Memoize the month to prevent unnecessary re-renders
     const currentMonth = useMemo(() => {
-        return monthParam ? parseISO(monthParam + "-01") : new Date()
-    }, [monthParam])
+        return monthParam ? parseISO(monthParam + "-01") : today
+    }, [monthParam, today])
 
     const [attendances, setAttendances] = useState<AttendancesAtDate[]>([])
     const [employeeSummaries, setEmployeeSummaries] = useState<

@@ -25,7 +25,7 @@ Name every model if more than one was used. Write "None" if written entirely by 
 <!-- What you actually ran, and what it said. Note anything that could not be run here. -->
 
 - [ ] `npm run lint`
-- [ ] `npx tsc --noEmit`
+- [ ] `npm run typecheck`
 - [ ] `npm run build`
 - [ ] Checked in the browser (`npm run dev`)
 
