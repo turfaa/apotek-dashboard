@@ -18,7 +18,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Check, ChevronsUpDown } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { useMemo, useState } from "react"
+import { useId, useMemo, useState } from "react"
 import { useHydrated } from "@/lib/use-hydrated"
 
 export interface CalculatorSelectorProps {
@@ -31,6 +31,7 @@ export default function CalculatorSelector({
     const calculator = useCalculator((state) => state.calculator)
     const setCalculator = useCalculator((state) => state.setCalculator)
     const [open, setOpen] = useState(false)
+    const popoverContentId = useId()
 
     const calculatorBySupplier: Record<string, InvoiceCalculator> =
         useMemo(() => {
@@ -56,13 +57,17 @@ export default function CalculatorSelector({
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
+                    aria-controls={open ? popoverContentId : undefined}
                     className="w-full justify-between"
                 >
                     {calculator?.supplier ?? "Pilih supplier..."}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-(--radix-popover-trigger-width) p-0">
+            <PopoverContent
+                id={popoverContentId}
+                className="w-(--radix-popover-trigger-width) p-0"
+            >
                 <Command className="w-full">
                     <CommandInput placeholder="Cari supplier..." />
                     <CommandEmpty>Supplier tidak ditemukan.</CommandEmpty>

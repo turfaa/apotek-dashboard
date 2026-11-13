@@ -244,7 +244,7 @@ Four roles enforced at multiple layers:
 └── components/     # Custom table component
 
 middleware.ts        # Auth + API rewrites
-next.config.js       # PWA plugin, output: standalone
+next.config.js       # output: standalone, React Compiler
 components.json      # shadcn/ui configuration
 ```
 
@@ -300,9 +300,10 @@ AUTH_GOOGLE_SECRET     # OAuth client secret
 
 ## PWA Configuration
 
-- Service worker generated with next-pwa
+- Web app manifest at `/public/manifest.json` (linked from `app/layout.tsx`)
 - Icons in `/public` (192x192, 512x512, apple-icon)
-- Disabled in development mode
+- No service worker: `next-pwa` was removed because it is a webpack plugin and
+  did nothing under Turbopack builds
 - Output: "standalone" for Docker deployments
 
 ## Key Implementation Details
