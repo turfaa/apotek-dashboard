@@ -1,5 +1,8 @@
 FROM node:24-trixie AS base
 
+# Skip the "new major version of npm available" notice in build logs
+ENV NPM_CONFIG_UPDATE_NOTIFIER=false
+
 # Install dependencies only when needed
 FROM base AS deps
 WORKDIR /app
@@ -8,7 +11,7 @@ WORKDIR /app
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 RUN \
   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-  elif [ -f package-lock.json ]; then npm ci --force; \
+  elif [ -f package-lock.json ]; then npm ci; \
   elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i --frozen-lockfile; \
   else echo "Lockfile not found." && exit 1; \
   fi
@@ -38,7 +41,7 @@ ENV NODE_ENV=production
 # ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN groupadd --system --gid 1001 nodejs
-RUN useradd --system --uid 1001 --gid nodejs nextjs
+RUN useradd --no-create-home --uid 1001 --gid nodejs nextjs
 
 RUN mkdir -p /app/.next/cache && chown nextjs:nodejs /app/.next/cache
 VOLUME ["/app/.next/cache"]

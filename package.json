@@ -48,7 +48,6 @@
     "moment": "^2.31.0",
     "next": "^16.4.6",
     "next-auth": "^5.0.0-beta.32",
-    "next-pwa": "^5.6.0",
     "next-themes": "^0.4.6",
     "nuqs": "^2.10.3",
     "postcss": "^8.5.32",
@@ -78,5 +77,8 @@
   },
   "overrides": {
     "@types/react": "19.3.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
   }
 }

@@ -27,7 +27,7 @@ A modern, full-featured pharmacy management dashboard with integrated HR capabil
 ### Technical Features
 - **Role-Based Access Control (RBAC)**: Four user roles (ADMIN, STAFF, RESELLER, GUEST)
 - **Google OAuth Authentication**: Secure login via Google accounts
-- **Progressive Web App (PWA)**: Installable with offline capabilities
+- **Progressive Web App (PWA)**: Installable via web app manifest
 - **Responsive Design**: Optimized for desktop and mobile devices
 - **Print Mode**: Special print layouts for reports and documents
 - **Dark Mode**: Theme switching support

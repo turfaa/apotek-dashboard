@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useMemo, useTransition } from "react"
+import React, { useId, useState, useMemo, useTransition } from "react"
 import { Subtitle } from "@/components/typography"
 import { Drug } from "@/lib/api/drugv2"
 import { usePrintMode } from "@/lib/print-mode"
@@ -36,6 +36,7 @@ export default function DrugSelectorClient({
     const [isPending] = useTransition()
     const { selectedDrug, setSelectedDrug } = useDrugSelector(drugs)
     const [open, setOpen] = useState(false)
+    const popoverContentId = useId()
     const [searchValue, setSearchValue] = useState("")
     const { isPrintMode } = usePrintMode()
 
@@ -71,6 +72,7 @@ export default function DrugSelectorClient({
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
+                    aria-controls={open ? popoverContentId : undefined}
                     className="w-full justify-between"
                     disabled={disabled ?? isPending}
                 >
@@ -78,7 +80,10 @@ export default function DrugSelectorClient({
                     <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-(--radix-popover-trigger-width) p-0">
+            <PopoverContent
+                id={popoverContentId}
+                className="w-(--radix-popover-trigger-width) p-0"
+            >
                 <Command className="w-full">
                     <CommandInput
                         placeholder="Cari obat..."
