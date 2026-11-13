@@ -120,7 +120,7 @@
     "react/refs": "error",
     "react/set-state-in-effect": "error",
     "react/error-boundaries": "error",
-    "react/purity": "warn",
+    "react/purity": "error",
     "react/set-state-in-render": "error",
     "react/unsupported-syntax": "warn"
   },

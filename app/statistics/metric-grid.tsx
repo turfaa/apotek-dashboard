@@ -1,3 +1,4 @@
+import { useState } from "react"
 import MetricCard, { MetricCardFallback } from "@/app/statistics/metric-card"
 import MetricChart, { MetricChartFallback } from "@/app/statistics/metric-chart"
 
@@ -13,9 +14,11 @@ export interface Datum {
 }
 
 export default function MetricGrid(props: MetricGridProps): React.ReactElement {
+    // Fallback timestamp for empty data, captured once per mount.
+    const [now] = useState(() => new Date())
     const latest: Datum = props.data[props.data.length - 1] ?? {
         value: 0,
-        timestamp: new Date(),
+        timestamp: now,
     }
 
     let sum = 0

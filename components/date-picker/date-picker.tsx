@@ -10,7 +10,7 @@ import {
     useRouter,
     useSearchParams,
 } from "next/navigation"
-import { useTransition, useRef } from "react"
+import { useTransition, useRef, useState } from "react"
 import { CalendarIcon } from "@radix-ui/react-icons"
 import { format } from "date-fns"
 import { Button } from "@/components/ui/button"
@@ -29,8 +29,10 @@ export function DatePicker(props: CalendarProps): React.ReactElement {
     const { isPrintMode } = usePrintMode()
     const searchParams: ReadonlyURLSearchParams = useSearchParams()
 
+    // Captured once per mount so the fallback date stays stable across renders.
+    const [today] = useState(() => new Date())
     const dateFromParams = searchParams.get("date")
-    const date = dateFromParams ? new Date(dateFromParams) : new Date()
+    const date = dateFromParams ? new Date(dateFromParams) : today
     const dateString = format(date, "PPP", { locale: id })
 
     const popOverRef = useRef<HTMLButtonElement | null>(null)
