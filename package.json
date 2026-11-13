@@ -10,7 +10,8 @@
     "experimental-compile": "next experimental-compile",
     "format": "oxlint --fix",
     "generate-pwa-icons": "tsx scripts/generate-pwa-icons.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "stub-api": "node scripts/stub-api/server.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^7.0.6",

@@ -128,6 +128,7 @@ npm run lint         # Run oxlint
 npm run format       # Auto-fix with oxlint
 npm run typecheck    # Type-check with TypeScript 7 (tsc --noEmit)
 npm run generate-pwa-icons  # Generate PWA icons
+npm run stub-api            # Fake VMEDIS/HRIS backends (see CLAUDE.md)
 ```
 
 ## Build

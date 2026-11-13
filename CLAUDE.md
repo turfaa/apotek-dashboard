@@ -61,7 +61,24 @@ npm run typecheck              # Type-check with TypeScript 7 (tsc --noEmit)
 
 # Other
 npm run generate-pwa-icons     # Generate PWA icons
+npm run stub-api               # Fake VMEDIS/HRIS backends for local builds/tests
 ```
+
+### Building and testing without the real backends
+
+The VMEDIS and HRIS backends are only reachable from the local network. To build
+or click through the app elsewhere, run the stub API (`scripts/stub-api/server.mjs`),
+which serves fake fixtures for every endpoint the app uses:
+
+```bash
+npm run stub-api   # http://127.0.0.1:4010, logs any route it has no fixture for
+VMEDIS_PROXY_URL=http://127.0.0.1:4010/vmedis/api \
+HRIS_PROXY_URL=http://127.0.0.1:4010/hris/api npm run build   # or npm run dev / npm start
+```
+
+Signing in still needs Google OAuth. For local testing, mint an admin session cookie
+(`authjs.session-token`) with `encode()` from `next-auth/jwt`, using `AUTH_SECRET`
+and `salt: "authjs.session-token"`, with `role: "admin"` in the token.
 
 ## Architecture Overview
 
