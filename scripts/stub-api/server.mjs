@@ -62,6 +62,18 @@ const drugsV1 = [
         ],
         stocks: ["12 Strip"],
     },
+    {
+        // No supplier, so its recommendation has no fromSupplier.
+        vmedisCode: "MNY60",
+        name: "Minyak Kayu Putih 60 ml",
+        manufacturer: "Cap Lang",
+        supplier: "",
+        minimumStock: "2 Botol",
+        units: [
+            { unit: "Botol", unitOrder: 1, priceOne: 25000, priceTwo: 24000, priceThree: 23000 },
+        ],
+        stocks: ["1 Botol"],
+    },
 ]
 
 const drugsV2 = drugsV1.map((d) => ({
@@ -313,7 +325,8 @@ const vmedis = [
     ["GET", /^\/v2\/procurements\/drugs\/[^/]+\/last$/, () => table(["Tanggal", "Supplier", "Jumlah"], [[ymd(daysAgo(7)), "PT Sumber Sehat", "5 Box"]])],
     ["GET", /^\/v2\/procurements\/suppliers\/recap$/, () => table(["Supplier", "Jumlah faktur", "Total"], [["PT Sumber Sehat", "3", "Rp 1.500.000"]])],
     ["GET", /^\/v1\/procurements\/recommendations$/, () => ({
-        recommendations: drugsV1.map((drug) => ({ drug, stock: drug.stocks.join(", "), fromSupplier: drug.supplier, procurement: "2 Box", alternatives: [] })),
+        // Like the real API, fromSupplier is omitted when it is empty.
+        recommendations: drugsV1.map((drug) => ({ drug, stock: drug.stocks.join(", "), ...(drug.supplier && { fromSupplier: drug.supplier }), procurement: "2 Box", alternatives: [] })),
         computedAt: iso(now),
     })],
     ["GET", /^\/v1\/procurements\/recommendations\/status$/, () => ({ status: "IDLE" })],

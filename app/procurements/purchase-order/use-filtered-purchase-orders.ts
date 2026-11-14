@@ -42,7 +42,7 @@ export function useFilteredPurchaseOrders(): FilteredPurchaseOrders {
             stock: procurement.stock,
             alternatives: procurement.alternatives,
             procurement: procurement.procurement,
-            supplier: procurement.fromSupplier,
+            supplier: procurement.fromSupplier ?? "",
             raw: procurement,
         }))
         .filter((row: Row) =>

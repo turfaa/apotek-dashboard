@@ -14,7 +14,8 @@ interface UnderlyingProcurementRecommendationsResponse {
 export interface ProcurementRecommendation {
     drug: Drug
     stock: string
-    fromSupplier: string
+    // Omitted by the API when the drug has no supplier.
+    fromSupplier?: string
     procurement: string
     alternatives?: string[]
     // Set on rows added by hand with Tambah Obat, whose code is random and
