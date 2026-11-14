@@ -49,6 +49,10 @@ const availableNavigations: NavigationItem[] = [
                 href: "/procurements/purchase-order",
             },
             {
+                name: "Riwayat Surat Pesanan",
+                href: "/procurements/purchase-orders",
+            },
+            {
                 name: "Harga Obat Terakhir",
                 href: "/procurements/by-drug",
             },

@@ -75,6 +75,14 @@ export const apiRules: ApiRule[] = [
         write: ADMIN_STAFF,
     },
     {
+        // Purchase order letters (surat pesanan). The backend also checks the role.
+        source: "/api/procurements/purchase-orders",
+        backend: "vmedis",
+        target: "/v1/procurements/purchase-orders",
+        read: ADMIN_STAFF,
+        write: ADMIN_STAFF,
+    },
+    {
         source: "/api/suppliers",
         backend: "vmedis",
         target: "/v1/suppliers",

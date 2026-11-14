@@ -26,9 +26,12 @@ const ymd = (d) => d.toLocaleDateString("en-CA")
 const daysAgo = (n) => new Date(now.getTime() - n * 24 * 60 * 60 * 1000)
 const currentMonth = ymd(now).slice(0, 7)
 
-// Handlers return JSON by default; wrap HTML endpoints with html().
+// Handlers return JSON by default; wrap HTML endpoints with html(), and any
+// other response (a status, headers or a binary body) with raw().
 const html = (body) => ({ [HTML]: `<!doctype html><html><body>${body}</body></html>` })
 const HTML = Symbol("html")
+const raw = (status, headers, body) => ({ [RAW]: { status, headers, body } })
+const RAW = Symbol("raw")
 
 const table = (header, rows) => ({
     header,
@@ -188,7 +191,106 @@ const suppliers = [
         phone: "022-123", mobilePhone: "0812", bankAccountNumber: "123", taxNumber: "01.234",
         active: true, leadTimeDays: 2, rating: 4, updatedAt: iso(daysAgo(3)),
     },
+    {
+        // No address, to show the "Alamat supplier kosong" warning.
+        vmedisId: 2, code: "MJ", name: "PT Medika Jaya", address: "", city: "",
+        phone: "", mobilePhone: "", bankAccountNumber: "", taxNumber: "",
+        active: true, leadTimeDays: 3, rating: 3, updatedAt: iso(daysAgo(3)),
+    },
 ]
+
+// Purchase order letters (surat pesanan). Kept in memory, so SPs created
+// while clicking through show up in Riwayat until the stub restarts.
+const purchaseOrderOptions = {
+    templates: [{ id: "reguler", name: "Surat Pesanan Reguler", description: "Untuk obat bebas, bebas terbatas, keras dan alat kesehatan." }],
+    signer: { name: "Nama Apoteker", licenseNumber: "SIPA-0000" },
+    vmedisSupplierPageUrl: "https://aulia.vmedis.com/apt-data-supplier-v2",
+}
+const romanMonths = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"]
+const purchaseOrders = []
+
+function createPurchaseOrder(body) {
+    const supplier = suppliers.find((s) => s.vmedisId === body?.supplierVmedisId)
+    if (!supplier) return raw(404, {}, { error: "supplier not found" })
+
+    const invalidItems = (body.items ?? []).flatMap((item, i) => (item.drugName?.trim() && item.quantity?.trim() ? [] : [i]))
+    if (!body.items?.length || invalidItems.length) return raw(400, {}, { error: `${invalidItems.length} obat belum diisi nama atau jumlahnya`, invalidItems })
+
+    const createdAt = new Date()
+    const sameMonth = purchaseOrders.filter((po) => po.createdAt.slice(0, 7) === iso(createdAt).slice(0, 7))
+    const number = `${String(sameMonth.length + 1).padStart(3, "0")}/SP-REG/AAF/${romanMonths[createdAt.getMonth()]}/${createdAt.getFullYear()}`
+    const po = {
+        id: purchaseOrders.length + 1,
+        number,
+        templateId: body.templateId,
+        templateName: "Surat Pesanan Reguler",
+        supplier: { vmedisId: supplier.vmedisId, name: supplier.name, address: supplier.address, city: supplier.city, phone: supplier.phone },
+        itemCount: body.items.length,
+        includePharmacistSignature: !!body.includePharmacistSignature,
+        signer: body.includePharmacistSignature ? purchaseOrderOptions.signer : null,
+        createdByEmployee: body.createdByEmployee,
+        createdByEmail: "stub@example.com",
+        createdAt: iso(createdAt),
+        items: body.items.map((item, i) => ({ position: i + 1, ...item })),
+    }
+    purchaseOrders.push(po)
+    return raw(201, {}, { id: po.id, number: po.number, createdAt: po.createdAt })
+}
+
+function listPurchaseOrders(q) {
+    const query = (q.get("q") ?? "").toLowerCase()
+    const matches = purchaseOrders
+        .filter((po) => !query || po.number.toLowerCase().includes(query) || po.items.some((item) => item.drugName.toLowerCase().includes(query)))
+        .filter((po) => !q.get("supplierVmedisId") || po.supplier.vmedisId === Number(q.get("supplierVmedisId")))
+        .filter((po) => !q.get("templateId") || po.templateId === q.get("templateId"))
+        .filter((po) => !q.get("createdByEmployeeId") || po.createdByEmployee.id === Number(q.get("createdByEmployeeId")))
+        .filter((po) => (!q.get("from") || ymd(new Date(po.createdAt)) >= q.get("from")) && (!q.get("to") || ymd(new Date(po.createdAt)) <= q.get("to")))
+        .reverse()
+    const page = Number(q.get("page") ?? 1)
+    const pageSize = Number(q.get("pageSize") ?? 20)
+    return {
+        purchaseOrders: matches.slice((page - 1) * pageSize, page * pageSize).map(({ items: _items, signer: _signer, supplier, ...po }) => ({ ...po, supplier: { vmedisId: supplier.vmedisId, name: supplier.name } })),
+        total: matches.length,
+        page,
+        pageSize,
+    }
+}
+
+function purchaseOrderPdf(m) {
+    const po = purchaseOrders.find((p) => p.id === Number(m[1]))
+    if (!po) return raw(404, {}, { error: "purchase order not found" })
+
+    const filename = `${po.createdAt.slice(0, 10)} - ${po.supplier.name} - ${po.templateName} - ${po.number.replaceAll("/", "-")}.pdf`
+    return raw(200, {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename="${filename}"; filename*=UTF-8''${encodeURIComponent(filename)}`,
+    }, Buffer.from(tinyPdf(`Stub ${po.number}`)))
+}
+
+// A one-page PDF with a line of text.
+function tinyPdf(text) {
+    const objects = [
+        "<< /Type /Catalog /Pages 2 0 R >>",
+        "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+        "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>",
+        null,
+        "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+    ]
+    const stream = `BT /F1 18 Tf 72 770 Td (${text.replace(/[()\\]/g, "")}) Tj ET`
+    objects[3] = `<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`
+
+    let pdf = "%PDF-1.4\n"
+    const offsets = objects.map((obj, i) => {
+        const offset = pdf.length
+        pdf += `${i + 1} 0 obj\n${obj}\nendobj\n`
+        return offset
+    })
+    const xref = pdf.length
+    pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`
+    pdf += offsets.map((o) => `${String(o).padStart(10, "0")} 00000 n \n`).join("")
+    pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`
+    return pdf
+}
 
 // ---------------------------------------------------------------------------
 // Routes: [method, path regex (after /vmedis/api or /hris/api), handler]
@@ -210,6 +312,17 @@ const vmedis = [
     })],
     ["GET", /^\/v1\/procurements\/recommendations\/status$/, () => ({ status: "IDLE" })],
     ["POST", /^\/v1\/procurements\/recommendations\/dump$/, () => ({ message: "ok" })],
+    ["GET", /^\/v1\/procurements\/purchase-orders\/options$/, () => purchaseOrderOptions],
+    ["GET", /^\/v1\/procurements\/purchase-orders\/creators$/, () => ({
+        creators: [...new Map(purchaseOrders.map((po) => [po.createdByEmployee.id, po.createdByEmployee])).values()],
+    })],
+    ["GET", /^\/v1\/procurements\/purchase-orders$/, (_m, _b, q) => listPurchaseOrders(q)],
+    ["POST", /^\/v1\/procurements\/purchase-orders$/, (_m, body) => createPurchaseOrder(body)],
+    ["GET", /^\/v1\/procurements\/purchase-orders\/(\d+)$/, (m) => {
+        const po = purchaseOrders.find((p) => p.id === Number(m[1]))
+        return po ?? raw(404, {}, { error: "purchase order not found" })
+    }],
+    ["GET", /^\/v1\/procurements\/purchase-orders\/(\d+)\/pdf$/, purchaseOrderPdf],
     ["GET", /^\/v1\/procurements\/invoice-calculators$/, () => ({
         calculators: [
             { supplier: "PT Sumber Sehat", shouldRound: true, components: [{ name: "Subtotal", multiplier: 1 }, { name: "PPN", multiplier: 0.11 }] },
@@ -296,8 +409,16 @@ const server = createServer(async (req, res) => {
         for (const [method, pattern, handler] of routes) {
             const m = path.match(pattern)
             if (m && method === req.method) {
-                console.log(`200 ${req.method} ${url.pathname}${url.search}`)
                 const result = handler(m, body, url.searchParams)
+                console.log(`${result?.[RAW]?.status ?? 200} ${req.method} ${url.pathname}${url.search}`)
+                if (result?.[RAW]) {
+                    const { status, headers, body: rawBody } = result[RAW]
+                    if (Buffer.isBuffer(rawBody)) {
+                        res.writeHead(status, headers)
+                        return res.end(rawBody)
+                    }
+                    return send(res, status, rawBody)
+                }
                 if (result?.[HTML]) {
                     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" })
                     return res.end(result[HTML])

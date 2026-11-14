@@ -1,6 +1,7 @@
 import GenerateButton from "@/app/procurements/purchase-order/generate-button"
 import GeneratingAlert from "@/app/procurements/purchase-order/generating-alert"
 import NewDrugButton from "@/app/procurements/purchase-order/new-drug-button"
+import PurchaseOrderLetterButton from "@/app/procurements/purchase-order/purchase-order-letter-button"
 import RefreshButton from "@/app/procurements/purchase-order/refresh-button"
 import PurchaseOrderTable from "@/app/procurements/purchase-order/table"
 import PurchaseOrderTitle from "@/app/procurements/purchase-order/title"
@@ -9,6 +10,8 @@ import moment from "moment/moment"
 import { Metadata } from "next"
 import { Card, CardContent } from "@/components/ui/card"
 import { SearchParams } from "@/types/search-params"
+import { auth } from "@/lib/auth"
+import { getPurchaseOrderLetterEmployees } from "@/lib/api/purchase-order-letter"
 
 interface PurchaseOrderProps {
     searchParams: SearchParams
@@ -35,6 +38,12 @@ export async function generateMetadata(
 }
 
 export default function PurchaseOrder() {
+    // Read on the server, so only employee ids and names reach the browser.
+    // Null when HRIS can't be read; the dialog says so.
+    const employeesPromise = auth()
+        .then((session) => getPurchaseOrderLetterEmployees(session))
+        .catch(() => null)
+
     return (
         <main className="p-4 md:p-10 mx-auto">
             <div className="flex pb-4">
@@ -44,10 +53,13 @@ export default function PurchaseOrder() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <SearchButton />
 
-                <div className="justify-self-end flex gap-4">
+                <div className="justify-self-end flex flex-wrap justify-end gap-4">
                     <NewDrugButton />
                     <GenerateButton />
                     <RefreshButton />
+                    <PurchaseOrderLetterButton
+                        employeesPromise={employeesPromise}
+                    />
                 </div>
             </div>
 
