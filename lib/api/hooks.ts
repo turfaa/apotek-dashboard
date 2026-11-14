@@ -30,9 +30,17 @@ import {
 } from "@/lib/api/shift"
 import {
     SupplierDumpStatus,
+    SuppliersResponse,
     dumpSuppliers,
     getSupplierDumpStatus,
+    getSuppliers,
 } from "@/lib/api/supplier"
+import {
+    PurchaseOrderLetterDetail,
+    PurchaseOrderLetterOptions,
+    getPurchaseOrderLetter,
+    getPurchaseOrderLetterOptions,
+} from "@/lib/api/purchase-order-letter"
 import {
     TokenRefreshStatus,
     getTokenRefreshStatus,
@@ -215,8 +223,17 @@ export interface SupplierDumpStatusHook {
     sync: () => Promise<void>
 }
 
-export function useSupplierDumpStatus(): SupplierDumpStatusHook {
+export interface SupplierDumpStatusOptions {
+    // Called when a running sync finishes. Defaults to refreshing the
+    // server-rendered page.
+    onFinished?: () => void
+}
+
+export function useSupplierDumpStatus(
+    options?: SupplierDumpStatusOptions,
+): SupplierDumpStatusHook {
     const router = useRouter()
+    const onFinished = options?.onFinished
 
     const { data, error, isLoading, mutate } = useSWR(
         "/v1/suppliers/dump/status",
@@ -238,10 +255,14 @@ export function useSupplierDumpStatus(): SupplierDumpStatusHook {
     const wasDumping = useRef(false)
     useEffect(() => {
         if (wasDumping.current && !isDumping) {
-            router.refresh()
+            if (onFinished) {
+                onFinished()
+            } else {
+                router.refresh()
+            }
         }
         wasDumping.current = isDumping
-    }, [isDumping, router])
+    }, [isDumping, router, onFinished])
 
     const [isStarting, setIsStarting] = useState(false)
 
@@ -264,6 +285,44 @@ export function useSupplierDumpStatus(): SupplierDumpStatusHook {
         isStarting,
         sync,
     }
+}
+
+export interface SuppliersHook {
+    data?: SuppliersResponse
+    isLoading: boolean
+    error?: Error
+    mutate: () => Promise<unknown>
+}
+
+// Suppliers synced from Vmedis. Pass enabled = false to skip fetching.
+export function useSuppliers(enabled: boolean = true): SuppliersHook {
+    const { data, error, isLoading, mutate } = useSWR(
+        enabled ? "/v1/suppliers" : null,
+        () => getSuppliers(),
+        { revalidateOnFocus: false },
+    )
+
+    return { data, error, isLoading, mutate }
+}
+
+// What the create SP dialog needs: templates, signer, Vmedis supplier page.
+// Pass enabled = false to skip fetching.
+export function usePurchaseOrderLetterOptions(enabled: boolean = true) {
+    return useSWR<PurchaseOrderLetterOptions>(
+        enabled ? "/v1/procurements/purchase-orders/options" : null,
+        () => getPurchaseOrderLetterOptions(),
+        { revalidateOnFocus: false },
+    )
+}
+
+// A stored SP with its items. Pass undefined to skip fetching.
+export function usePurchaseOrderLetter(id: number | undefined) {
+    return useSWR<PurchaseOrderLetterDetail>(
+        id !== undefined ? `/v1/procurements/purchase-orders/${id}` : null,
+        () => getPurchaseOrderLetter(id as number),
+        // Stored SPs never change.
+        { revalidateOnFocus: false, revalidateIfStale: false },
+    )
 }
 
 export interface TokenRefreshStatusHook {

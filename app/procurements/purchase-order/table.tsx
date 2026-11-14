@@ -3,7 +3,10 @@
 import { usePurchaseOrders } from "@/lib/api/hooks"
 import { ProcurementRecommendation } from "@/lib/api/procurement-recommendation"
 import { usePrintMode } from "@/lib/print-mode"
-import useSearch from "@/lib/search-hook"
+import {
+    Row,
+    useFilteredPurchaseOrders,
+} from "@/app/procurements/purchase-order/use-filtered-purchase-orders"
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons"
 import { useState } from "react"
 import { useHydrated } from "@/lib/use-hydrated"
@@ -19,19 +22,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
 import Loading from "@/components/loading"
-
-export interface Row {
-    vmedisCode: string
-    name: string
-    manufacturer: string
-    minimumStock: string
-    stock: string
-    alternatives?: string[]
-    procurement: string
-    supplier: string
-
-    raw: ProcurementRecommendation
-}
 
 const columns: Column[] = [
     "no.",
@@ -121,8 +111,8 @@ export default function PurchaseOrderTable(): React.ReactElement {
         "supplier",
     ])
 
-    const { data, isLoading, error, setData, deleteData } = usePurchaseOrders()
-    const { query } = useSearch()
+    const { setData, deleteData } = usePurchaseOrders()
+    const { rows, isLoading, error } = useFilteredPurchaseOrders()
     const { isPrintMode } = usePrintMode()
 
     if (isLoading || !ssrCompleted) return <Loading />
@@ -135,25 +125,6 @@ export default function PurchaseOrderTable(): React.ReactElement {
                 <AlertDescription>{error.message}</AlertDescription>
             </Alert>
         )
-
-    const rows: Row[] = Object.values(data || {})
-        .map((procurement: ProcurementRecommendation) => ({
-            vmedisCode: procurement.drug.vmedisCode,
-            name: procurement.drug.name,
-            manufacturer: procurement.drug.manufacturer,
-            minimumStock: procurement.drug.minimumStock,
-            stock: procurement.stock,
-            alternatives: procurement.alternatives,
-            procurement: procurement.procurement,
-            supplier: procurement.fromSupplier,
-            raw: procurement,
-        }))
-        .filter((row: Row) =>
-            (row.vmedisCode + row.name + row.manufacturer + row.supplier)
-                .toLowerCase()
-                .includes(query.toLowerCase()),
-        )
-        .sort((a, b) => a.name.localeCompare(b.name))
 
     return (
         <Table>

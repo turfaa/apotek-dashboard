@@ -17,6 +17,9 @@ export interface ProcurementRecommendation {
     fromSupplier: string
     procurement: string
     alternatives?: string[]
+    // Set on rows added by hand with Tambah Obat, whose code is random and
+    // not a Vmedis code.
+    isManual?: boolean
 }
 
 export async function getProcurementRecommendations(): Promise<ProcurementRecommendationsResponse> {
