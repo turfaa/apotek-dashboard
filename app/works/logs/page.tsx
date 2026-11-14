@@ -11,6 +11,7 @@ import { auth } from "@/lib/auth"
 import { getWorkLogs, getWorkTypes } from "@/lib/api/work"
 import { getEmployees } from "@/lib/api/employee"
 import { Title } from "@/components/typography/v2"
+import { currentMonthRange } from "@/lib/date-range"
 
 export const metadata: Metadata = {
     title: "Laporan Pekerjaan",
@@ -19,18 +20,6 @@ export const metadata: Metadata = {
 
 export interface WorkLogsProps {
     searchParams: SearchParams
-}
-
-// Returns the first and last day of the current month as YYYY-MM-DD.
-function currentMonthRange(): { from: string; until: string } {
-    const now = new Date()
-    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1)
-    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0)
-
-    return {
-        from: firstDay.toLocaleDateString("en-CA"),
-        until: lastDay.toLocaleDateString("en-CA"),
-    }
 }
 
 export default function WorkLogs(props: WorkLogsProps): React.ReactElement {

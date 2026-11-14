@@ -46,5 +46,6 @@ function newProcurement(query: string): ProcurementRecommendation {
         alternatives: [],
         procurement: "",
         fromSupplier: query,
+        isManual: true,
     }
 }

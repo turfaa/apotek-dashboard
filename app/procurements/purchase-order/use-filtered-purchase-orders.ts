@@ -55,8 +55,15 @@ export function useFilteredPurchaseOrders(): FilteredPurchaseOrders {
     return { rows, query, isLoading, error }
 }
 
-// Rows added with Tambah Obat get a random code and have no units, unlike
-// drugs from Vmedis, so their code is not a Vmedis code.
+// Rows added with Tambah Obat get a random code, so their code is not a
+// Vmedis code. They are marked isManual; rows added before that mark existed
+// are recognised by having no units, no manufacturer and no stock, which a
+// Vmedis drug in the recommendations always has.
 export function isVmedisDrug(row: Row): boolean {
-    return row.raw.drug.units.length > 0
+    const { isManual, drug, stock } = row.raw
+    if (isManual) return false
+
+    const looksManual =
+        drug.units.length === 0 && !drug.manufacturer && !stock.trim()
+    return !looksManual
 }

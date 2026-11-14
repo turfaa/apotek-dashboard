@@ -1,4 +1,5 @@
 import { PurchaseOrderLetterFilters } from "@/lib/api/purchase-order-letter"
+import { currentMonthRange } from "@/lib/date-range"
 
 // URL query of the Riwayat page. `from` and `until` are the keys the shared
 // DateRangePicker writes.
@@ -13,19 +14,6 @@ export const filterKeys = {
 } as const
 
 export const pageSize = 20
-
-// The first and last day of the current month as YYYY-MM-DD, the default
-// date range.
-export function currentMonthRange(): { from: string; until: string } {
-    const now = new Date()
-    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1)
-    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0)
-
-    return {
-        from: firstDay.toLocaleDateString("en-CA"),
-        until: lastDay.toLocaleDateString("en-CA"),
-    }
-}
 
 function positiveInt(value: string | undefined): number | undefined {
     const n = Number(value)

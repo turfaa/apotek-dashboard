@@ -130,6 +130,9 @@ function DialogBody({
     const [pickedTemplateId, setPickedTemplateId] = useState<string>()
     const templateId = pickedTemplateId ?? options.data?.templates[0]?.id
 
+    // One key per dialog opening, so "Coba lagi" after a lost response gets
+    // the SP already made instead of a second one.
+    const [idempotencyKey] = useState(() => crypto.randomUUID())
     const [includeSignature, setIncludeSignature] = useState(true)
     const [creatorId, setCreatorId] = useState<number | null>(null)
     const [showRequired, setShowRequired] = useState(false)
@@ -149,6 +152,7 @@ function DialogBody({
         setSubmitError(undefined)
         try {
             await createAndDownload({
+                idempotencyKey,
                 templateId,
                 supplierVmedisId: supplier.vmedisId,
                 includePharmacistSignature: includeSignature,

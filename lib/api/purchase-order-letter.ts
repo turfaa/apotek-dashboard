@@ -46,6 +46,10 @@ export interface PurchaseOrderLetterItemInput {
 }
 
 export interface CreatePurchaseOrderLetterRequest {
+    // Made once per dialog opening. A retry with the same key (e.g. after a
+    // lost response) returns the SP the first request created instead of
+    // using up another number.
+    idempotencyKey: string
     templateId: string
     supplierVmedisId: number
     includePharmacistSignature: boolean
@@ -57,6 +61,8 @@ export interface CreatePurchaseOrderLetterResponse {
     id: number
     number: string
     createdAt: string
+    // True when an earlier request with the same idempotency key created it.
+    replayed: boolean
 }
 
 export interface PurchaseOrderLetterSummary {

@@ -43,7 +43,10 @@ export default function PurchaseOrderLettersPage(
     // For Dibuat oleh in the Duplikat dialog. Null when HRIS can't be read.
     const employeesPromise = sessionPromise
         .then((session) => getPurchaseOrderLetterEmployees(session))
-        .catch(() => null)
+        .catch((error: unknown) => {
+            console.error("Failed to load employees from HRIS", error)
+            return null
+        })
 
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">

@@ -25,12 +25,12 @@ export function describeCreateError(error: unknown): CreateErrorMessage {
     if (error instanceof PurchaseOrderLetterError) {
         switch (error.status) {
             case 400:
-                return { title, description: `${error.message}.` }
+                return { title, description: describeBadRequest(error) }
             case 404:
                 return {
                     title,
                     description:
-                        "Supplier atau template tidak ditemukan. Sinkronkan data supplier di Daftar Supplier, lalu coba lagi.",
+                        "Supplier tidak ditemukan. Sinkronkan data supplier di Daftar Supplier, lalu coba lagi.",
                 }
             case 503:
                 return {
@@ -55,6 +55,16 @@ export function describeCreateError(error: unknown): CreateErrorMessage {
         description:
             "Server tidak dapat dihubungi. Pilihan Anda tidak hilang, silakan coba lagi.",
     }
+}
+
+// "1 obat terlalu panjang: …" → "1 obat terlalu panjang: … (baris 3)."
+// Item indexes become the row numbers shown in the item list.
+function describeBadRequest(error: PurchaseOrderLetterError): string {
+    let message = error.message.charAt(0).toUpperCase() + error.message.slice(1)
+    if (error.invalidItems?.length) {
+        message += ` (baris ${error.invalidItems.map((i) => i + 1).join(", ")})`
+    }
+    return /[.!?]$/.test(message) ? message : `${message}.`
 }
 
 // Downloads an SP's PDF, with a toast when it fails.

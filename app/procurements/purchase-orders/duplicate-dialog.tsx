@@ -25,7 +25,7 @@ import {
     LetterItemsTable,
     SignatureCheckbox,
 } from "@/components/purchase-order-letter/fields"
-import { usePurchaseOrderLetter } from "@/lib/api/hooks"
+import { usePurchaseOrderLetter, useSuppliers } from "@/lib/api/hooks"
 import {
     PurchaseOrderLetterDetail,
     PurchaseOrderLetterEmployee,
@@ -112,6 +112,17 @@ function DuplicateForm({
     const router = useRouter()
     const createAndDownload = useCreateAndDownload()
 
+    // The new SP takes the supplier's current details, not the old SP's
+    // snapshot, so show those.
+    const suppliers = useSuppliers()
+    const supplier = suppliers.data?.suppliers.find(
+        (s) => s.vmedisId === detail.supplier.vmedisId,
+    )
+    const supplierGone = !!suppliers.data && !supplier
+
+    // One key per dialog opening, so "Coba lagi" after a lost response gets
+    // the SP already made instead of a second one.
+    const [idempotencyKey] = useState(() => crypto.randomUUID())
     const [includeSignature, setIncludeSignature] = useState(
         detail.includePharmacistSignature,
     )
@@ -133,6 +144,7 @@ function DuplicateForm({
         try {
             await createAndDownload(
                 {
+                    idempotencyKey,
                     templateId: detail.templateId,
                     supplierVmedisId: detail.supplier.vmedisId,
                     includePharmacistSignature: includeSignature,
@@ -160,11 +172,18 @@ function DuplicateForm({
             <dl className="grid grid-cols-1 gap-x-6 gap-y-3 text-sm sm:grid-cols-2">
                 <div>
                     <dt className="text-muted-foreground">Supplier</dt>
-                    <dd className="mt-0.5 font-medium">{detail.supplier.name}</dd>
+                    <dd className="mt-0.5 font-medium">
+                        {supplier?.name ?? detail.supplier.name}
+                    </dd>
                     <dd className="mt-0.5 text-muted-foreground">
-                        {[detail.supplier.address, detail.supplier.city]
-                            .filter((part) => part.trim())
-                            .join(", ") || "Alamat kosong"}
+                        {suppliers.isLoading ? (
+                            <Skeleton className="h-4 w-40" />
+                        ) : supplier ? (
+                            [supplier.address, supplier.city]
+                                .filter((part) => part.trim())
+                                .join(", ") ||
+                            "Alamat kosong, baris alamat dikosongkan"
+                        ) : null}
                     </dd>
                 </div>
                 <div>
@@ -172,6 +191,18 @@ function DuplicateForm({
                     <dd className="mt-0.5 font-medium">{detail.templateName}</dd>
                 </div>
             </dl>
+
+            {supplierGone && (
+                <Alert variant="destructive">
+                    <ExclamationTriangleIcon className="h-4 w-4" />
+                    <AlertTitle>Supplier tidak ditemukan</AlertTitle>
+                    <AlertDescription>
+                        {detail.supplier.name} tidak ada lagi di daftar supplier.
+                        Sinkronkan data supplier di Daftar Supplier, lalu coba
+                        lagi.
+                    </AlertDescription>
+                </Alert>
+            )}
 
             {employees ? (
                 <CreatorSelect
@@ -214,7 +245,10 @@ function DuplicateForm({
                 <Button variant="outline" onClick={onDone} disabled={isSubmitting}>
                     Batal
                 </Button>
-                <Button onClick={submit} disabled={isSubmitting || !employees}>
+                <Button
+                    onClick={submit}
+                    disabled={isSubmitting || !employees || supplierGone}
+                >
                     {submitError ? (
                         <RefreshCw className="mr-2 h-4 w-4" />
                     ) : (

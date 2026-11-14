@@ -210,6 +210,11 @@ const romanMonths = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"
 const purchaseOrders = []
 
 function createPurchaseOrder(body) {
+    const earlier = body?.idempotencyKey && purchaseOrders.find((po) => po.idempotencyKey === body.idempotencyKey)
+    if (earlier) return raw(200, {}, { id: earlier.id, number: earlier.number, createdAt: earlier.createdAt, replayed: true })
+
+    if (!purchaseOrderOptions.templates.some((t) => t.id === body?.templateId)) return raw(400, {}, { error: `template "${body?.templateId}" tidak dikenal` })
+
     const supplier = suppliers.find((s) => s.vmedisId === body?.supplierVmedisId)
     if (!supplier) return raw(404, {}, { error: "supplier not found" })
 
@@ -231,10 +236,11 @@ function createPurchaseOrder(body) {
         createdByEmployee: body.createdByEmployee,
         createdByEmail: "stub@example.com",
         createdAt: iso(createdAt),
+        idempotencyKey: body.idempotencyKey,
         items: body.items.map((item, i) => ({ position: i + 1, ...item })),
     }
     purchaseOrders.push(po)
-    return raw(201, {}, { id: po.id, number: po.number, createdAt: po.createdAt })
+    return raw(201, {}, { id: po.id, number: po.number, createdAt: po.createdAt, replayed: false })
 }
 
 function listPurchaseOrders(q) {
