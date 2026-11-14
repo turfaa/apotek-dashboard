@@ -1,4 +1,4 @@
-FROM node:24-trixie AS base
+FROM node:26-trixie AS base
 
 # Skip the "new major version of npm available" notice in build logs
 ENV NPM_CONFIG_UPDATE_NOTIFIER=false

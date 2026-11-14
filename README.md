@@ -72,7 +72,7 @@ A modern, full-featured pharmacy management dashboard with integrated HR capabil
 
 ## Prerequisites
 
-- **Node.js** 18.x or higher
+- **Node.js** 26.x (the version the Docker image uses)
 - **npm** 9.x or higher
 - **Jujutsu (jj)** - Version control system (replaces git in this project)
 
@@ -241,7 +241,7 @@ Access control is enforced at multiple layers:
 The application is configured for standalone deployment (Docker-friendly):
 
 ```dockerfile
-FROM node:18-alpine AS base
+FROM node:26-trixie AS base
 
 # Install dependencies
 FROM base AS deps
