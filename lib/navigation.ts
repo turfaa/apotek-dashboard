@@ -1,3 +1,4 @@
+import { isPageAllowed } from "@/lib/access"
 import { Role } from "@/lib/api/auth"
 
 export interface NavigationHook {
@@ -5,23 +6,23 @@ export interface NavigationHook {
     navigations: NavigationItem[]
 }
 
+// Which roles see a menu item comes from the page access table in
+// lib/access.ts: a page is listed only if the role may open it, and a group
+// only if at least one of its pages is listed.
 export interface NavigationItem {
     name: string
     target: string | Page[]
-    allowedRoles?: Role[]
 }
 
 export interface Page {
     name: string
     href: string
-    allowedRoles?: Role[]
 }
 
 const availableNavigations: NavigationItem[] = [
     {
         name: "Ringkasan",
         target: "/statistics",
-        allowedRoles: [Role.ADMIN],
     },
     {
         name: "Penjualan",
@@ -29,25 +30,16 @@ const availableNavigations: NavigationItem[] = [
             {
                 name: "Daftar Harga",
                 href: "/price-list",
-                allowedRoles: [
-                    Role.ADMIN,
-                    Role.STAFF,
-                    Role.RESELLER,
-                    Role.GUEST,
-                ],
             },
             {
                 name: "Obat Terjual",
                 href: "/sold-drugs",
-                allowedRoles: [Role.ADMIN, Role.STAFF],
             },
             {
                 name: "Harga Jual Obat Terakhir",
                 href: "/sales/by-drug",
-                allowedRoles: [Role.ADMIN, Role.STAFF],
             },
         ],
-        allowedRoles: [Role.ADMIN, Role.STAFF, Role.RESELLER, Role.GUEST],
     },
     {
         name: "Pembelian",
@@ -55,35 +47,28 @@ const availableNavigations: NavigationItem[] = [
             {
                 name: "Buat Pesanan",
                 href: "/procurements/purchase-order",
-                allowedRoles: [Role.ADMIN, Role.STAFF],
             },
             {
                 name: "Harga Obat Terakhir",
                 href: "/procurements/by-drug",
-                allowedRoles: [Role.ADMIN, Role.STAFF],
             },
             {
                 name: "Rekap Pembelian per Supplier",
                 href: "/procurements/by-supplier",
-                allowedRoles: [Role.ADMIN, Role.STAFF],
             },
             {
                 name: "Kalkulator Faktur",
                 href: "/procurements/invoice-calculator",
-                allowedRoles: [Role.ADMIN, Role.STAFF],
             },
             {
                 name: "Obat Tertolak",
                 href: "/procurements/rejected-drugs",
-                allowedRoles: [Role.ADMIN, Role.STAFF],
             },
             {
                 name: "Daftar Supplier",
                 href: "/procurements/suppliers",
-                allowedRoles: [Role.ADMIN, Role.STAFF],
             },
         ],
-        allowedRoles: [Role.ADMIN, Role.STAFF],
     },
     {
         name: "Stock Opname",
@@ -91,34 +76,27 @@ const availableNavigations: NavigationItem[] = [
             {
                 name: "Obat Harus Stok Opname",
                 href: "/stock-opnames/drugs-to-stock-opname",
-                allowedRoles: [Role.ADMIN, Role.STAFF],
             },
             {
                 name: "Laporan Stok Opname",
                 href: "/stock-opnames",
-                allowedRoles: [Role.ADMIN, Role.STAFF],
             },
         ],
-        allowedRoles: [Role.ADMIN, Role.STAFF],
     },
     {
         name: "Laporan Shift",
         target: "/shifts",
-        allowedRoles: [Role.ADMIN, Role.STAFF],
     },
     {
         name: "Pekerjaan",
-        allowedRoles: [Role.ADMIN, Role.STAFF],
         target: [
             {
                 name: "Laporan Pekerjaan",
                 href: "/works/logs",
-                allowedRoles: [Role.ADMIN, Role.STAFF],
             },
             {
                 name: "Jenis Pekerjaan",
                 href: "/works/types",
-                allowedRoles: [Role.ADMIN],
             },
         ],
     },
@@ -128,30 +106,24 @@ const availableNavigations: NavigationItem[] = [
             {
                 name: "Kalkulator Gaji",
                 href: "/salary/calculator",
-                allowedRoles: [Role.ADMIN],
             },
             {
                 name: "Komponen Gaji Statis",
                 href: "/salary/static-components",
-                allowedRoles: [Role.ADMIN],
             },
             {
                 name: "Komponen Gaji Tambahan",
                 href: "/salary/additional-components",
-                allowedRoles: [Role.ADMIN],
             },
             {
                 name: "Informasi Tambahan",
                 href: "/salary/extra-infos",
-                allowedRoles: [Role.ADMIN],
             },
             {
                 name: "Snapshot Gaji",
                 href: "/salary/snapshots",
-                allowedRoles: [Role.ADMIN],
             },
         ],
-        allowedRoles: [Role.ADMIN],
     },
     {
         name: "HRIS",
@@ -159,25 +131,20 @@ const availableNavigations: NavigationItem[] = [
             {
                 name: "Karyawan",
                 href: "/employees",
-                allowedRoles: [Role.ADMIN],
             },
             {
                 name: "Kehadiran",
                 href: "/attendances",
-                allowedRoles: [Role.ADMIN, Role.STAFF],
             },
             {
                 name: "Jenis Kehadiran",
                 href: "/attendances/types",
-                allowedRoles: [Role.ADMIN],
             },
             {
                 name: "Kuota Kehadiran",
                 href: "/attendances/quotas",
-                allowedRoles: [Role.ADMIN],
             },
         ],
-        allowedRoles: [Role.ADMIN, Role.STAFF],
     },
     {
         name: "Vmedis",
@@ -185,10 +152,8 @@ const availableNavigations: NavigationItem[] = [
             {
                 name: "Manajemen Token",
                 href: "/vmedis/tokens",
-                allowedRoles: [Role.ADMIN, Role.STAFF],
             },
         ],
-        allowedRoles: [Role.ADMIN, Role.STAFF],
     },
 ]
 
@@ -210,59 +175,23 @@ export function homepage(items: NavigationItem[]): string {
 }
 
 export function allowedNavigations(role?: Role | null): NavigationItem[] {
-    if (!role) {
-        role = Role.GUEST
-    }
-
     const navigations = availableNavigations
-        .filter(
-            (navigation) =>
-                !navigation.allowedRoles ||
-                navigation.allowedRoles.includes(role),
-        )
         .map((navigation) => ({
             ...navigation,
             target:
                 typeof navigation.target === "string"
                     ? navigation.target
-                    : navigation.target.filter(
-                        (page) =>
-                            !page.allowedRoles ||
-                              page.allowedRoles.includes(role),
+                    : navigation.target.filter((page) =>
+                        isPageAllowed(page.href, role),
                     ),
         }))
-        .filter((navigation) => navigation.target.length > 0)
+        .filter((navigation) =>
+            typeof navigation.target === "string"
+                ? isPageAllowed(navigation.target, role)
+                : navigation.target.length > 0,
+        )
 
     return flattenSingleNavigations(navigations)
-}
-
-export function isPageAllowed(href: string, role?: Role | null): boolean {
-    const matchedNavigations = availableNavigations.filter(
-        (navigation) => navigation.target === href,
-    )
-
-    const matchedPages = availableNavigations
-        .flatMap((navigation) =>
-            Array.isArray(navigation.target) ? navigation.target : [],
-        )
-        .filter((page) => page.href === href)
-
-    if (matchedNavigations.length === 0 && matchedPages.length === 0) {
-        return true
-    }
-
-    return (
-        matchedNavigations.some(
-            (navigation) =>
-                !navigation.allowedRoles ||
-                navigation.allowedRoles.includes(role ?? Role.GUEST),
-        ) ||
-        matchedPages.some(
-            (page) =>
-                !page.allowedRoles ||
-                page.allowedRoles.includes(role ?? Role.GUEST),
-        )
-    )
 }
 
 function flattenSingleNavigations(
@@ -281,7 +210,6 @@ function flattenSingleNavigations(
         return {
             name: page.name,
             target: page.href,
-            allowedRoles: page.allowedRoles,
         }
     })
 }

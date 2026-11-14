@@ -1,4 +1,5 @@
-import { auth } from "@/lib/auth"
+import { Role } from "@/lib/api/auth"
+import { requireRole } from "@/lib/require-role"
 import { getEmployees } from "@/lib/api/employee"
 import { StaticComponentsPageClient } from "./static-components-page-client"
 import { Title, Subtitle } from "@/components/typography"
@@ -18,7 +19,8 @@ interface StaticComponentsPageProps {
 export default async function StaticComponentsPage({
     searchParams,
 }: StaticComponentsPageProps): Promise<React.ReactElement> {
-    const sessionPromise = auth()
+    const session = await requireRole([Role.ADMIN])
+    const sessionPromise = Promise.resolve(session)
 
     // Process search params
     const processedSearchParams = searchParams.then((params) => ({

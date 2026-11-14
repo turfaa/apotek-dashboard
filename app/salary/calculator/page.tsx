@@ -1,4 +1,5 @@
-import { auth } from "@/lib/auth"
+import { Role } from "@/lib/api/auth"
+import { requireRole } from "@/lib/require-role"
 import { getEmployees } from "@/lib/api/employee"
 import { SalaryPageClient } from "./salary-page-client"
 import { Title, Subtitle } from "@/components/typography"
@@ -19,7 +20,8 @@ interface SalaryCalculatorPageProps {
 export default async function SalaryCalculatorPage({
     searchParams,
 }: SalaryCalculatorPageProps): Promise<React.ReactElement> {
-    const sessionPromise = auth()
+    const session = await requireRole([Role.ADMIN])
+    const sessionPromise = Promise.resolve(session)
 
     // Get default month (previous month)
     const defaultMonth = new Date()

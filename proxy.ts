@@ -1,101 +1,33 @@
+import {
+    apiTargetPath,
+    findApiRule,
+    isApiMethodAllowed,
+    isPageAllowed,
+    type Backend,
+} from "@/lib/access"
 import { Role } from "@/lib/api/auth"
 import { auth } from "@/lib/auth"
-import { isPageAllowed } from "@/lib/navigation"
 import { NextAuthRequest } from "next-auth"
 import { NextResponse } from "next/server"
 
-interface RewriteRule {
-    source: string
-    destination: string
-    allowedRoles: Role[]
+const backendUrls: Record<Backend, string | undefined> = {
+    vmedis: process.env.VMEDIS_PROXY_URL,
+    hris: process.env.HRIS_PROXY_URL,
 }
 
-const rewrites = [
-    {
-        source: "/api/sales/statistics",
-        destination: `${process.env.VMEDIS_PROXY_URL}/v1/sales/statistics`,
-        allowedRoles: [Role.ADMIN],
-    },
-    {
-        source: "/api/procurements/recommendations",
-        destination: `${process.env.VMEDIS_PROXY_URL}/v1/procurements/recommendations`,
-        allowedRoles: [Role.ADMIN, Role.STAFF],
-    },
-    {
-        source: "/api/employees",
-        destination: `${process.env.HRIS_PROXY_URL}/v1/employees`,
-        allowedRoles: [Role.ADMIN, Role.STAFF],
-    },
-    {
-        source: "/api/work-types",
-        destination: `${process.env.HRIS_PROXY_URL}/v1/work-types`,
-        allowedRoles: [Role.ADMIN, Role.STAFF],
-    },
-    {
-        source: "/api/work-logs",
-        destination: `${process.env.HRIS_PROXY_URL}/v1/work-logs`,
-        allowedRoles: [Role.ADMIN, Role.STAFF],
-    },
-    {
-        source: "/api/attendances",
-        destination: `${process.env.HRIS_PROXY_URL}/v1/attendances`,
-        allowedRoles: [Role.ADMIN, Role.STAFF],
-    },
-    {
-        source: "/api/attendances/:path*",
-        destination: `${process.env.HRIS_PROXY_URL}/v1/attendances/:path*`,
-        allowedRoles: [Role.ADMIN, Role.STAFF],
-    },
-    {
-        source: "/api/suppliers",
-        destination: `${process.env.VMEDIS_PROXY_URL}/v1/suppliers`,
-        allowedRoles: [Role.ADMIN, Role.STAFF],
-    },
+// Files served from /public and app/icon.png live at the root, e.g.
+// /favicon.ico, /manifest.json, /icon.png. No page sits at a root dynamic
+// segment (checked by `npm run check:access`), so these can't be pages.
+const ROOT_FILE = /^\/[^/]+\.[A-Za-z0-9]+$/
 
-    // v2 APIs are not protected by auth here becuase they are protected in the backend.
-    {
-        source: "/api/drugs",
-        destination: `${process.env.VMEDIS_PROXY_URL}/v2/drugs`,
-        allowedRoles: [Role.ADMIN, Role.STAFF, Role.RESELLER, Role.GUEST],
-    },
-    {
-        source: "/api/procurements/drugs",
-        destination: `${process.env.VMEDIS_PROXY_URL}/v2/procurements/drugs`,
-        allowedRoles: [Role.ADMIN, Role.STAFF, Role.RESELLER, Role.GUEST],
-    },
-    // The trailing slash keeps this rule from swallowing /api/sales/drugs,
-    // which is the v1 sold drugs report.
-    {
-        source: "/api/sales/drugs/",
-        destination: `${process.env.VMEDIS_PROXY_URL}/v2/sales/drugs/`,
-        allowedRoles: [Role.ADMIN, Role.STAFF],
-    },
-    {
-        source: "/api/procurements/suppliers",
-        destination: `${process.env.VMEDIS_PROXY_URL}/v2/procurements/suppliers`,
-        allowedRoles: [Role.ADMIN, Role.STAFF],
-    },
-    {
-        source: "/api/shifts",
-        destination: `${process.env.VMEDIS_PROXY_URL}/v2/shifts`,
-        allowedRoles: [Role.ADMIN, Role.STAFF],
-    },
-    {
-        source: "/api/salary",
-        destination: `${process.env.HRIS_PROXY_URL}/v1/salary`,
-        allowedRoles: [Role.ADMIN],
-    },
-    {
-        source: "/api/tokens",
-        destination: `${process.env.VMEDIS_PROXY_URL}/v2/vmedis/tokens`,
-        allowedRoles: [Role.ADMIN, Role.STAFF],
-    },
-    {
-        source: "/api/rejected-drugs",
-        destination: `${process.env.VMEDIS_PROXY_URL}/v2/rejected-drugs`,
-        allowedRoles: [Role.ADMIN, Role.STAFF],
-    },
-] satisfies RewriteRule[]
+function isFrameworkPath(pathname: string): boolean {
+    return (
+        pathname.startsWith("/_next/") ||
+        pathname === "/api/auth" ||
+        pathname.startsWith("/api/auth/") ||
+        ROOT_FILE.test(pathname)
+    )
+}
 
 export default auth(async function middleware(
     request: NextAuthRequest,
@@ -103,29 +35,35 @@ export default auth(async function middleware(
     const { pathname, search } = request.nextUrl
     const role = request.auth?.user?.role ?? Role.GUEST
 
-    for (const rule of rewrites) {
-        if (pathname.startsWith(rule.source)) {
-            if (!rule.allowedRoles.includes(role)) {
-                return NextResponse.json(
-                    { message: "Unauthorized" },
-                    { status: 401 },
-                )
-            }
-
-            const restOfPath = pathname.replace(rule.source, "")
-
-            const requestHeaders = new Headers(request.headers)
-            requestHeaders.set("x-email", request.auth?.user?.email ?? "")
-
-            const url = `${rule.destination}${restOfPath}${search}`
-            return NextResponse.rewrite(url, {
-                headers: requestHeaders,
-            })
-        }
+    if (isFrameworkPath(pathname)) {
+        return NextResponse.next()
     }
 
-    const path = pathname.endsWith("/") ? pathname.slice(0, -1) : pathname
-    if (!isPageAllowed(path, role)) {
+    if (pathname === "/api" || pathname.startsWith("/api/")) {
+        const rule = findApiRule(pathname)
+        if (!rule) {
+            return NextResponse.json({ message: "Not Found" }, { status: 404 })
+        }
+
+        if (!isApiMethodAllowed(rule, request.method, role)) {
+            return NextResponse.json(
+                { message: "Unauthorized" },
+                { status: 401 },
+            )
+        }
+
+        const requestHeaders = new Headers(request.headers)
+        requestHeaders.set("x-email", request.auth?.user?.email ?? "")
+
+        const url = `${backendUrls[rule.backend]}${apiTargetPath(rule, pathname)}${search}`
+        // `request.headers` replaces the headers sent upstream, so a client
+        // can't pass its own X-Email through to the backends.
+        return NextResponse.rewrite(url, {
+            request: { headers: requestHeaders },
+        })
+    }
+
+    if (!isPageAllowed(pathname, role)) {
         const url = request.nextUrl.clone()
         url.pathname = "/"
         url.search = ""
@@ -134,3 +72,8 @@ export default auth(async function middleware(
 
     return NextResponse.next()
 })
+
+export const config = {
+    // Skip static build output; everything else goes through the checks above.
+    matcher: ["/((?!_next/static|_next/image).*)"],
+}

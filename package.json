@@ -11,7 +11,8 @@
     "format": "oxlint --fix",
     "generate-pwa-icons": "tsx scripts/generate-pwa-icons.ts",
     "typecheck": "tsc --noEmit",
-    "stub-api": "node scripts/stub-api/server.mjs"
+    "stub-api": "node scripts/stub-api/server.mjs",
+    "check:access": "tsx scripts/check-page-access.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^7.0.6",

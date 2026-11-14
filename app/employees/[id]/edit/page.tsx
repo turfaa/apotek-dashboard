@@ -1,7 +1,8 @@
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { getEmployee } from "@/lib/api/employee"
-import { auth } from "@/lib/auth"
+import { Role } from "@/lib/api/auth"
+import { requireRole } from "@/lib/require-role"
 import { EditEmployeeForm } from "./form"
 
 export const metadata: Metadata = {
@@ -16,13 +17,13 @@ interface EditEmployeePageProps {
 export default async function EditEmployeePage({
     params,
 }: EditEmployeePageProps): Promise<React.ReactElement> {
+    const session = await requireRole([Role.ADMIN])
     const { id } = await params
     const employeeID = Number(id)
     if (!Number.isInteger(employeeID) || employeeID <= 0) {
         notFound()
     }
 
-    const session = await auth()
     const employee = await getEmployee(employeeID, session)
 
     return (

@@ -1,4 +1,5 @@
-import { auth } from "@/lib/auth"
+import { Role } from "@/lib/api/auth"
+import { requireRole } from "@/lib/require-role"
 import { getEmployees } from "@/lib/api/employee"
 import { AdditionalComponentsPageClient } from "./additional-components-page-client"
 import { Title, Subtitle } from "@/components/typography"
@@ -19,7 +20,8 @@ interface AdditionalComponentsPageProps {
 export default async function AdditionalComponentsPage({
     searchParams,
 }: AdditionalComponentsPageProps): Promise<React.ReactElement> {
-    const sessionPromise = auth()
+    const session = await requireRole([Role.ADMIN])
+    const sessionPromise = Promise.resolve(session)
 
     // Get default month (previous month)
     const defaultMonth = new Date()

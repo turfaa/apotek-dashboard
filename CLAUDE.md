@@ -62,6 +62,7 @@ npm run typecheck              # Type-check with TypeScript 7 (tsc --noEmit)
 # Other
 npm run generate-pwa-icons     # Generate PWA icons
 npm run stub-api               # Fake VMEDIS/HRIS backends for local builds/tests
+npm run check:access           # Fail if a page under app/ has no rule in lib/access.ts
 ```
 
 ### Building and testing without the real backends
@@ -139,10 +140,8 @@ export function ClientPageComponent({ dataPromise }) {
 1. User signs in with Google OAuth
 2. JWT callback in `/lib/auth.ts` calls `postLogin()` to fetch user role from backend
 3. Role stored in JWT token and session
-4. Middleware (`middleware.ts`) enforces:
-   - API route access control via rewrites
-   - Page-level access control via redirects
-5. Navigation menu filtered by role in `lib/navigation.ts`
+4. Proxy (`proxy.ts`) enforces page and API access from `lib/access.ts`
+5. Navigation menu filtered by the same page rules in `lib/navigation.ts`
 
 **Important**: Session contains `user.role` property added via NextAuth callbacks.
 
@@ -195,20 +194,21 @@ export function ClientPageComponent({ dataPromise }) {
 
 ### Role-Based Access Control
 
-Four roles enforced at multiple layers:
+Four roles, and access is **deny-by-default**. One access table in `lib/access.ts` drives everything:
 
-1. **Middleware** (`middleware.ts`):
-   - API route rewrites check `allowedRoles`
-   - Page access via `isPageAllowed()` function
-   - Unauthorized requests redirected to home
-
-2. **Navigation** (`lib/navigation.ts`):
-   - Navigation items have `allowedRoles` array
-   - Menu automatically filtered based on current user role
-
-3. **Component Level**:
-   - Print mode only for ADMIN/STAFF
-   - Conditional rendering based on session.user.role
+1. **Page rules** (`pageRules`): path patterns → allowed roles. Matched per path segment
+   (`*` = one segment, trailing `**` = the path and everything under it); the most specific
+   rule wins. A path with no rule is denied for every role (silent redirect to `/`).
+   **Every new page needs a rule** — `npm run check:access` fails otherwise (runs in the
+   Docker build and the `check-access` workflow).
+2. **API rules** (`apiRules`): `/api/*` prefix → backend path, with separate `read`
+   (GET/HEAD) and `write` (other methods) roles. Denied → `401`, unknown `/api/*` → `404`;
+   nothing is forwarded in either case. `x-email` is set from the session.
+3. **Proxy** (`proxy.ts`): applies both tables to every request.
+4. **Navigation** (`lib/navigation.ts`): menu items have no roles of their own; a page is
+   shown only if `isPageAllowed()` allows it.
+5. **Server components** that fetch sensitive data (`app/salary/**`, `app/employees/**`)
+   also call `requireRole()` from `lib/require-role.ts` before fetching.
 
 ## Directory Structure
 

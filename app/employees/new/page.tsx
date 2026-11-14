@@ -1,3 +1,5 @@
+import { Role } from "@/lib/api/auth"
+import { requireRole } from "@/lib/require-role"
 import { Metadata } from "next"
 import { EmployeeForm } from "./form"
 
@@ -6,7 +8,9 @@ export const metadata: Metadata = {
     description: "Tambah karyawan baru ke sistem",
 }
 
-export default function NewEmployeePage() {
+export default async function NewEmployeePage(): Promise<React.ReactElement> {
+    await requireRole([Role.ADMIN])
+
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <div className="mb-6">

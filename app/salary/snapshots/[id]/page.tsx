@@ -1,4 +1,5 @@
-import { auth } from "@/lib/auth"
+import { Role } from "@/lib/api/auth"
+import { requireRole } from "@/lib/require-role"
 import { getEmployees } from "@/lib/api/employee"
 import { getSalarySnapshot } from "@/lib/api/salary"
 import { SnapshotDetailClient } from "./snapshot-detail-client"
@@ -11,7 +12,7 @@ interface SnapshotDetailPageProps {
 }
 
 export async function generateMetadata({ params }: SnapshotDetailPageProps): Promise<Metadata> {
-    const session = await auth()
+    const session = await requireRole([Role.ADMIN])
     const { id } = await params
 
     try {
@@ -33,7 +34,8 @@ export async function generateMetadata({ params }: SnapshotDetailPageProps): Pro
 export default async function SnapshotDetailPage({
     params,
 }: SnapshotDetailPageProps): Promise<React.ReactElement> {
-    const sessionPromise = auth()
+    const session = await requireRole([Role.ADMIN])
+    const sessionPromise = Promise.resolve(session)
     const { id } = await params
 
     // Fetch snapshot by ID

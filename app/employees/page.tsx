@@ -6,15 +6,17 @@ import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import Link from "next/link"
 import { Title, Subtitle } from "@/components/typography/v2"
-import { auth } from "@/lib/auth"
+import { Role } from "@/lib/api/auth"
+import { requireRole } from "@/lib/require-role"
 
 export const metadata: Metadata = {
     title: "Karyawan",
     description: "Kelola karyawan dan gaji per shift mereka",
 }
 
-export default function EmployeesPage(): React.ReactElement {
-    const employees = auth().then((session) => getEmployees(session))
+export default async function EmployeesPage(): Promise<React.ReactElement> {
+    const session = await requireRole([Role.ADMIN])
+    const employees = getEmployees(session)
 
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
