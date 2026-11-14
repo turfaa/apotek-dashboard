@@ -28,6 +28,7 @@ const formSchema = z.object({
         message: "Gaji per shift harus berupa angka positif.",
     }),
     showInAttendances: z.boolean(),
+    isActive: z.boolean(),
 })
 
 interface EditEmployeeFormProps {
@@ -42,6 +43,7 @@ export function EditEmployeeForm({ employee }: EditEmployeeFormProps) {
             name: employee.name,
             shiftFee: employee.shiftFee,
             showInAttendances: employee.showInAttendances,
+            isActive: employee.isActive,
         },
     })
 
@@ -52,6 +54,7 @@ export function EditEmployeeForm({ employee }: EditEmployeeFormProps) {
                 values.name,
                 values.shiftFee,
                 values.showInAttendances,
+                values.isActive,
             )
             toast.success("Data karyawan berhasil diperbarui")
             router.push("/employees")
@@ -92,6 +95,30 @@ export function EditEmployeeForm({ employee }: EditEmployeeFormProps) {
                                 />
                             </FormControl>
                             <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="isActive"
+                    render={({ field }) => (
+                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                            <div className="space-y-0.5">
+                                <FormLabel className="text-base">
+                                    Aktif
+                                </FormLabel>
+                                <FormDescription>
+                                    Nonaktifkan jika karyawan ini sudah tidak
+                                    bekerja lagi. Karyawan nonaktif tidak bisa
+                                    dipilih di halaman lain selain kehadiran.
+                                </FormDescription>
+                            </div>
+                            <FormControl>
+                                <Switch
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                />
+                            </FormControl>
                         </FormItem>
                     )}
                 />

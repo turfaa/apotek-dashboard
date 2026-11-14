@@ -188,7 +188,7 @@ export async function getPurchaseOrderLetter(
     )
 }
 
-// Lists the current employees for "Dibuat oleh", sorted by name. Reads HRIS
+// Lists the active employees for "Dibuat oleh", sorted by name. Reads HRIS
 // on the server and keeps only the id and name, because the HRIS employee
 // list also has their shift fees.
 export async function getPurchaseOrderLetterEmployees(
@@ -197,7 +197,7 @@ export async function getPurchaseOrderLetterEmployees(
     const employees = await getEmployees(session)
 
     return employees
-        .filter((employee) => employee.showInAttendances)
+        .filter((employee) => employee.isActive)
         .map(({ id, name }) => ({ id, name }))
         .sort((a, b) => a.name.localeCompare(b.name, "id"))
 }

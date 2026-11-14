@@ -86,9 +86,10 @@ const drugsV2 = drugsV1.map((d) => ({
 }))
 
 const employees = [
-    { id: 1, name: "Andi", shiftFee: "75000", showInAttendances: true },
-    { id: 2, name: "Budi", shiftFee: "70000", showInAttendances: true },
-    { id: 3, name: "Citra", shiftFee: "80000", showInAttendances: false },
+    { id: 1, name: "Andi", shiftFee: "75000", showInAttendances: true, isActive: true },
+    { id: 2, name: "Budi", shiftFee: "70000", showInAttendances: true, isActive: true },
+    { id: 3, name: "Citra", shiftFee: "80000", showInAttendances: false, isActive: true },
+    { id: 4, name: "Dewi", shiftFee: "72000", showInAttendances: true, isActive: false },
 ].map((e) => ({ ...e, createdAt: iso(daysAgo(365)), updatedAt: iso(daysAgo(30)) }))
 
 const attendanceTypes = [

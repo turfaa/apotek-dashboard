@@ -13,7 +13,10 @@ import { PersonIcon } from "@radix-ui/react-icons"
 import {
     Select,
     SelectContent,
+    SelectGroup,
     SelectItem,
+    SelectLabel,
+    SelectSeparator,
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
@@ -39,6 +42,11 @@ export function EmployeePicker({
     const employeeName = selectedEmployee
         ? selectedEmployee.name
         : "Pilih Karyawan"
+
+    // Inactive employees stay pickable so their past records can still be
+    // opened, but they are listed apart from the active ones.
+    const activeEmployees = employees.filter((emp) => emp.isActive)
+    const inactiveEmployees = employees.filter((emp) => !emp.isActive)
 
     if (isPrintMode) {
         return <Title>{employeeName}</Title>
@@ -73,7 +81,7 @@ export function EmployeePicker({
                 </div>
             </SelectTrigger>
             <SelectContent>
-                {employees.map((employee) => (
+                {activeEmployees.map((employee) => (
                     <SelectItem
                         key={employee.id}
                         value={employee.id.toString()}
@@ -81,6 +89,23 @@ export function EmployeePicker({
                         {employee.name}
                     </SelectItem>
                 ))}
+                {inactiveEmployees.length > 0 && (
+                    <>
+                        <SelectSeparator />
+                        <SelectGroup>
+                            <SelectLabel>Tidak aktif</SelectLabel>
+                            {inactiveEmployees.map((employee) => (
+                                <SelectItem
+                                    key={employee.id}
+                                    value={employee.id.toString()}
+                                    className="text-muted-foreground"
+                                >
+                                    {employee.name}
+                                </SelectItem>
+                            ))}
+                        </SelectGroup>
+                    </>
+                )}
             </SelectContent>
         </Select>
     )

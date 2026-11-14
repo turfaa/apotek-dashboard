@@ -125,7 +125,9 @@ export function AddWorkLogDialog({
     }
 
     const session = use(sessionPromise)
-    const employees = use(employeesPromise)
+    const employees = use(employeesPromise).filter(
+        (employee) => employee.isActive,
+    )
     const workTypes = use(workTypesPromise)
 
     async function onSubmit(values: FormData) {

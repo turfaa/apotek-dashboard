@@ -2,6 +2,7 @@
 
 import { DataTableColumnDef } from "@/lib/data-table"
 import { Employee } from "@/lib/api/employee"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Pencil } from "lucide-react"
 import Link from "next/link"
@@ -22,6 +23,16 @@ export const columns: DataTableColumnDef<Employee>[] = [
             }).format(amount)
             return formatted
         },
+    },
+    {
+        accessorKey: "isActive",
+        header: "Status",
+        cell: ({ row }) =>
+            row.original.isActive ? (
+                <Badge>Aktif</Badge>
+            ) : (
+                <Badge variant="secondary">Tidak aktif</Badge>
+            ),
     },
     {
         accessorKey: "createdAt",

@@ -6,6 +6,7 @@ export interface Employee {
     name: string
     shiftFee: number
     showInAttendances: boolean
+    isActive: boolean
     createdAt: Date
     updatedAt: Date
 }
@@ -15,6 +16,7 @@ export interface UnderlyingEmployee {
     name: string
     shiftFee: string
     showInAttendances: boolean
+    isActive?: boolean
     createdAt: string
     updatedAt: string
 }
@@ -48,6 +50,8 @@ export function convertUnderlyingEmployee(
         name: underlyingEmployee.name,
         shiftFee: parseFloat(underlyingEmployee.shiftFee),
         showInAttendances: underlyingEmployee.showInAttendances,
+        // Older HRIS versions do not send isActive yet.
+        isActive: underlyingEmployee.isActive ?? true,
         createdAt: new Date(underlyingEmployee.createdAt),
         updatedAt: new Date(underlyingEmployee.updatedAt),
     }
@@ -97,12 +101,13 @@ export async function updateEmployee(
     name: string,
     shiftFee: number,
     showInAttendances: boolean,
+    isActive: boolean,
     session?: Session | null,
 ): Promise<Employee> {
     const underlyingEmployee = await fetchAPI<UnderlyingEmployee>(
         "PUT",
         `/employees/${id}`,
-        { name, shiftFee, showInAttendances },
+        { name, shiftFee, showInAttendances, isActive },
         {},
         {
             forHRIS: true,
