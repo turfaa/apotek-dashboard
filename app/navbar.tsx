@@ -42,6 +42,10 @@ import Link from "next/link"
 
 const rolesAllowedToPrint = [Role.ADMIN, Role.STAFF]
 
+// Pages with no Print button. On Buat Pesanan, operators should make a surat
+// pesanan instead of printing the page.
+const pathsWithoutPrint = ["/procurements/purchase-order"]
+
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(" ")
 }
@@ -79,6 +83,10 @@ export function InnerNavbar({
 
     let pathname = usePathname()
     if (pathname === "/") pathname = `/${homepage}`
+
+    const showPrint =
+        rolesAllowedToPrint.includes(session?.user?.role ?? Role.GUEST) &&
+        !pathsWithoutPrint.includes(pathname)
 
     const [isSheetOpen, setIsSheetOpen] = useState(false)
 
@@ -156,9 +164,7 @@ export function InnerNavbar({
                         </div>
                     </div>
                     <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
-                        {rolesAllowedToPrint.includes(
-                            session?.user?.role ?? Role.GUEST,
-                        ) && <PrintButton />}
+                        {showPrint && <PrintButton />}
 
                         <DropdownMenu>
                             <DropdownMenuTrigger>
