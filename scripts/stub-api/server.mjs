@@ -224,7 +224,7 @@ const vmedis = [
     ["GET", /^\/v2\/shifts$/, () => table(["Kode", "Kasir", "Mulai", "Selesai"], [["S1", "Andi", iso(daysAgo(1)), iso(now)]])],
     ["GET", /^\/v2\/shifts\/(\d+)\/show$/, (m) => html(`<h1>Shift ${m[1]}</h1><p>Stub shift printout.</p>`)],
     ["GET", /^\/v2\/shifts\/dump\/status$/, () => ({ status: "IDLE" })],
-    ["GET", /^\/v2\/vmedis\/tokens$/, () => table(["ID", "Token", "Status"], [["1", "abc…", "ACTIVE"]])],
+    ["GET", /^\/v2\/vmedis\/tokens$/, () => table(["ID", "Token", "Status", "Versi"], [["1", "abc…", "ACTIVE", "V1"]])],
     ["GET", /^\/v2\/vmedis\/tokens\/refresh\/status$/, () => ({ status: "IDLE" })],
     ["GET", /^\/v2\/rejected-drugs$/, () => table(["Obat", "Status", "Dibuat oleh"], rejectedDrugs.map((d) => [d.drugName, d.resolution, d.createdBy]))],
     ["GET", /^\/v2\/rejected-drugs\/resolutions$/, () => ({ options: [{ value: "UNRESOLVED", label: "Belum ditangani" }, { value: "ORDERED", label: "Sudah dipesan" }] })],

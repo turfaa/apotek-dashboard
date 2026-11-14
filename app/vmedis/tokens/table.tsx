@@ -35,6 +35,7 @@ export function TokensTableFallback(): React.ReactElement {
                     <TableHead>Terakhir Diperbarui</TableHead>
                     <TableHead>Token</TableHead>
                     <TableHead>Status</TableHead>
+                    <TableHead>Versi</TableHead>
                     <TableHead></TableHead>
                 </TableRow>
             </TableHeader>
@@ -56,6 +57,9 @@ export function TokensTableFallback(): React.ReactElement {
                         </TableCell>
                         <TableCell>
                             <Skeleton className="h-4 w-[100px]" />
+                        </TableCell>
+                        <TableCell>
+                            <Skeleton className="h-4 w-[40px]" />
                         </TableCell>
                         <TableCell>
                             <Skeleton className="h-9 w-9" />
