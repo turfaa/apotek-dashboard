@@ -254,238 +254,241 @@ export function AttendanceTable({
         <div className="space-y-4">
             <TooltipProvider>
                 <div className="rounded-md border overflow-hidden">
-                    <div className="overflow-x-auto">
-                        <Table>
-                            <TableHeader>
-                                <TableRow className="bg-muted/50">
-                                    <TableHead className="w-32 sticky left-0 bg-muted/50 z-10">
-                                        Tanggal
+                    {/*
+                         * The table scrolls inside its own box (both axes) so the
+                         * employee-name header can stay pinned to the top while
+                         * scrolling through the dates.
+                         */}
+                    <Table containerClassName="max-h-[calc(100dvh-4rem)]">
+                        <TableHeader>
+                            <TableRow className="bg-muted hover:bg-muted">
+                                <TableHead className="w-32 sticky top-0 left-0 bg-muted z-30 shadow-[inset_0_-1px_0_hsl(var(--border))]">
+                                    Tanggal
+                                </TableHead>
+                                {filteredEmployees.map((employee) => (
+                                    <TableHead
+                                        key={employee.id}
+                                        className="text-center min-w-[120px] sticky top-0 bg-muted z-20 shadow-[inset_0_-1px_0_hsl(var(--border))]"
+                                    >
+                                        {employee.name}
                                     </TableHead>
-                                    {filteredEmployees.map((employee) => (
-                                        <TableHead
-                                            key={employee.id}
-                                            className="text-center min-w-[120px]"
-                                        >
-                                            {employee.name}
-                                        </TableHead>
-                                    ))}
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {monthDates.map((date: string) => (
-                                    <TableRow key={date}>
-                                        <TableCell className="font-medium sticky left-0 bg-background z-10">
-                                            {format(
-                                                parseISO(date),
-                                                "dd MMM yyyy",
-                                                { locale: id },
-                                            )}
-                                        </TableCell>
-                                        {filteredEmployees.map((employee) => {
-                                            const attendance = getAttendance(
-                                                employee.id,
-                                                date,
-                                            )
-                                            const isMutable =
-                                                isDateMutable(date)
+                                ))}
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {monthDates.map((date: string) => (
+                                <TableRow key={date}>
+                                    <TableCell className="font-medium sticky left-0 bg-background z-10">
+                                        {format(
+                                            parseISO(date),
+                                            "dd MMM yyyy",
+                                            { locale: id },
+                                        )}
+                                    </TableCell>
+                                    {filteredEmployees.map((employee) => {
+                                        const attendance = getAttendance(
+                                            employee.id,
+                                            date,
+                                        )
+                                        const isMutable =
+                                            isDateMutable(date)
 
-                                            return (
-                                                <TableCell
-                                                    key={employee.id}
-                                                    className={cn(
-                                                        "text-center transition-colors border-l",
-                                                        isMutable
-                                                            ? "cursor-pointer hover:bg-muted/50 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                                                            : "cursor-not-allowed opacity-50 bg-muted/20",
-                                                    )}
-                                                    onClick={() =>
-                                                        handleCellClick(
-                                                            employee.id,
-                                                            date,
-                                                        )
-                                                    }
-                                                    onKeyDown={(e) =>
-                                                        handleKeyDown(
-                                                            e,
-                                                            employee.id,
-                                                            date,
-                                                        )
-                                                    }
-                                                    tabIndex={
-                                                        isMutable ? 0 : -1
-                                                    }
-                                                    role={
-                                                        isMutable
-                                                            ? "button"
-                                                            : undefined
-                                                    }
-                                                    aria-label={
-                                                        isMutable
-                                                            ? `Edit kehadiran ${employee.name} pada ${format(parseISO(date), "dd MMM yyyy", { locale: id })}`
-                                                            : undefined
-                                                    }
-                                                >
-                                                    <Tooltip>
-                                                        <TooltipTrigger asChild>
-                                                            <div className="w-full h-full">
-                                                                {attendance ? (
-                                                                    <div className="space-y-1">
-                                                                        <div className="text-sm font-medium">
-                                                                            {
-                                                                                attendance
-                                                                                    .type
-                                                                                    .name
-                                                                            }
-                                                                        </div>
-                                                                        {attendance.overtimeHours >
-                                                                            0 && (
-                                                                            <div className="text-xs text-muted-foreground">
-                                                                                +
-                                                                                {
-                                                                                    attendance.overtimeHours
-                                                                                }{" "}
-                                                                                jam
-                                                                            </div>
-                                                                        )}
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="text-sm text-muted-foreground">
-                                                                        -
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        </TooltipTrigger>
-                                                        <TooltipContent>
-                                                            <div className="text-center">
-                                                                <div className="font-medium">
-                                                                    {
-                                                                        employee.name
-                                                                    }
-                                                                </div>
-                                                                <div className="text-sm opacity-90">
-                                                                    {format(
-                                                                        parseISO(
-                                                                            date,
-                                                                        ),
-                                                                        "dd MMMM yyyy",
-                                                                        {
-                                                                            locale: id,
-                                                                        },
-                                                                    )}
-                                                                </div>
-                                                                {attendance && (
-                                                                    <div className="text-sm opacity-75 mt-1">
+                                        return (
+                                            <TableCell
+                                                key={employee.id}
+                                                className={cn(
+                                                    "text-center transition-colors border-l",
+                                                    isMutable
+                                                        ? "cursor-pointer hover:bg-muted/50 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                                                        : "cursor-not-allowed opacity-50 bg-muted/20",
+                                                )}
+                                                onClick={() =>
+                                                    handleCellClick(
+                                                        employee.id,
+                                                        date,
+                                                    )
+                                                }
+                                                onKeyDown={(e) =>
+                                                    handleKeyDown(
+                                                        e,
+                                                        employee.id,
+                                                        date,
+                                                    )
+                                                }
+                                                tabIndex={
+                                                    isMutable ? 0 : -1
+                                                }
+                                                role={
+                                                    isMutable
+                                                        ? "button"
+                                                        : undefined
+                                                }
+                                                aria-label={
+                                                    isMutable
+                                                        ? `Edit kehadiran ${employee.name} pada ${format(parseISO(date), "dd MMM yyyy", { locale: id })}`
+                                                        : undefined
+                                                }
+                                            >
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <div className="w-full h-full">
+                                                            {attendance ? (
+                                                                <div className="space-y-1">
+                                                                    <div className="text-sm font-medium">
                                                                         {
                                                                             attendance
                                                                                 .type
                                                                                 .name
                                                                         }
-                                                                        {attendance.overtimeHours >
-                                                                            0 &&
-                                                                            ` • +${attendance.overtimeHours} jam`}
                                                                     </div>
+                                                                    {attendance.overtimeHours >
+                                                                            0 && (
+                                                                        <div className="text-xs text-muted-foreground">
+                                                                            +
+                                                                            {
+                                                                                attendance.overtimeHours
+                                                                            }{" "}
+                                                                            jam
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            ) : (
+                                                                <div className="text-sm text-muted-foreground">
+                                                                    -
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        <div className="text-center">
+                                                            <div className="font-medium">
+                                                                {
+                                                                    employee.name
+                                                                }
+                                                            </div>
+                                                            <div className="text-sm opacity-90">
+                                                                {format(
+                                                                    parseISO(
+                                                                        date,
+                                                                    ),
+                                                                    "dd MMMM yyyy",
+                                                                    {
+                                                                        locale: id,
+                                                                    },
                                                                 )}
                                                             </div>
-                                                        </TooltipContent>
-                                                    </Tooltip>
-                                                </TableCell>
-                                            )
-                                        })}
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                            <TableFooter>
-                                <TableRow className="bg-muted/30">
-                                    <TableCell className="font-medium sticky left-0 bg-muted/30 z-10">
-                                        Ringkasan Bulanan
-                                    </TableCell>
-                                    {filteredEmployees.map((employee) => {
-                                        const summary = getEmployeeSummary(
-                                            employee.id,
+                                                            {attendance && (
+                                                                <div className="text-sm opacity-75 mt-1">
+                                                                    {
+                                                                        attendance
+                                                                            .type
+                                                                            .name
+                                                                    }
+                                                                    {attendance.overtimeHours >
+                                                                            0 &&
+                                                                            ` • +${attendance.overtimeHours} jam`}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TableCell>
                                         )
+                                    })}
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                        <TableFooter>
+                            <TableRow className="bg-muted/30">
+                                <TableCell className="font-medium sticky left-0 bg-muted/30 z-10">
+                                    Ringkasan Bulanan
+                                </TableCell>
+                                {filteredEmployees.map((employee) => {
+                                    const summary = getEmployeeSummary(
+                                        employee.id,
+                                    )
 
-                                        if (isLoading) {
-                                            return (
-                                                <TableCell
-                                                    key={employee.id}
-                                                    className="text-center text-sm"
-                                                >
-                                                    <div className="animate-pulse bg-muted h-4 w-16 mx-auto rounded"></div>
-                                                </TableCell>
-                                            )
-                                        }
-
-                                        if (!summary) {
-                                            return (
-                                                <TableCell
-                                                    key={employee.id}
-                                                    className="text-center text-sm text-muted-foreground"
-                                                >
-                                                    -
-                                                </TableCell>
-                                            )
-                                        }
-
-                                        // Format detailed benefits
-                                        const benefitEntries = Object.entries(
-                                            summary.daysByBenefit,
-                                        )
-                                            .filter((entry) => entry[1] > 0)
-                                            .sort(([a], [b]) =>
-                                                a < b ? -1 : 1,
-                                            ) // Sort by benefit name
-
+                                    if (isLoading) {
                                         return (
                                             <TableCell
                                                 key={employee.id}
                                                 className="text-center text-sm"
                                             >
-                                                <div className="space-y-1">
-                                                    <div className="font-medium">
-                                                        {summary.workingDays}{" "}
-                                                        hari kerja
-                                                    </div>
-                                                    {benefitEntries.length >
-                                                        0 && (
-                                                        <div className="space-y-0.5">
-                                                            {benefitEntries.map(
-                                                                ([
-                                                                    benefit,
-                                                                    count,
-                                                                ]) => (
-                                                                    <div
-                                                                        key={
-                                                                            benefit
-                                                                        }
-                                                                        className="text-xs text-blue-600"
-                                                                    >
-                                                                        {count}{" "}
-                                                                        {
-                                                                            benefit
-                                                                        }
-                                                                    </div>
-                                                                ),
-                                                            )}
-                                                        </div>
-                                                    )}
-                                                    {summary.overtimeHours >
-                                                        0 && (
-                                                        <div className="text-xs text-orange-600">
-                                                            +
-                                                            {
-                                                                summary.overtimeHours
-                                                            }{" "}
-                                                            jam lembur
-                                                        </div>
-                                                    )}
-                                                </div>
+                                                <div className="animate-pulse bg-muted h-4 w-16 mx-auto rounded"></div>
                                             </TableCell>
                                         )
-                                    })}
-                                </TableRow>
-                            </TableFooter>
-                        </Table>
-                    </div>
+                                    }
+
+                                    if (!summary) {
+                                        return (
+                                            <TableCell
+                                                key={employee.id}
+                                                className="text-center text-sm text-muted-foreground"
+                                            >
+                                                -
+                                            </TableCell>
+                                        )
+                                    }
+
+                                    // Format detailed benefits
+                                    const benefitEntries = Object.entries(
+                                        summary.daysByBenefit,
+                                    )
+                                        .filter((entry) => entry[1] > 0)
+                                        .sort(([a], [b]) =>
+                                            a < b ? -1 : 1,
+                                        ) // Sort by benefit name
+
+                                    return (
+                                        <TableCell
+                                            key={employee.id}
+                                            className="text-center text-sm"
+                                        >
+                                            <div className="space-y-1">
+                                                <div className="font-medium">
+                                                    {summary.workingDays}{" "}
+                                                    hari kerja
+                                                </div>
+                                                {benefitEntries.length >
+                                                        0 && (
+                                                    <div className="space-y-0.5">
+                                                        {benefitEntries.map(
+                                                            ([
+                                                                benefit,
+                                                                count,
+                                                            ]) => (
+                                                                <div
+                                                                    key={
+                                                                        benefit
+                                                                    }
+                                                                    className="text-xs text-blue-600"
+                                                                >
+                                                                    {count}{" "}
+                                                                    {
+                                                                        benefit
+                                                                    }
+                                                                </div>
+                                                            ),
+                                                        )}
+                                                    </div>
+                                                )}
+                                                {summary.overtimeHours >
+                                                        0 && (
+                                                    <div className="text-xs text-orange-600">
+                                                        +
+                                                        {
+                                                            summary.overtimeHours
+                                                        }{" "}
+                                                        jam lembur
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </TableCell>
+                                    )
+                                })}
+                            </TableRow>
+                        </TableFooter>
+                    </Table>
                 </div>
             </TooltipProvider>
 
