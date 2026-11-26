@@ -188,7 +188,7 @@ export function SalaryPageClient({
                                 asChild
                             >
                                 <a
-                                    href={`/salary/snapshots/${existingSnapshot.id}?print=true`}
+                                    href={`/salary/snapshots/${existingSnapshot.id}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
