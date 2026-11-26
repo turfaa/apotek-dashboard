@@ -11,6 +11,7 @@ import { format } from "date-fns"
 import { id } from "date-fns/locale"
 import { SalaryCard } from "../../components/salary-card"
 import { usePrintMode } from "@/lib/print-mode"
+import { SlipPdfButton } from "../slip-download"
 
 interface SnapshotDetailClientProps {
     snapshotPromise: Promise<SalarySnapshot>
@@ -40,7 +41,7 @@ export function SnapshotDetailClient({
     return (
         <div className="space-y-6">
             {!isPrintMode && (
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                         <h2 className="text-lg font-semibold">
                             Snapshot Gaji - {employee?.name || "Karyawan tidak ditemukan"}
@@ -49,10 +50,13 @@ export function SnapshotDetailClient({
                             Dibuat pada {format(snapshot.createdAt, "dd MMM yyyy 'pukul' HH:mm", { locale: id })}
                         </p>
                     </div>
-                    <Button variant="outline" onClick={handleGoBack}>
-                        <ArrowLeft className="h-4 w-4 mr-2" />
-                        Kembali ke Daftar
-                    </Button>
+                    <div className="flex flex-wrap gap-2">
+                        <SlipPdfButton snapshotID={snapshot.id} variant="label" />
+                        <Button variant="outline" onClick={handleGoBack}>
+                            <ArrowLeft className="h-4 w-4 mr-2" />
+                            Kembali ke Daftar
+                        </Button>
+                    </div>
                 </div>
             )}
 

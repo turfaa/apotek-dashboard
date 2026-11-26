@@ -13,6 +13,7 @@
 // is persisted.
 
 import { createServer } from "node:http"
+import { crc32 } from "node:zlib"
 
 const PORT = Number(process.env.STUB_API_PORT ?? 4010)
 
@@ -400,6 +401,87 @@ function purchaseOrderPdf(m) {
     }, Buffer.from(tinyPdf(`Stub ${po.number}`)))
 }
 
+// Pay slips (slip gaji) of salary snapshots: a tiny PDF per snapshot, and a
+// ZIP of a month's, named like HRIS names them.
+function salarySlipFile(snapshot) {
+    const name = employees.find((e) => e.id === snapshot.employeeID)?.name ?? `Karyawan #${snapshot.employeeID}`
+    return { filename: `${snapshot.month} - ${name} - Slip Gaji.pdf`, content: Buffer.from(tinyPdf(`Stub Slip Gaji ${name}`)) }
+}
+
+function attachment(contentType, filename) {
+    return {
+        "Content-Type": contentType,
+        "Content-Disposition": `attachment; filename="${filename}"; filename*=UTF-8''${encodeURIComponent(filename)}`,
+        "Cache-Control": "no-store",
+    }
+}
+
+function salarySlipPdf(m) {
+    const snapshot = salarySnapshots.find((s) => s.id === Number(m[1]))
+    if (!snapshot) return raw(404, {}, { message: "snapshot not found" })
+
+    const file = salarySlipFile(snapshot)
+    return raw(200, attachment("application/pdf", file.filename), file.content)
+}
+
+function salarySlipsZip(_m, _body, params) {
+    const month = params.get("month")
+    if (!/^\d{4}-\d{2}$/.test(month ?? "")) return raw(400, {}, { message: "month is required" })
+
+    const employeeID = params.get("employeeID")
+    const snapshots = salarySnapshots.filter((s) =>
+        s.month === month && (!employeeID || s.employeeID === Number(employeeID)))
+    if (snapshots.length === 0) return raw(404, {}, { message: "no salary snapshots for this month" })
+
+    return raw(200, attachment("application/zip", `${month} - Slip Gaji.zip`), storedZip(snapshots.map(salarySlipFile)))
+}
+
+// A ZIP of uncompressed ("stored") files.
+function storedZip(files) {
+    const locals = []
+    const centrals = []
+    let offset = 0
+
+    for (const { filename, content } of files) {
+        const name = Buffer.from(filename)
+        const crc = crc32(content)
+
+        const local = Buffer.alloc(30)
+        local.writeUInt32LE(0x04034b50, 0)
+        local.writeUInt16LE(20, 4)
+        local.writeUInt16LE(0x0800, 6) // UTF-8 names
+        local.writeUInt32LE(crc, 14)
+        local.writeUInt32LE(content.length, 18)
+        local.writeUInt32LE(content.length, 22)
+        local.writeUInt16LE(name.length, 26)
+        locals.push(local, name, content)
+
+        const central = Buffer.alloc(46)
+        central.writeUInt32LE(0x02014b50, 0)
+        central.writeUInt16LE(20, 4)
+        central.writeUInt16LE(20, 6)
+        central.writeUInt16LE(0x0800, 8)
+        central.writeUInt32LE(crc, 16)
+        central.writeUInt32LE(content.length, 20)
+        central.writeUInt32LE(content.length, 24)
+        central.writeUInt16LE(name.length, 28)
+        central.writeUInt32LE(offset, 42)
+        centrals.push(central, name)
+
+        offset += local.length + name.length + content.length
+    }
+
+    const centralSize = centrals.reduce((n, b) => n + b.length, 0)
+    const end = Buffer.alloc(22)
+    end.writeUInt32LE(0x06054b50, 0)
+    end.writeUInt16LE(files.length, 8)
+    end.writeUInt16LE(files.length, 10)
+    end.writeUInt32LE(centralSize, 12)
+    end.writeUInt32LE(offset, 16)
+
+    return Buffer.concat([...locals, ...centrals, end])
+}
+
 // A one-page PDF with a line of text.
 function tinyPdf(text) {
     const objects = [
@@ -502,6 +584,8 @@ const hris = [
         { id: 1, employeeID: 1, attendanceType: attendanceTypes[1], previousQuota: 12, newQuota: 11, reason: "attendance_deduction", createdAt: iso(daysAgo(2)) },
     ]],
     ["GET", /^\/v1\/salary\/snapshots$/, () => salarySnapshots],
+    ["GET", /^\/v1\/salary\/snapshots\/slips\.zip$/, salarySlipsZip],
+    ["GET", /^\/v1\/salary\/snapshots\/(\d+)\/pdf$/, salarySlipPdf],
     ["GET", /^\/v1\/salary\/snapshots\/(\d+)$/, (m) => salarySnapshots.find((s) => s.id === Number(m[1])) ?? salarySnapshots[0]],
     ["GET", /^\/v1\/salary\/(\d+)\/static-components$/, (m) => salaryComponents.map((c, i) => ({ id: i + 1, employeeID: Number(m[1]), ...c }))],
     ["GET", /^\/v1\/salary\/(\d{4}-\d{2})\/(\d+)\/additional-components$/, (m) => [

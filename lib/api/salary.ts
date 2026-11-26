@@ -1,6 +1,7 @@
 import { Session } from "next-auth"
 import { fetchAPI } from "./base"
 import { buildQueryParams } from "./common"
+import { saveResponseAsFile } from "@/lib/download"
 
 export interface SalarySnapshot {
     id: number
@@ -456,4 +457,60 @@ export async function deleteSalarySnapshot(
             session: session,
         },
     )
+}
+
+// An error response of the pay slip (slip gaji) downloads.
+export class SalarySlipError extends Error {
+    readonly status: number
+
+    constructor(status: number, message: string) {
+        super(message)
+        this.name = "SalarySlipError"
+        this.status = status
+    }
+}
+
+// Downloads a snapshot's pay slip PDF in the browser, named
+// "YYYY-MM - <name> - Slip Gaji.pdf" by HRIS. Throws SalarySlipError.
+export async function downloadSalarySlipPdf(snapshotID: number): Promise<void> {
+    const res = await fetch(`/api/salary/snapshots/${snapshotID}/pdf`)
+    if (!res.ok) {
+        throw await toSalarySlipError(res)
+    }
+
+    await saveResponseAsFile(res, `slip-gaji-${snapshotID}.pdf`)
+}
+
+// Downloads a ZIP of the pay slips of a month's snapshots, of one employee
+// when employeeID is set, named "YYYY-MM - Slip Gaji.zip". Throws
+// SalarySlipError.
+export async function downloadSalarySlipsZip(
+    month: string,
+    employeeID?: number,
+): Promise<void> {
+    const params = new URLSearchParams({ month })
+    if (employeeID !== undefined) {
+        params.set("employeeID", String(employeeID))
+    }
+
+    const res = await fetch(`/api/salary/snapshots/slips.zip?${params}`)
+    if (!res.ok) {
+        throw await toSalarySlipError(res)
+    }
+
+    await saveResponseAsFile(res, `${month} - Slip Gaji.zip`)
+}
+
+async function toSalarySlipError(res: Response): Promise<SalarySlipError> {
+    let message = res.statusText || `HTTP ${res.status}`
+
+    try {
+        const body = await res.json()
+        if (typeof body?.error === "string") message = body.error
+        else if (typeof body?.message === "string") message = body.message
+    } catch {
+        // Not JSON: keep the status text.
+    }
+
+    return new SalarySlipError(res.status, message)
 }

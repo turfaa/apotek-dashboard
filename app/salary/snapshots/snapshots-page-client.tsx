@@ -28,6 +28,8 @@ import {
 } from "@/components/ui/table"
 import { RupiahFormatProvider, useRupiahFormat } from "@/lib/rupiah-format-context"
 import { RupiahFormatToggle } from "@/components/rupiah-format-toggle"
+import { usePrintMode } from "@/lib/print-mode"
+import { SlipPdfButton, SlipsZipButton } from "./slip-download"
 
 interface SnapshotsPageClientProps {
     employeesPromise: Promise<Employee[]>
@@ -48,6 +50,8 @@ function SnapshotsPageClientContent({
     const searchParams = use(searchParamsPromise)
     const router = useRouter()
     const { format: rupiahFormat } = useRupiahFormat()
+    const { isPrintMode } = usePrintMode(session?.user?.role)
+    const employeeID = searchParams.employeeID ? parseInt(searchParams.employeeID) : undefined
 
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
     const [snapshotToDelete, setSnapshotToDelete] = useState<SalarySnapshot | null>(null)
@@ -58,7 +62,7 @@ function SnapshotsPageClientContent({
         mutate: reloadSnapshots,
     } = useSalarySnapshots(
         searchParams.month,
-        searchParams.employeeID ? parseInt(searchParams.employeeID) : undefined,
+        employeeID,
         session,
     )
 
@@ -103,9 +107,18 @@ function SnapshotsPageClientContent({
 
             <Card>
                 <CardHeader>
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
                         <CardTitle>Daftar Snapshot Gaji</CardTitle>
-                        <RupiahFormatToggle />
+                        <div className="flex flex-wrap items-center gap-4">
+                            <RupiahFormatToggle />
+                            {!isPrintMode && (
+                                <SlipsZipButton
+                                    month={searchParams.month}
+                                    employeeID={employeeID}
+                                    disabled={loading || snapshots.length === 0}
+                                />
+                            )}
+                        </div>
                     </div>
                 </CardHeader>
                 <CardContent>
@@ -159,6 +172,9 @@ function SnapshotsPageClientContent({
                                                     >
                                                         <Eye className="h-4 w-4" />
                                                     </Button>
+                                                    {!isPrintMode && (
+                                                        <SlipPdfButton snapshotID={snapshot.id} variant="icon" />
+                                                    )}
                                                     <Button
                                                         variant="destructive"
                                                         size="sm"

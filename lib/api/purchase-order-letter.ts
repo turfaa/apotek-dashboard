@@ -1,6 +1,7 @@
 import { Session } from "next-auth"
 import { fetchAPI } from "@/lib/api/base"
 import { getEmployees } from "@/lib/api/employee"
+import { saveResponseAsFile } from "@/lib/download"
 
 // Purchase order letters (surat pesanan, SP): numbered letters on the
 // pharmacy letterhead that order drugs from a supplier.
@@ -365,20 +366,7 @@ export async function downloadPurchaseOrderLetterPdf(id: number): Promise<void> 
         throw await toError(res)
     }
 
-    const blob = await res.blob()
-    const filename =
-        filenameFromContentDisposition(res.headers.get("Content-Disposition")) ??
-        `surat-pesanan-${id}.pdf`
-
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement("a")
-    link.href = url
-    link.download = filename
-    document.body.appendChild(link)
-    link.click()
-    link.remove()
-    // Revoke later: some browsers start the download asynchronously.
-    setTimeout(() => URL.revokeObjectURL(url), 60 * 1000)
+    await saveResponseAsFile(res, `surat-pesanan-${id}.pdf`)
 }
 
 async function toError(res: Response): Promise<PurchaseOrderLetterError> {
@@ -395,22 +383,4 @@ async function toError(res: Response): Promise<PurchaseOrderLetterError> {
     }
 
     return new PurchaseOrderLetterError(res.status, message, invalidItems)
-}
-
-export function filenameFromContentDisposition(
-    header: string | null,
-): string | undefined {
-    if (!header) return undefined
-
-    const encoded = header.match(/filename\*\s*=\s*UTF-8''([^;]+)/i)
-    if (encoded) {
-        try {
-            return decodeURIComponent(encoded[1].trim())
-        } catch {
-            // Fall back to the plain filename.
-        }
-    }
-
-    const plain = header.match(/filename\s*=\s*"([^"]*)"/i)
-    return plain?.[1] || undefined
 }
