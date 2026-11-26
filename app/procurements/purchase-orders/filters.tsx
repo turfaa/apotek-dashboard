@@ -24,7 +24,7 @@ import {
     PurchaseOrderLetterOptions,
 } from "@/lib/api/purchase-order-letter"
 import { useResetCount, useResetFilters } from "./reset-filters"
-import { filterKeys } from "./search-params"
+import { filterKeys, parseStatus } from "./search-params"
 
 const all = "ALL"
 
@@ -54,6 +54,7 @@ export function HistoryFilters({
             supplier: parseAsInteger,
             template: parseAsString,
             creator: parseAsInteger,
+            status: parseAsString,
             page: parseAsInteger,
         },
         {
@@ -127,6 +128,25 @@ export function HistoryFilters({
                 </Select>
             </div>
 
+            <div className="flex w-full flex-col gap-1.5 sm:w-[150px]">
+                <Label htmlFor="sp-status">Status</Label>
+                <Select
+                    value={parseStatus(filters.status) ?? all}
+                    onValueChange={(value) =>
+                        setFilter({ status: value === all ? null : value })
+                    }
+                >
+                    <SelectTrigger id="sp-status">
+                        <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value={all}>Semua status</SelectItem>
+                        <SelectItem value="active">Aktif</SelectItem>
+                        <SelectItem value="cancelled">Dibatalkan</SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
+
             <div className="flex w-full flex-col gap-1.5 sm:w-[180px]">
                 <Label htmlFor="sp-creator">Dibuat oleh</Label>
                 <Select
@@ -169,6 +189,7 @@ export function HistoryFiltersFallback(): React.ReactElement {
             <Skeleton className="h-9 w-[300px]" />
             <Skeleton className="h-9 w-[220px]" />
             <Skeleton className="h-9 w-[200px]" />
+            <Skeleton className="h-9 w-[150px]" />
             <Skeleton className="h-9 w-[180px]" />
         </div>
     )

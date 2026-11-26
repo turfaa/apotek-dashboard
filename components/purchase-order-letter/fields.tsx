@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/table"
 import {
     PurchaseOrderLetterEmployee,
+    PurchaseOrderLetterItem,
     PurchaseOrderLetterSigner,
 } from "@/lib/api/purchase-order-letter"
 import { cn } from "@/lib/utils"
@@ -30,6 +31,8 @@ export interface CreatorSelectProps {
     onChange: (id: number) => void
     // Shown under the field, e.g. when submitting without a choice.
     error?: string
+    // Defaults to "Dibuat oleh".
+    label?: string
 }
 
 // "Dibuat oleh": the employee making the SP. Required and never pre-selected,
@@ -40,12 +43,13 @@ export function CreatorSelect({
     value,
     onChange,
     error,
+    label = "Dibuat oleh",
 }: CreatorSelectProps): React.ReactElement {
     const id = useId()
 
     return (
         <div className="flex flex-col gap-2">
-            <Label htmlFor={id}>Dibuat oleh</Label>
+            <Label htmlFor={id}>{label}</Label>
             <Select
                 value={value === null ? "" : String(value)}
                 onValueChange={(v) => onChange(Number(v))}
@@ -139,5 +143,66 @@ export function LetterItemsTable({
                 ))}
             </TableBody>
         </Table>
+    )
+}
+
+// The items of a stored Prekursor or OOT SP, as they print.
+export function ControlledLetterItemsTable({
+    items,
+}: {
+    items: PurchaseOrderLetterItem[]
+}): React.ReactElement {
+    const hasNote = items.some((item) => item.note?.trim())
+
+    return (
+        <div className="overflow-x-auto">
+            <Table className="min-w-[640px] text-[13px]">
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="w-8">No.</TableHead>
+                        <TableHead>Nama Obat</TableHead>
+                        <TableHead>Zat Aktif</TableHead>
+                        <TableHead>Bentuk &amp; Kekuatan</TableHead>
+                        <TableHead>Kemasan Terkecil</TableHead>
+                        <TableHead className="text-right">Jumlah</TableHead>
+                        <TableHead>Terbilang</TableHead>
+                        {hasNote && <TableHead>Ket.</TableHead>}
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {items.map((item, index) => (
+                        <TableRow key={index} className="align-top">
+                            <TableCell className="text-muted-foreground">
+                                {index + 1}
+                            </TableCell>
+                            <TableCell>{item.drugName}</TableCell>
+                            <TableCell>{item.activeIngredient}</TableCell>
+                            <TableCell>{item.dosageFormStrength}</TableCell>
+                            <TableCell>{item.smallestPackage}</TableCell>
+                            <TableCell className="text-right">{item.quantity}</TableCell>
+                            <TableCell className="text-muted-foreground">
+                                {item.quantityWords}
+                            </TableCell>
+                            {hasNote && <TableCell>{item.note}</TableCell>}
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </div>
+    )
+}
+
+// The items of a stored SP, in the columns of its template.
+export function StoredLetterItemsTable({
+    items,
+    controlled,
+}: {
+    items: PurchaseOrderLetterItem[]
+    controlled: boolean
+}): React.ReactElement {
+    return controlled ? (
+        <ControlledLetterItemsTable items={items} />
+    ) : (
+        <LetterItemsTable items={items} />
     )
 }

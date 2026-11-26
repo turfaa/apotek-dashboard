@@ -1,4 +1,7 @@
-import { PurchaseOrderLetterFilters } from "@/lib/api/purchase-order-letter"
+import {
+    PurchaseOrderLetterFilters,
+    PurchaseOrderLetterStatus,
+} from "@/lib/api/purchase-order-letter"
 import { currentMonthRange } from "@/lib/date-range"
 
 // URL query of the Riwayat page. `from` and `until` are the keys the shared
@@ -10,10 +13,17 @@ export const filterKeys = {
     supplier: "supplier",
     template: "template",
     creator: "creator",
+    status: "status",
     page: "page",
 } as const
 
 export const pageSize = 20
+
+const statuses: PurchaseOrderLetterStatus[] = ["active", "cancelled"]
+
+export function parseStatus(value: string | null | undefined): PurchaseOrderLetterStatus | undefined {
+    return statuses.find((status) => status === value)
+}
 
 function positiveInt(value: string | undefined): number | undefined {
     const n = Number(value)
@@ -36,6 +46,7 @@ export function filtersFromSearchParams(params: {
         supplierVmedisId: positiveInt(params[filterKeys.supplier]),
         templateId: params[filterKeys.template] || undefined,
         createdByEmployeeId: positiveInt(params[filterKeys.creator]),
+        status: parseStatus(params[filterKeys.status]),
         page: positiveInt(params[filterKeys.page]) ?? 1,
         pageSize,
     }

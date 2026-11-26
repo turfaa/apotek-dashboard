@@ -61,6 +61,7 @@ export default async function HistoryTable({
         <HistoryTableClient
             data={result.data}
             signer={options?.signer}
+            templates={options?.templates ?? []}
             employees={employees}
         />
     )
