@@ -7,13 +7,29 @@ import { useMaskito } from "@maskito/react"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 
-const maskitoOptions = maskitoNumberOptionsGenerator({
+const numberParams = {
     prefix: "Rp ",
     decimalSeparator: ",",
     thousandSeparator: ".",
     maximumFractionDigits: 2,
     minimumFractionDigits: 2,
-})
+}
+
+const maskitoOptions = maskitoNumberOptionsGenerator(numberParams)
+
+// The mask writes negatives with a Unicode minus ("Rp −5.000,00"), so parse with
+// the same params as the mask. Text with no digits yet (such as "Rp −") is 0.
+function parseAmount(text: string): number {
+    const amount = maskitoParseNumber(text, numberParams)
+    return isNaN(amount) ? 0 : amount
+}
+
+function formatValue(value: string | number | undefined): string {
+    if (typeof value === "number") {
+        return maskitoTransform(value.toString().replace(".", ","), maskitoOptions)
+    }
+    return value ?? ""
+}
 
 export interface RupiahInputProps
     extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange"> {
@@ -26,11 +42,22 @@ const RupiahInput = React.forwardRef<HTMLInputElement, RupiahInputProps>(
     ({ className, value, onChange, onInput, onClick, onFocus, ...props }, _) => {
         const rupiahMask = useMaskito({ options: maskitoOptions })
 
+        // Keep the typed text so a lone minus sign ("Rp −") survives until digits
+        // follow it. Re-format from `value` only when the parent changes it to an
+        // amount that differs from what is typed.
+        const [text, setText] = React.useState(() => formatValue(value))
+        const [prevValue, setPrevValue] = React.useState(value)
+        if (value !== prevValue) {
+            setPrevValue(value)
+            if (typeof value !== "number" || parseAmount(text) !== value) {
+                setText(formatValue(value))
+            }
+        }
+
         // A zero amount ("Rp 0,00") has its caret land after the decimals, where typing
         // is rejected. Select the whole text instead so typing replaces it.
         const selectAllIfZero = (input: HTMLInputElement) => {
-            const amount = maskitoParseNumber(input.value, { decimalSeparator: "," })
-            if (!amount) {
+            if (!parseAmount(input.value)) {
                 input.select()
             }
         }
@@ -45,27 +72,12 @@ const RupiahInput = React.forwardRef<HTMLInputElement, RupiahInputProps>(
             selectAllIfZero(e.currentTarget)
         }
 
-        const formattedValue =
-            typeof value === "number"
-                ? maskitoTransform(
-                    value.toString().replace(".", ","),
-                    maskitoOptions,
-                )
-                : value
-
-        const handleInput = React.useCallback(
-            (e: React.InputEvent<HTMLInputElement>) => {
-                onInput?.(e)
-                if (!onChange) return
-
-                let amount = maskitoParseNumber(e.currentTarget.value, { decimalSeparator: "," })
-                if (isNaN(amount)) {
-                    amount = 0
-                }
-                onChange(amount)
-            },
-            [onChange, onInput],
-        )
+        const handleInput = (e: React.InputEvent<HTMLInputElement>) => {
+            onInput?.(e)
+            const newText = e.currentTarget.value
+            setText(newText)
+            onChange?.(parseAmount(newText))
+        }
 
         return (
             <Input
@@ -73,7 +85,7 @@ const RupiahInput = React.forwardRef<HTMLInputElement, RupiahInputProps>(
                 inputMode="numeric"
                 ref={rupiahMask}
                 className={cn("font-mono", className)}
-                value={formattedValue}
+                value={text}
                 onInput={handleInput}
                 onClick={handleClick}
                 onFocus={handleFocus}
