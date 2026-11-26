@@ -11,10 +11,35 @@ const clientBasePath = `/api${basePath}`
 
 const noCache = { next: { revalidate: 0 } }
 
+// "basic": a drug name and a free-text quantity ("10 Box").
+// "controlled" (Prekursor, OOT): also zat aktif and bentuk & kekuatan from
+// Vmedis, kemasan terkecil, a whole-number quantity with its words, and an
+// optional keterangan.
+export type PurchaseOrderLetterItemFields = "basic" | "controlled"
+
+// "optional": the APJ signature block is printed only when asked.
+// "wet": always printed, with space for a wet signature and stamp.
+export type PurchaseOrderLetterSignatureMode = "optional" | "wet"
+
 export interface PurchaseOrderLetterTemplate {
     id: string
     name: string
     description: string
+    // Missing from backends older than the Prekursor/OOT templates.
+    itemFields?: PurchaseOrderLetterItemFields
+    signatureMode?: PurchaseOrderLetterSignatureMode
+}
+
+export function isControlledTemplate(
+    template?: Pick<PurchaseOrderLetterTemplate, "itemFields">,
+): boolean {
+    return template?.itemFields === "controlled"
+}
+
+export function hasWetSignature(
+    template?: Pick<PurchaseOrderLetterTemplate, "signatureMode">,
+): boolean {
+    return template?.signatureMode === "wet"
 }
 
 // The pharmacist who signs SPs (Apoteker Penanggung Jawab).
@@ -30,6 +55,8 @@ export interface PurchaseOrderLetterOptions {
     signer: PurchaseOrderLetterSigner
     // The Vmedis page where suppliers are edited.
     vmedisSupplierPageUrl: string
+    // The Vmedis page where drugs (Data Obat) are edited.
+    vmedisDrugPageUrl?: string
 }
 
 // An HRIS employee, reduced to what the SP pages need.
@@ -42,7 +69,47 @@ export interface PurchaseOrderLetterItemInput {
     // Null for drugs added by hand that are not in Vmedis.
     drugVmedisCode: string | null
     drugName: string
+    // Free text ("10 Box") on basic templates, a whole number ("12") on
+    // controlled ones.
     quantity: string
+    // Controlled templates only. Zat aktif and bentuk & kekuatan are not
+    // sent: the backend takes them from Vmedis.
+    smallestPackage?: string
+    note?: string | null
+}
+
+// What Vmedis has on a drug, for the controlled item fields.
+export interface PurchaseOrderLetterItemDetails {
+    drugVmedisCode: string
+    // False when the drug is not in the synced Vmedis drugs.
+    found: boolean
+    activeIngredient: string | null
+    dosageFormStrength: string | null
+    // From the smallest unit.
+    units: {
+        unit: string
+        // Empty for the smallest unit.
+        parentUnit: string
+        conversionToParentUnit: number
+    }[]
+    vmedisGolongan: string | null
+    // Null when the golongan is not a drug class (e.g. a shelf).
+    classMatches: boolean | null
+    missingInVmedis: ("activeIngredient" | "dosageFormStrength")[]
+}
+
+export type PurchaseOrderLetterStatus = "active" | "cancelled"
+
+export interface PurchaseOrderLetterCancellation {
+    cancelledAt: string
+    reason: string
+    cancelledByEmployee: PurchaseOrderLetterEmployee
+    cancelledByEmail: string
+}
+
+export interface CancelPurchaseOrderLetterRequest {
+    reason: string
+    cancelledByEmployee: PurchaseOrderLetterEmployee
 }
 
 export interface CreatePurchaseOrderLetterRequest {
@@ -70,16 +137,29 @@ export interface PurchaseOrderLetterSummary {
     number: string
     templateId: string
     templateName: string
+    // Missing from older backends.
+    templateItemFields?: PurchaseOrderLetterItemFields
+    status?: PurchaseOrderLetterStatus
     supplier: { vmedisId: number; name: string }
     itemCount: number
     includePharmacistSignature: boolean
     createdByEmployee: PurchaseOrderLetterEmployee
     createdByEmail: string
     createdAt: string
+    cancellation?: PurchaseOrderLetterCancellation | null
 }
 
-export interface PurchaseOrderLetterItem extends PurchaseOrderLetterItemInput {
+export interface PurchaseOrderLetterItem {
     position: number
+    drugVmedisCode: string | null
+    drugName: string
+    quantity: string
+    // Set on controlled templates, null otherwise.
+    activeIngredient?: string | null
+    dosageFormStrength?: string | null
+    smallestPackage?: string | null
+    quantityWords?: string | null
+    note?: string | null
 }
 
 export interface PurchaseOrderLetterDetail
@@ -111,6 +191,7 @@ export interface PurchaseOrderLetterFilters {
     supplierVmedisId?: number
     templateId?: string
     createdByEmployeeId?: number
+    status?: PurchaseOrderLetterStatus
     page?: number
     pageSize?: number
 }
@@ -118,7 +199,7 @@ export interface PurchaseOrderLetterFilters {
 // An error response of the SP API, with the body's message.
 export class PurchaseOrderLetterError extends Error {
     readonly status: number
-    // Indexes of the items without a drug name or quantity.
+    // Indexes of the invalid items.
     readonly invalidItems?: number[]
 
     constructor(status: number, message: string, invalidItems?: number[]) {
@@ -218,6 +299,63 @@ export async function createPurchaseOrderLetter(
     }
 
     return res.json()
+}
+
+// Gets what the synced Vmedis drugs have on the drugs for a template's
+// controlled item fields. Reads the backend's database, not Vmedis.
+export async function getPurchaseOrderLetterItemDetails(
+    templateId: string,
+    codes: string[],
+): Promise<PurchaseOrderLetterItemDetails[]> {
+    const params = new URLSearchParams({ templateId, codes: codes.join(",") })
+    const res = await fetch(`${clientBasePath}/item-details?${params}`)
+    if (!res.ok) {
+        throw await toError(res)
+    }
+
+    return (await res.json()).items
+}
+
+// Fetches the drugs from Vmedis again (after they were filled in there) and
+// returns their item details.
+export async function refreshPurchaseOrderLetterItemDetails(
+    templateId: string,
+    codes: string[],
+): Promise<PurchaseOrderLetterItemDetails[]> {
+    const res = await fetch(`${clientBasePath}/item-details/refresh`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ templateId, codes }),
+    })
+    if (!res.ok) {
+        throw await toError(res)
+    }
+
+    return (await res.json()).items
+}
+
+// Cancels an SP from the browser. Throws PurchaseOrderLetterError (409 when
+// it is already cancelled).
+export async function cancelPurchaseOrderLetter(
+    id: number,
+    request: CancelPurchaseOrderLetterRequest,
+): Promise<PurchaseOrderLetterDetail> {
+    const res = await fetch(`${clientBasePath}/${id}/cancel`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(request),
+    })
+    if (!res.ok) {
+        throw await toError(res)
+    }
+
+    return res.json()
+}
+
+export function isCancelled(
+    po: Pick<PurchaseOrderLetterSummary, "status" | "cancellation">,
+): boolean {
+    return po.status === "cancelled" || !!po.cancellation
 }
 
 // Downloads an SP's PDF in the browser, under the name the backend gives it.

@@ -12,7 +12,8 @@
     "generate-pwa-icons": "tsx scripts/generate-pwa-icons.ts",
     "typecheck": "tsc --noEmit",
     "stub-api": "node scripts/stub-api/server.mjs",
-    "check:access": "tsx scripts/check-page-access.ts"
+    "check:access": "tsx scripts/check-page-access.ts",
+    "test": "tsx --test lib/*.test.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^7.0.6",

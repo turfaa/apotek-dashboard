@@ -22,8 +22,8 @@ import {
 } from "@/components/purchase-order-letter/create"
 import {
     CreatorSelect,
-    LetterItemsTable,
     SignatureCheckbox,
+    StoredLetterItemsTable,
 } from "@/components/purchase-order-letter/fields"
 import { usePurchaseOrderLetter, useSuppliers } from "@/lib/api/hooks"
 import {
@@ -31,13 +31,17 @@ import {
     PurchaseOrderLetterEmployee,
     PurchaseOrderLetterSigner,
     PurchaseOrderLetterSummary,
+    PurchaseOrderLetterTemplate,
+    hasWetSignature,
 } from "@/lib/api/purchase-order-letter"
+import { cn } from "@/lib/utils"
 
 export interface DuplicateDialogProps {
     // The SP to duplicate; the dialog is closed when undefined.
     summary?: PurchaseOrderLetterSummary
     onOpenChange: (open: boolean) => void
     signer?: PurchaseOrderLetterSigner
+    templates: PurchaseOrderLetterTemplate[]
     // Null when HRIS could not be read.
     employees: PurchaseOrderLetterEmployee[] | null
 }
@@ -49,13 +53,20 @@ export function DuplicateDialog({
     summary,
     onOpenChange,
     signer,
+    templates,
     employees,
 }: DuplicateDialogProps): React.ReactElement {
     const { data: detail, error } = usePurchaseOrderLetter(summary?.id)
+    const controlled = summary?.templateItemFields === "controlled"
 
     return (
         <Dialog open={!!summary} onOpenChange={onOpenChange}>
-            <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[560px]">
+            <DialogContent
+                className={cn(
+                    "max-h-[90vh] overflow-y-auto",
+                    controlled ? "sm:max-w-4xl" : "sm:max-w-[560px]",
+                )}
+            >
                 <DialogHeader>
                     <DialogTitle>Duplikat Surat Pesanan</DialogTitle>
                     <DialogDescription>
@@ -87,6 +98,7 @@ export function DuplicateDialog({
                         key={detail.id}
                         detail={detail}
                         signer={signer}
+                        template={templates.find((t) => t.id === detail.templateId)}
                         employees={employees}
                         onDone={() => onOpenChange(false)}
                     />
@@ -99,6 +111,7 @@ export function DuplicateDialog({
 interface DuplicateFormProps {
     detail: PurchaseOrderLetterDetail
     signer?: PurchaseOrderLetterSigner
+    template?: PurchaseOrderLetterTemplate
     employees: PurchaseOrderLetterEmployee[] | null
     onDone: () => void
 }
@@ -106,9 +119,12 @@ interface DuplicateFormProps {
 function DuplicateForm({
     detail,
     signer,
+    template,
     employees,
     onDone,
 }: DuplicateFormProps): React.ReactElement {
+    const controlled = detail.templateItemFields === "controlled"
+    const wetSignature = hasWetSignature(template)
     const router = useRouter()
     const createAndDownload = useCreateAndDownload()
 
@@ -147,12 +163,16 @@ function DuplicateForm({
                     idempotencyKey,
                     templateId: detail.templateId,
                     supplierVmedisId: detail.supplier.vmedisId,
-                    includePharmacistSignature: includeSignature,
+                    includePharmacistSignature: wetSignature || includeSignature,
                     createdByEmployee: creator,
                     items: detail.items.map((item) => ({
                         drugVmedisCode: item.drugVmedisCode,
                         drugName: item.drugName,
                         quantity: item.quantity,
+                        ...(controlled && {
+                            smallestPackage: item.smallestPackage ?? "",
+                            note: item.note ?? null,
+                        }),
                     })),
                 },
                 { showHistoryLink: false },
@@ -223,15 +243,24 @@ function DuplicateForm({
                 </Alert>
             )}
 
-            <SignatureCheckbox
-                checked={includeSignature}
-                onChange={setIncludeSignature}
-                signer={signer}
-            />
+            {!wetSignature && (
+                <SignatureCheckbox
+                    checked={includeSignature}
+                    onChange={setIncludeSignature}
+                    signer={signer}
+                />
+            )}
 
             <div className="rounded-md border">
-                <LetterItemsTable items={detail.items} />
+                <StoredLetterItemsTable items={detail.items} controlled={controlled} />
             </div>
+
+            {controlled && (
+                <p className="text-xs text-muted-foreground">
+                    Zat aktif serta bentuk &amp; kekuatan diambil lagi dari Data
+                    Obat Vmedis saat surat pesanan baru dibuat.
+                </p>
+            )}
 
             {submitError && (
                 <Alert variant="destructive">

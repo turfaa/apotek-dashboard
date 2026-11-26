@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react"
 import { parseAsInteger, useQueryState } from "nuqs"
-import { Copy, FileText } from "lucide-react"
+import { Ban, Copy, FileText } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -18,7 +18,11 @@ import {
     PurchaseOrderLetterSigner,
     PurchaseOrderLetterSummary,
     PurchaseOrderLettersResponse,
+    PurchaseOrderLetterTemplate,
+    isCancelled,
 } from "@/lib/api/purchase-order-letter"
+import { CancelDialog } from "./cancel-dialog"
+import { StatusBadge } from "./status-badge"
 import { DetailDialog } from "./detail-dialog"
 import { DownloadButton } from "./download-button"
 import { DuplicateDialog } from "./duplicate-dialog"
@@ -28,6 +32,7 @@ import { filterKeys, formatCreatedAt } from "./search-params"
 export interface HistoryTableClientProps {
     data: PurchaseOrderLettersResponse
     signer?: PurchaseOrderLetterSigner
+    templates: PurchaseOrderLetterTemplate[]
     // Null when HRIS could not be read.
     employees: PurchaseOrderLetterEmployee[] | null
 }
@@ -35,10 +40,12 @@ export interface HistoryTableClientProps {
 export function HistoryTableClient({
     data,
     signer,
+    templates,
     employees,
 }: HistoryTableClientProps): React.ReactElement {
     const [detailOf, setDetailOf] = useState<PurchaseOrderLetterSummary>()
     const [duplicateOf, setDuplicateOf] = useState<PurchaseOrderLetterSummary>()
+    const [cancelOf, setCancelOf] = useState<PurchaseOrderLetterSummary>()
 
     const { purchaseOrders, total, page, pageSize } = data
 
@@ -49,7 +56,7 @@ export function HistoryTableClient({
     return (
         <>
             <div className="overflow-x-auto rounded-md border">
-                <Table className="min-w-[1000px]">
+                <Table className="min-w-[1120px]">
                     <TableHeader>
                         <TableRow>
                             <TableHead>Nomor SP</TableHead>
@@ -61,6 +68,7 @@ export function HistoryTableClient({
                             </TableHead>
                             <TableHead>TTD APJ</TableHead>
                             <TableHead>Dibuat oleh</TableHead>
+                            <TableHead>Status</TableHead>
                             <TableHead>
                                 <span className="sr-only">Aksi</span>
                             </TableHead>
@@ -87,6 +95,9 @@ export function HistoryTableClient({
                                 </TableCell>
                                 <TableCell>{po.createdByEmployee.name}</TableCell>
                                 <TableCell>
+                                    <StatusBadge cancelled={isCancelled(po)} />
+                                </TableCell>
+                                <TableCell>
                                     <div className="flex justify-end gap-1">
                                         <Button
                                             variant="ghost"
@@ -108,6 +119,17 @@ export function HistoryTableClient({
                                             number={po.number}
                                             size="sm"
                                         />
+                                        {!isCancelled(po) && (
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="text-destructive hover:text-destructive"
+                                                onClick={() => setCancelOf(po)}
+                                            >
+                                                <Ban className="mr-1.5 h-3.5 w-3.5" />
+                                                Batalkan
+                                            </Button>
+                                        )}
                                     </div>
                                 </TableCell>
                             </TableRow>
@@ -125,12 +147,23 @@ export function HistoryTableClient({
                     setDetailOf(undefined)
                     setDuplicateOf(po)
                 }}
+                onCancel={(po) => {
+                    setDetailOf(undefined)
+                    setCancelOf(po)
+                }}
             />
 
             <DuplicateDialog
                 summary={duplicateOf}
                 onOpenChange={(open) => !open && setDuplicateOf(undefined)}
                 signer={signer}
+                templates={templates}
+                employees={employees}
+            />
+
+            <CancelDialog
+                summary={cancelOf}
+                onOpenChange={(open) => !open && setCancelOf(undefined)}
                 employees={employees}
             />
         </>

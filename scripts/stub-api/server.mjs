@@ -215,12 +215,95 @@ const suppliers = [
 // Purchase order letters (surat pesanan). Kept in memory, so SPs created
 // while clicking through show up in Riwayat until the stub restarts.
 const purchaseOrderOptions = {
-    templates: [{ id: "reguler", name: "Surat Pesanan Reguler", description: "Untuk obat bebas, bebas terbatas, keras dan alat kesehatan." }],
+    templates: [
+        { id: "reguler", name: "Surat Pesanan Reguler", description: "Untuk obat bebas, bebas terbatas, keras dan alat kesehatan.", itemFields: "basic", signatureMode: "optional" },
+        { id: "prekursor", name: "Surat Pesanan Prekursor Farmasi", description: "Untuk obat mengandung prekursor farmasi. Dibuat terpisah dari obat lain.", itemFields: "controlled", signatureMode: "wet" },
+        { id: "oot", name: "Surat Pesanan Obat-Obat Tertentu", description: "Untuk Obat-Obat Tertentu yang sering disalahgunakan. Dibuat terpisah dari obat lain.", itemFields: "controlled", signatureMode: "wet" },
+    ],
     signer: { name: "Nama Apoteker", licenseNumber: "SIPA-0000" },
     vmedisSupplierPageUrl: "https://aulia.vmedis.com/apt-data-supplier-v2",
+    vmedisDrugPageUrl: "https://aulia.vmedis.com/apt-obat-batch-v2",
 }
+const templateNumberCodes = { reguler: "REG", prekursor: "PRE", oot: "OOT" }
 const romanMonths = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"]
 const purchaseOrders = []
+
+// What Vmedis has on each drug for the Prekursor/OOT fields. AMX500 starts
+// incomplete, and "Muat ulang dari Vmedis" fills it, as if it was filled in
+// Vmedis meanwhile. PCT500's golongan is another class, to show the warning.
+const drugVmedisDetails = {
+    PCT500: { golongan: "Obat Bebas", activeIngredient: "Paracetamol", dosageFormStrength: "Tablet 500 mg" },
+    AMX500: { golongan: "", activeIngredient: null, dosageFormStrength: null },
+    MNY60: { golongan: "DEPAN", activeIngredient: "Oleum Cajuputi", dosageFormStrength: "Cairan 60 ml" },
+}
+const drugVmedisDetailsInVmedis = {
+    ...drugVmedisDetails,
+    AMX500: { golongan: "Obat-Obatan Tertentu", activeIngredient: "Amoksisilin", dosageFormStrength: "Kapsul 500 mg" },
+}
+const golonganClasses = { prekursor: "prekursor", "obat-obatan tertentu": "oot", "obat bebas": "other", "obat keras": "other" }
+
+function itemDetails(templateId, codes) {
+    const template = purchaseOrderOptions.templates.find((t) => t.id === templateId)
+    if (!template) return raw(400, {}, { error: `template "${templateId}" tidak dikenal` })
+
+    return {
+        items: [...new Set(codes.map((c) => c.trim()).filter(Boolean))].map((code) => {
+            const drug = drugsV1.find((d) => d.vmedisCode === code)
+            const details = drugVmedisDetails[code]
+            const cls = details && golonganClasses[details.golongan.toLowerCase()]
+            return {
+                drugVmedisCode: code,
+                found: !!drug,
+                activeIngredient: details?.activeIngredient ?? null,
+                dosageFormStrength: details?.dosageFormStrength ?? null,
+                units: (drug?.units ?? []).map((u) => ({ unit: u.unit, parentUnit: u.parentUnit ?? "", conversionToParentUnit: u.conversionToParentUnit ?? 0 })),
+                vmedisGolongan: details?.golongan || null,
+                classMatches: template.itemFields === "controlled" && cls ? cls === templateId : null,
+                missingInVmedis: [
+                    ...(details?.activeIngredient ? [] : ["activeIngredient"]),
+                    ...(details?.dosageFormStrength ? [] : ["dosageFormStrength"]),
+                ],
+            }
+        }),
+    }
+}
+
+function refreshItemDetails(body) {
+    for (const code of body?.codes ?? []) {
+        if (drugVmedisDetailsInVmedis[code]) drugVmedisDetails[code] = drugVmedisDetailsInVmedis[code]
+    }
+    return itemDetails(body?.templateId, body?.codes ?? [])
+}
+
+const terbilangDigits = ["nol", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas"]
+// Enough of terbilang for the stub: up to 999.
+function stubTerbilang(n) {
+    const words = []
+    const hundreds = Math.floor(n / 100)
+    if (hundreds) words.push(hundreds === 1 ? "seratus" : `${terbilangDigits[hundreds]} ratus`)
+    n %= 100
+    if (n && n < 12) words.push(terbilangDigits[n])
+    else if (n && n < 20) words.push(`${terbilangDigits[n - 10]} belas`)
+    else if (n) words.push(`${terbilangDigits[Math.floor(n / 10)]} puluh`, ...(n % 10 ? [terbilangDigits[n % 10]] : []))
+    return words.join(" ") || "nol"
+}
+
+function cancelPurchaseOrder(m, body) {
+    const po = purchaseOrders.find((p) => p.id === Number(m[1]))
+    if (!po) return raw(404, {}, { error: "purchase order not found" })
+    if (po.cancellation) return raw(409, {}, { error: "surat pesanan sudah dibatalkan" })
+    if (!body?.reason?.trim()) return raw(400, {}, { error: "alasan pembatalan wajib diisi" })
+    if (!body?.cancelledByEmployee?.id) return raw(400, {}, { error: "karyawan yang membatalkan wajib dipilih" })
+
+    po.status = "cancelled"
+    po.cancellation = {
+        cancelledAt: iso(new Date()),
+        reason: body.reason.trim(),
+        cancelledByEmployee: body.cancelledByEmployee,
+        cancelledByEmail: "stub@example.com",
+    }
+    return po
+}
 
 function createPurchaseOrder(body) {
     const earlier = body?.idempotencyKey && purchaseOrders.find((po) => po.idempotencyKey === body.idempotencyKey)
@@ -234,23 +317,53 @@ function createPurchaseOrder(body) {
     const invalidItems = (body.items ?? []).flatMap((item, i) => (item.drugName?.trim() && item.quantity?.trim() ? [] : [i]))
     if (!body.items?.length || invalidItems.length) return raw(400, {}, { error: `${invalidItems.length} obat belum diisi nama atau jumlahnya`, invalidItems })
 
+    const template = purchaseOrderOptions.templates.find((t) => t.id === body.templateId)
+    const controlled = template.itemFields === "controlled"
+    if (controlled) {
+        const incomplete = body.items.flatMap((item, i) => {
+            const details = drugVmedisDetails[item.drugVmedisCode]
+            return details?.activeIngredient && details?.dosageFormStrength ? [] : [i]
+        })
+        if (incomplete.length) return raw(400, {}, { error: `${incomplete.length} obat belum diisi zat aktif atau bentuk & kekuatannya di Data Obat Vmedis`, invalidItems: incomplete })
+
+        const invalid = body.items.flatMap((item, i) => (/^\d+$/.test(item.quantity.trim()) && Number(item.quantity) >= 1 && item.smallestPackage?.trim() ? [] : [i]))
+        if (invalid.length) return raw(400, {}, { error: `${invalid.length} obat tidak valid: jumlah harus angka bulat dan kemasan terkecil wajib diisi`, invalidItems: invalid })
+    }
+
+    const signed = !!body.includePharmacistSignature || template.signatureMode === "wet"
     const createdAt = new Date()
-    const sameMonth = purchaseOrders.filter((po) => po.createdAt.slice(0, 7) === iso(createdAt).slice(0, 7))
-    const number = `${String(sameMonth.length + 1).padStart(3, "0")}/SP-REG/AAF/${romanMonths[createdAt.getMonth()]}/${createdAt.getFullYear()}`
+    const sameSeries = purchaseOrders.filter((po) => po.templateId === body.templateId && po.createdAt.slice(0, 7) === iso(createdAt).slice(0, 7))
+    const number = `${String(sameSeries.length + 1).padStart(3, "0")}/SP-${templateNumberCodes[body.templateId]}/AAF/${romanMonths[createdAt.getMonth()]}/${createdAt.getFullYear()}`
     const po = {
         id: purchaseOrders.length + 1,
         number,
         templateId: body.templateId,
-        templateName: "Surat Pesanan Reguler",
+        templateName: template.name,
+        templateItemFields: template.itemFields,
+        status: "active",
+        cancellation: null,
         supplier: { vmedisId: supplier.vmedisId, name: supplier.name, address: supplier.address, city: supplier.city, phone: supplier.phone },
         itemCount: body.items.length,
-        includePharmacistSignature: !!body.includePharmacistSignature,
-        signer: body.includePharmacistSignature ? purchaseOrderOptions.signer : null,
+        includePharmacistSignature: signed,
+        signer: signed ? purchaseOrderOptions.signer : null,
         createdByEmployee: body.createdByEmployee,
         createdByEmail: "stub@example.com",
         createdAt: iso(createdAt),
         idempotencyKey: body.idempotencyKey,
-        items: body.items.map((item, i) => ({ position: i + 1, ...item })),
+        items: body.items.map((item, i) => {
+            const details = controlled ? drugVmedisDetails[item.drugVmedisCode] : undefined
+            return {
+                position: i + 1,
+                drugVmedisCode: item.drugVmedisCode,
+                drugName: item.drugName,
+                quantity: controlled ? String(Number(item.quantity)) : item.quantity,
+                activeIngredient: details?.activeIngredient ?? null,
+                dosageFormStrength: details?.dosageFormStrength ?? null,
+                smallestPackage: controlled ? item.smallestPackage.trim() : null,
+                quantityWords: controlled ? stubTerbilang(Number(item.quantity)) : null,
+                note: controlled ? item.note?.trim() || null : null,
+            }
+        }),
     }
     purchaseOrders.push(po)
     return raw(201, {}, { id: po.id, number: po.number, createdAt: po.createdAt, replayed: false })
@@ -263,6 +376,7 @@ function listPurchaseOrders(q) {
         .filter((po) => !q.get("supplierVmedisId") || po.supplier.vmedisId === Number(q.get("supplierVmedisId")))
         .filter((po) => !q.get("templateId") || po.templateId === q.get("templateId"))
         .filter((po) => !q.get("createdByEmployeeId") || po.createdByEmployee.id === Number(q.get("createdByEmployeeId")))
+        .filter((po) => !q.get("status") || po.status === q.get("status"))
         .filter((po) => (!q.get("from") || ymd(new Date(po.createdAt)) >= q.get("from")) && (!q.get("to") || ymd(new Date(po.createdAt)) <= q.get("to")))
         .reverse()
     const page = Number(q.get("page") ?? 1)
@@ -279,7 +393,7 @@ function purchaseOrderPdf(m) {
     const po = purchaseOrders.find((p) => p.id === Number(m[1]))
     if (!po) return raw(404, {}, { error: "purchase order not found" })
 
-    const filename = `${po.createdAt.slice(0, 10)} - ${po.supplier.name} - ${po.templateName} - ${po.number.replaceAll("/", "-")}.pdf`
+    const filename = `${po.createdAt.slice(0, 10)} - ${po.supplier.name} - ${po.templateName} - ${po.number.replaceAll("/", "-")}${po.cancellation ? " - DIBATALKAN" : ""}.pdf`
     return raw(200, {
         "Content-Type": "application/pdf",
         "Content-Disposition": `attachment; filename="${filename}"; filename*=UTF-8''${encodeURIComponent(filename)}`,
@@ -336,6 +450,9 @@ const vmedis = [
     ["GET", /^\/v1\/procurements\/purchase-orders\/creators$/, () => ({
         creators: [...new Map(purchaseOrders.map((po) => [po.createdByEmployee.id, po.createdByEmployee])).values()],
     })],
+    ["GET", /^\/v1\/procurements\/purchase-orders\/item-details$/, (_m, _b, q) => itemDetails(q.get("templateId"), (q.get("codes") ?? "").split(","))],
+    ["POST", /^\/v1\/procurements\/purchase-orders\/item-details\/refresh$/, (_m, body) => refreshItemDetails(body)],
+    ["POST", /^\/v1\/procurements\/purchase-orders\/(\d+)\/cancel$/, (m, body) => cancelPurchaseOrder(m, body)],
     ["GET", /^\/v1\/procurements\/purchase-orders$/, (_m, _b, q) => listPurchaseOrders(q)],
     ["POST", /^\/v1\/procurements\/purchase-orders$/, (_m, body) => createPurchaseOrder(body)],
     ["GET", /^\/v1\/procurements\/purchase-orders\/(\d+)$/, (m) => {

@@ -37,8 +37,10 @@ import {
 } from "@/lib/api/supplier"
 import {
     PurchaseOrderLetterDetail,
+    PurchaseOrderLetterItemDetails,
     PurchaseOrderLetterOptions,
     getPurchaseOrderLetter,
+    getPurchaseOrderLetterItemDetails,
     getPurchaseOrderLetterOptions,
 } from "@/lib/api/purchase-order-letter"
 import {
@@ -315,12 +317,27 @@ export function usePurchaseOrderLetterOptions(enabled: boolean = true) {
     )
 }
 
+// What Vmedis has on the drugs with the codes, for a controlled SP template.
+// Pass undefined as the template to skip fetching.
+export function usePurchaseOrderLetterItemDetails(
+    templateId: string | undefined,
+    codes: string[],
+) {
+    return useSWR<PurchaseOrderLetterItemDetails[]>(
+        templateId && codes.length > 0
+            ? ["/v1/procurements/purchase-orders/item-details", templateId, codes.join(",")]
+            : null,
+        () => getPurchaseOrderLetterItemDetails(templateId as string, codes),
+        { revalidateOnFocus: false },
+    )
+}
+
 // A stored SP with its items. Pass undefined to skip fetching.
 export function usePurchaseOrderLetter(id: number | undefined) {
     return useSWR<PurchaseOrderLetterDetail>(
         id !== undefined ? `/v1/procurements/purchase-orders/${id}` : null,
         () => getPurchaseOrderLetter(id as number),
-        // Stored SPs never change.
+        // Stored SPs only change when cancelled, which mutates this key.
         { revalidateOnFocus: false, revalidateIfStale: false },
     )
 }
