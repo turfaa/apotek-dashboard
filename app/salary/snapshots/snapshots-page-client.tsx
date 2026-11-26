@@ -12,7 +12,8 @@ import { useSalarySnapshots } from "@/lib/api/hooks"
 import { Session } from "next-auth"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Eye, Trash2 } from "lucide-react"
+import { BookCheck, Eye, RotateCcw, Trash2 } from "lucide-react"
+import { toast } from "sonner"
 import { format } from "date-fns"
 import { id } from "date-fns/locale"
 import { rupiah } from "@/lib/rupiah"
@@ -30,6 +31,8 @@ import { RupiahFormatProvider, useRupiahFormat } from "@/lib/rupiah-format-conte
 import { RupiahFormatToggle } from "@/components/rupiah-format-toggle"
 import { usePrintMode } from "@/lib/print-mode"
 import { SlipPdfButton, SlipsZipButton } from "./slip-download"
+import { JournalStatusBadge } from "./journal"
+import { PostJournalDialog } from "./post-journal-dialog"
 
 interface SnapshotsPageClientProps {
     employeesPromise: Promise<Employee[]>
@@ -55,6 +58,8 @@ function SnapshotsPageClientContent({
 
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
     const [snapshotToDelete, setSnapshotToDelete] = useState<SalarySnapshot | null>(null)
+    const [deleting, setDeleting] = useState(false)
+    const [snapshotToPost, setSnapshotToPost] = useState<SalarySnapshot | null>(null)
 
     const {
         data: snapshots = [],
@@ -69,15 +74,27 @@ function SnapshotsPageClientContent({
     const handleDeleteSnapshot = async () => {
         if (!snapshotToDelete || !session) return
 
+        setDeleting(true)
         try {
-            await deleteSalarySnapshot(snapshotToDelete.id, session)
-            await reloadSnapshots() // Reload the list
+            await deleteSalarySnapshot(snapshotToDelete.id)
+            toast.success("Snapshot gaji berhasil dihapus")
             setShowDeleteDialog(false)
             setSnapshotToDelete(null)
         } catch (error) {
             console.error("Failed to delete snapshot:", error)
+            toast.error("Gagal menghapus snapshot gaji", {
+                description: error instanceof Error ? error.message : undefined,
+            })
+        } finally {
+            setDeleting(false)
+            await reloadSnapshots() // Reload the list
         }
     }
+
+    const employeeName = (snapshot: SalarySnapshot | null) =>
+        employees.find((emp) => emp.id === snapshot?.employeeID)?.name ?? "Karyawan tidak ditemukan"
+    const monthName = (snapshot: SalarySnapshot | null) =>
+        snapshot ? format(new Date(snapshot.month + "-01"), "MMMM yyyy", { locale: id }) : ""
 
     const openDeleteDialog = (snapshot: SalarySnapshot) => {
         setSnapshotToDelete(snapshot)
@@ -139,6 +156,7 @@ function SnapshotsPageClientContent({
                                     <TableHead className="text-right">Total (Tanpa Utang)</TableHead>
                                     <TableHead className="text-right">Total</TableHead>
                                     <TableHead>Dibuat</TableHead>
+                                    <TableHead>Jurnal Vmedis</TableHead>
                                     <TableHead className="text-right">Aksi</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -163,6 +181,9 @@ function SnapshotsPageClientContent({
                                             <TableCell>
                                                 {format(snapshot.createdAt, "dd MMM yyyy HH:mm", { locale: id })}
                                             </TableCell>
+                                            <TableCell>
+                                                <JournalStatusBadge status={snapshot.journalStatus} />
+                                            </TableCell>
                                             <TableCell className="text-right">
                                                 <div className="flex gap-2 justify-end">
                                                     <Button
@@ -175,13 +196,26 @@ function SnapshotsPageClientContent({
                                                     {!isPrintMode && (
                                                         <SlipPdfButton snapshotID={snapshot.id} variant="icon" />
                                                     )}
-                                                    <Button
-                                                        variant="destructive"
-                                                        size="sm"
-                                                        onClick={() => openDeleteDialog(snapshot)}
-                                                    >
-                                                        <Trash2 className="h-4 w-4" />
-                                                    </Button>
+                                                    {!isPrintMode && snapshot.journalStatus !== "posted" && (
+                                                        <Button
+                                                            size="sm"
+                                                            onClick={() => setSnapshotToPost(snapshot)}
+                                                        >
+                                                            {snapshot.journalStatus === "partial" ? <RotateCcw /> : <BookCheck />}
+                                                            {snapshot.journalStatus === "partial" ? "Ulangi Posting" : "Posting ke Jurnal"}
+                                                        </Button>
+                                                    )}
+                                                    {snapshot.journalStatus === "none" && (
+                                                        <Button
+                                                            variant="destructive"
+                                                            size="sm"
+                                                            onClick={() => openDeleteDialog(snapshot)}
+                                                            title="Hapus snapshot"
+                                                            aria-label="Hapus snapshot"
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </Button>
+                                                    )}
                                                 </div>
                                             </TableCell>
                                         </TableRow>
@@ -189,6 +223,11 @@ function SnapshotsPageClientContent({
                                 })}
                             </TableBody>
                         </Table>
+                    )}
+                    {!loading && snapshots.some((s) => s.journalStatus !== "none") && (
+                        <p className="mt-3 text-xs text-muted-foreground">
+                            &quot;Hapus&quot; tidak tersedia untuk snapshot yang sudah (sebagian) diposting ke Vmedis.
+                        </p>
                     )}
                 </CardContent>
             </Card>
@@ -198,6 +237,16 @@ function SnapshotsPageClientContent({
                 onOpenChange={setShowDeleteDialog}
                 snapshot={snapshotToDelete}
                 onConfirm={handleDeleteSnapshot}
+                deleting={deleting}
+            />
+
+            <PostJournalDialog
+                open={snapshotToPost !== null}
+                onOpenChange={(open) => !open && setSnapshotToPost(null)}
+                snapshotID={snapshotToPost?.id ?? null}
+                employeeName={employeeName(snapshotToPost)}
+                monthDisplay={monthName(snapshotToPost)}
+                onPosted={() => reloadSnapshots()}
             />
         </div>
     )

@@ -21,6 +21,7 @@ import {
     getSalaryAdditionalComponents,
     getSalaryExtraInfos,
     getSalarySnapshots,
+    getSalarySnapshotJournal,
     getSalaryStaticComponents,
 } from "@/lib/api/salary"
 import {
@@ -586,6 +587,19 @@ export function useSalarySnapshots(
         {
             ...salarySWRConfig,
             onError: (error) => console.error("Failed to load snapshots:", error),
+        },
+    )
+}
+
+// The Vmedis journal of a snapshot. Never cached by SWR across focus: it
+// changes only when someone posts.
+export function useSalarySnapshotJournal(snapshotID: number | undefined) {
+    return useSWR(
+        snapshotID !== undefined ? ["salary-snapshot-journal", snapshotID] : null,
+        ([, snapshotID]) => getSalarySnapshotJournal(snapshotID),
+        {
+            ...salarySWRConfig,
+            onError: (error) => console.error("Failed to load snapshot journal:", error),
         },
     )
 }

@@ -54,10 +54,13 @@ export default auth(async function middleware(
 
         const requestHeaders = new Headers(request.headers)
         requestHeaders.set("x-email", request.auth?.user?.email ?? "")
+        // The user's name, e.g. for the keterangan of Vmedis journal entries
+        // HRIS posts. Percent-encoded: header values can't hold every name.
+        requestHeaders.set("x-name", encodeURIComponent(request.auth?.user?.name ?? ""))
 
         const url = `${backendUrls[rule.backend]}${apiTargetPath(rule, pathname)}${search}`
         // `request.headers` replaces the headers sent upstream, so a client
-        // can't pass its own X-Email through to the backends.
+        // can't pass its own X-Email or X-Name through to the backends.
         return NextResponse.rewrite(url, {
             request: { headers: requestHeaders },
         })

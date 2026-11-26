@@ -125,13 +125,15 @@ export function SalaryPageClient({
 
         setDeletingSnapshot(true)
         try {
-            await deleteSalarySnapshot(existingSnapshot.id, session)
+            await deleteSalarySnapshot(existingSnapshot.id)
             toast.success("Snapshot gaji berhasil dihapus")
             await reloadSnapshots()
             setShowDeleteSnapshotDialog(false)
         } catch (error) {
             console.error("Failed to delete snapshot:", error)
-            toast.error("Gagal menghapus snapshot gaji")
+            toast.error("Gagal menghapus snapshot gaji", {
+                description: error instanceof Error ? error.message : undefined,
+            })
         } finally {
             setDeletingSnapshot(false)
         }

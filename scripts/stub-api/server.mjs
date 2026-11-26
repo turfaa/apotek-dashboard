@@ -146,24 +146,127 @@ function attendancesForMonth(month) {
 const salaryComponents = [
     { description: "Gaji pokok", multiplier: "1", amount: "3000000", total: "3000000" },
     { description: "Shift", multiplier: "20", amount: "75000", total: "1500000" },
+    { description: "Utang Kasbon", multiplier: "1", amount: "-150000", total: "-150000" },
+    { description: "Utang HP", multiplier: "1", amount: "-50000", total: "-50000" },
 ]
 
 function salary(employeeID, month) {
     return {
         components: salaryComponents,
         totalWithoutDebt: "4500000",
-        total: "4500000",
+        total: "4300000",
         extraInfos: [{ id: 1, employeeID, month, title: "Catatan", description: "Data stub", createdAt: iso(now) }],
     }
 }
 
-const salarySnapshots = [1, 2].map((id) => ({
+const salarySnapshots = [1, 2, 3].map((id) => ({
     id,
     employeeID: id,
     month: currentMonth,
     salary: salary(id, currentMonth),
     createdAt: iso(daysAgo(id)),
 }))
+
+// Vmedis journal postings of the snapshots, by snapshot id: snapshot 1 is
+// unposted, 2 is posted, 3 is partly posted (an utang failed). POST posts
+// snapshot 1 (an utang named "gagal" fails) and retries 3's failed entry.
+const journalEntries = {
+    1: {},
+    2: {
+        salary: { status: "posted", voucherNo: "JRLM2610310001", error: null, postedAt: iso(daysAgo(1)) },
+        "debt-2": { status: "posted", voucherNo: "JRLM2610310002", error: null, postedAt: iso(daysAgo(1)) },
+    },
+    3: {
+        salary: { status: "posted", voucherNo: "JRLM2610310003", error: null, postedAt: iso(daysAgo(1)) },
+        "debt-2": { status: "posted", voucherNo: "JRLM2610310004", error: null, postedAt: iso(daysAgo(1)) },
+        "debt-3": { status: "failed", voucherNo: null, error: "vmedis-proxy responded 502: vmedis rejected the request: sesi habis", postedAt: null },
+    },
+}
+let nextVoucher = 5
+
+function journalStatusOf(entries) {
+    const statuses = Object.values(entries).map((e) => e.status)
+    if (!statuses.some((s) => s === "posted" || s === "pending")) return "none"
+    return statuses.every((s) => s === "posted") ? "posted" : "partial"
+}
+
+function lastDayOf(month) {
+    const [y, m] = month.split("-").map(Number)
+    return ymd(new Date(y, m, 0))
+}
+
+function snapshotJournal(snapshot) {
+    const entries = journalEntries[snapshot.id] ?? {}
+    const status = journalStatusOf(entries)
+    const name = employees.find((e) => e.id === snapshot.employeeID)?.name ?? `Karyawan #${snapshot.employeeID}`
+    const ref = `(Snapshot #${snapshot.id}, diposting oleh Admin Stub)`
+    const lines = [{
+        kind: "salary", componentIndex: null, componentDescription: null,
+        description: `Gaji ${name} ${snapshot.month} ${ref}`,
+        creditAccount: "111004", debitAccount: "610002", amount: snapshot.salary.totalWithoutDebt,
+        postable: true, warning: null, entry: entries.salary ?? null,
+    }]
+    snapshot.salary.components.forEach((c, i) => {
+        if (!c.description.toLowerCase().includes("utang")) return
+        lines.push({
+            kind: "debt", componentIndex: i, componentDescription: c.description,
+            description: `Pelunasan ${c.description} - ${name} ${snapshot.month} ${ref}`,
+            creditAccount: "171001", debitAccount: "111004", amount: String(Math.abs(Number(c.total))),
+            postable: Number(c.total) < 0, warning: null, entry: entries[`debt-${i}`] ?? null,
+        })
+    })
+    const posted = Object.values(entries).filter((e) => e.status === "posted")
+    return {
+        snapshotID: snapshot.id,
+        status,
+        postedBy: posted.length ? "admin@example.com" : null,
+        postedByName: posted.length ? "Admin Stub" : null,
+        postedAt: posted[0]?.postedAt ?? null,
+        journalDate: lastDayOf(snapshot.month),
+        snapshotCreatedAt: snapshot.createdAt,
+        canPost: status === "none" || Object.values(entries).some((e) => e.status !== "posted"),
+        blockedReason: null,
+        otherPostedSnapshotID: null,
+        lines,
+    }
+}
+
+function getSnapshotJournal(m) {
+    const snapshot = salarySnapshots.find((s) => s.id === Number(m[1]))
+    return snapshot ? snapshotJournal(snapshot) : raw(404, {}, { message: "snapshot not found" })
+}
+
+function postSnapshotJournal(m, body) {
+    const snapshot = salarySnapshots.find((s) => s.id === Number(m[1]))
+    if (!snapshot) return raw(404, {}, { message: "snapshot not found" })
+
+    const entries = (journalEntries[snapshot.id] ??= {})
+    const post = () => ({ status: "posted", voucherNo: `JRLM261031${String(nextVoucher++).padStart(4, "0")}`, error: null, postedAt: iso(new Date()) })
+
+    if (journalStatusOf(entries) === "none") {
+        for (const key of Object.keys(entries)) delete entries[key]
+        entries.salary = post()
+        for (const i of body?.debtComponentIndexes ?? []) {
+            const c = snapshot.salary.components[i]
+            entries[`debt-${i}`] = c?.description.toLowerCase().includes("gagal")
+                ? { status: "failed", voucherNo: null, error: "vmedis rejected the request", postedAt: null }
+                : post()
+        }
+    } else {
+        for (const [key, e] of Object.entries(entries)) if (e.status !== "posted") entries[key] = post()
+    }
+    return snapshotJournal(snapshot)
+}
+
+function deleteSnapshot(m) {
+    const id = Number(m[1])
+    if (journalStatusOf(journalEntries[id] ?? {}) !== "none") {
+        return raw(409, {}, { message: "snapshot sudah diposting ke jurnal Vmedis dan tidak bisa dihapus; perbaiki jurnalnya di Vmedis" })
+    }
+    return { message: "successfully deleted the snapshot" }
+}
+
+const withJournalStatus = (s) => ({ ...s, journalStatus: journalStatusOf(journalEntries[s.id] ?? {}) })
 
 const rejectedDrugs = [1, 2].map((id) => ({
     id,
@@ -583,10 +686,13 @@ const hris = [
     ["GET", /^\/v1\/attendances\/quotas\/audit-logs$/, () => [
         { id: 1, employeeID: 1, attendanceType: attendanceTypes[1], previousQuota: 12, newQuota: 11, reason: "attendance_deduction", createdAt: iso(daysAgo(2)) },
     ]],
-    ["GET", /^\/v1\/salary\/snapshots$/, () => salarySnapshots],
+    ["GET", /^\/v1\/salary\/snapshots$/, () => salarySnapshots.map(withJournalStatus)],
+    ["GET", /^\/v1\/salary\/snapshots\/(\d+)\/journal$/, getSnapshotJournal],
+    ["POST", /^\/v1\/salary\/snapshots\/(\d+)\/journal$/, postSnapshotJournal],
+    ["DELETE", /^\/v1\/salary\/snapshots\/(\d+)$/, deleteSnapshot],
     ["GET", /^\/v1\/salary\/snapshots\/slips\.zip$/, salarySlipsZip],
     ["GET", /^\/v1\/salary\/snapshots\/(\d+)\/pdf$/, salarySlipPdf],
-    ["GET", /^\/v1\/salary\/snapshots\/(\d+)$/, (m) => salarySnapshots.find((s) => s.id === Number(m[1])) ?? salarySnapshots[0]],
+    ["GET", /^\/v1\/salary\/snapshots\/(\d+)$/, (m) => withJournalStatus(salarySnapshots.find((s) => s.id === Number(m[1])) ?? salarySnapshots[0])],
     ["GET", /^\/v1\/salary\/(\d+)\/static-components$/, (m) => salaryComponents.map((c, i) => ({ id: i + 1, employeeID: Number(m[1]), ...c }))],
     ["GET", /^\/v1\/salary\/(\d{4}-\d{2})\/(\d+)\/additional-components$/, (m) => [
         { id: 1, employeeID: Number(m[2]), month: m[1], description: "Bonus", amount: "100000", multiplier: "1", total: "100000" },

@@ -9,7 +9,13 @@ export interface SalarySnapshot {
     month: string
     salary: Salary
     createdAt: Date
+    // Whether the snapshot is posted to the Vmedis journal (Jurnal Keuangan).
+    journalStatus: SalaryJournalStatus
 }
+
+// "none": nothing posted; "posted": every entry posted; "partial": some
+// entries posted (or being posted) and some failed or with an unknown outcome.
+export type SalaryJournalStatus = "none" | "posted" | "partial"
 
 export interface Salary {
     components: SalaryComponent[]
@@ -69,6 +75,8 @@ export interface UnderlyingSalarySnapshot {
     month: string
     salary: UnderlyingSalary
     createdAt: string
+    // Missing from the snapshot a create returns.
+    journalStatus?: SalaryJournalStatus
 }
 
 export interface UnderlyingSalary {
@@ -107,6 +115,7 @@ export function convertUnderlyingSalarySnapshot(
         ...underlyingSalarySnapshot,
         salary: convertUnderlyingSalary(underlyingSalarySnapshot.salary),
         createdAt: new Date(underlyingSalarySnapshot.createdAt),
+        journalStatus: underlyingSalarySnapshot.journalStatus ?? "none",
     }
 }
 
@@ -443,20 +452,145 @@ export async function createSalarySnapshot(
     )
 }
 
-export async function deleteSalarySnapshot(
+// Deletes a snapshot, from the browser. Throws SalaryApiError, with HRIS's
+// message: a snapshot posted to the Vmedis journal can't be deleted (409).
+export async function deleteSalarySnapshot(snapshotID: number): Promise<void> {
+    const res = await fetch(`/api/salary/snapshots/${snapshotID}`, { method: "DELETE" })
+    if (!res.ok) {
+        throw await toSalaryApiError(res)
+    }
+}
+
+// The Vmedis journal entries (Jurnal Keuangan) of a snapshot: the salary
+// entry and one repayment entry per utang component, with their recorded
+// outcome once posted.
+export interface SalarySnapshotJournal {
+    snapshotID: number
+    status: SalaryJournalStatus
+    // The email and name of the admin who posted it, and when the first
+    // entry was posted. Null until something is posted.
+    postedBy: string | null
+    postedByName: string | null
+    postedAt: Date | null
+    // YYYY-MM-DD: the last day of the snapshot's month.
+    journalDate: string
+    snapshotCreatedAt: Date
+    // Whether posting (or posting again) would send anything.
+    canPost: boolean
+    blockedReason: string | null
+    // Another snapshot of the same employee and month that is posted.
+    otherPostedSnapshotID: number | null
+    // The salary line first, then the utang lines in component order.
+    lines: SalaryJournalLine[]
+}
+
+export interface SalaryJournalLine {
+    kind: "salary" | "debt"
+    // The utang component's index in salary.components, for debt lines.
+    componentIndex: number | null
+    componentDescription: string | null
+    // The keterangan in Vmedis.
+    description: string
+    creditAccount: string
+    debitAccount: string
+    amount: number
+    postable: boolean
+    warning: string | null
+    entry: SalaryJournalEntry | null
+}
+
+export interface SalaryJournalEntry {
+    // "pending" with an error is an entry whose outcome is unknown.
+    status: "pending" | "posted" | "failed"
+    voucherNo: string | null
+    error: string | null
+    postedAt: Date | null
+}
+
+interface UnderlyingSalarySnapshotJournal
+    extends Omit<SalarySnapshotJournal, "postedAt" | "snapshotCreatedAt" | "lines"> {
+    postedAt: string | null
+    snapshotCreatedAt: string
+    lines: (Omit<SalaryJournalLine, "amount" | "entry"> & {
+        amount: string
+        entry: (Omit<SalaryJournalEntry, "postedAt"> & { postedAt: string | null }) | null
+    })[]
+}
+
+function convertSalarySnapshotJournal(u: UnderlyingSalarySnapshotJournal): SalarySnapshotJournal {
+    return {
+        ...u,
+        postedAt: u.postedAt ? new Date(u.postedAt) : null,
+        snapshotCreatedAt: new Date(u.snapshotCreatedAt),
+        lines: u.lines.map((line) => ({
+            ...line,
+            amount: parseFloat(line.amount),
+            entry: line.entry
+                ? { ...line.entry, postedAt: line.entry.postedAt ? new Date(line.entry.postedAt) : null }
+                : null,
+        })),
+    }
+}
+
+// Gets a snapshot's journal, from the browser. Throws SalaryApiError.
+export async function getSalarySnapshotJournal(snapshotID: number): Promise<SalarySnapshotJournal> {
+    const res = await fetch(`/api/salary/snapshots/${snapshotID}/journal`, { cache: "no-store" })
+    if (!res.ok) {
+        throw await toSalaryApiError(res)
+    }
+
+    return convertSalarySnapshotJournal(await res.json())
+}
+
+// Posts a snapshot to the Vmedis journal with the chosen utang repayments,
+// or, once anything is posted, sends again only the entries that failed. It
+// resolves with the journal after the attempt, whatever each entry's outcome.
+// Throws SalaryApiError.
+export async function postSalarySnapshotJournal(
     snapshotID: number,
-    session?: Session | null,
-): Promise<void> {
-    await fetchAPI<void>(
-        "DELETE",
-        `/salary/snapshots/${snapshotID}`,
-        null,
-        {},
-        {
-            forHRIS: true,
-            session: session,
-        },
-    )
+    debtComponentIndexes: number[],
+): Promise<SalarySnapshotJournal> {
+    const res = await fetch(`/api/salary/snapshots/${snapshotID}/journal`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ debtComponentIndexes }),
+    })
+    if (!res.ok) {
+        throw await toSalaryApiError(res)
+    }
+
+    return convertSalarySnapshotJournal(await res.json())
+}
+
+// An error response of HRIS, with its message.
+export class SalaryApiError extends Error {
+    readonly status: number
+    // The posted snapshot of the same employee and month, on a 409 that is
+    // about it.
+    readonly otherSnapshotID: number | null
+
+    constructor(status: number, message: string, otherSnapshotID: number | null = null) {
+        super(message)
+        this.name = "SalaryApiError"
+        this.status = status
+        this.otherSnapshotID = otherSnapshotID
+    }
+}
+
+async function toSalaryApiError(res: Response): Promise<SalaryApiError> {
+    let message = res.statusText || `HTTP ${res.status}`
+    let otherSnapshotID: number | null = null
+
+    try {
+        const body = await res.json()
+        if (typeof body?.message === "string") message = body.message
+        else if (typeof body?.error === "string") message = body.error
+        if (typeof body?.otherSnapshotID === "number") otherSnapshotID = body.otherSnapshotID
+    } catch {
+        // Not JSON: keep the status text.
+    }
+
+    return new SalaryApiError(res.status, message, otherSnapshotID)
 }
 
 // An error response of the pay slip (slip gaji) downloads.
