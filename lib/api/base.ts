@@ -34,7 +34,7 @@ export async function fetchAPI<T>(
     return await res.json()
 }
 
-function getBaseUrl(fetchAPIOptions?: FetchAPIOptions): string {
+export function getBaseUrl(fetchAPIOptions?: FetchAPIOptions): string {
     const baseUrl = fetchAPIOptions?.forHRIS
         ? process.env.HRIS_PROXY_URL
         : process.env.VMEDIS_PROXY_URL

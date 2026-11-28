@@ -1,5 +1,5 @@
 import { Session } from "next-auth"
-import { fetchAPI } from "./base"
+import { fetchAPI, getBaseUrl } from "./base"
 import { buildQueryParams } from "./common"
 import { saveResponseAsFile } from "@/lib/download"
 
@@ -647,4 +647,167 @@ async function toSalarySlipError(res: Response): Promise<SalarySlipError> {
     }
 
     return new SalarySlipError(res.status, message)
+}
+
+// OCBC BI-FAST salary transfer file ("Unduh File Transfer OCBC"), made by
+// HRIS from a month's snapshots, and the bank accounts it pays. Bank accounts
+// are only served under /api/salary (ADMIN), never with the employee list.
+
+// Why an employee cannot be put in the transfer file.
+export type BIFASTIneligibleReason =
+    | "missing_bank_account"
+    | "non_positive_total"
+    | "bank_not_participant"
+
+export interface BIFASTPreview {
+    month: string
+    // YYYY-MM-DD: today in Jakarta, the date the transfers are made.
+    valueDate: string
+    debitAccountNo: string
+    // Employees with more than one snapshot in the month. No file can be made
+    // while there are any; they have no row.
+    duplicates: BIFASTDuplicate[]
+    // Ordered by employee name.
+    rows: BIFASTRow[]
+}
+
+export interface BIFASTDuplicate {
+    employeeID: number
+    employeeName: string
+    count: number
+}
+
+export interface BIFASTRow {
+    employeeID: number
+    snapshotID: number
+    employeeName: string
+    // The snapshot's total (after utang), whole rupiah.
+    amount: number
+    // Empty when the employee has no bank account.
+    bankBIC: string
+    bankName: string
+    accountNumber: string
+    accountName: string
+    eligible: boolean
+    reason: BIFASTIneligibleReason | null
+}
+
+interface UnderlyingBIFASTPreview extends Omit<BIFASTPreview, "rows"> {
+    rows: (Omit<BIFASTRow, "amount"> & { amount: string })[]
+}
+
+// Previews the transfer file of a month, of one employee when employeeID is
+// set, from the browser. Throws SalaryApiError: 404 without snapshots, 503
+// while HRIS's OCBC settings are not set.
+export async function getBIFASTPreview(month: string, employeeID?: number): Promise<BIFASTPreview> {
+    const params = new URLSearchParams({ month })
+    if (employeeID !== undefined) {
+        params.set("employeeID", String(employeeID))
+    }
+
+    const res = await fetch(`/api/salary/snapshots/bifast/preview?${params}`, { cache: "no-store" })
+    if (!res.ok) {
+        throw await toSalaryApiError(res)
+    }
+
+    const underlying: UnderlyingBIFASTPreview = await res.json()
+    return {
+        ...underlying,
+        rows: underlying.rows.map((row) => ({ ...row, amount: parseFloat(row.amount) })),
+    }
+}
+
+// Downloads the transfer file paying the employees' salaries of a month,
+// named "OCBC_BIFAST_GAJI_<YYYY-MM>_<YYYYMMDD>.txt" by HRIS. HRIS checks the
+// selection again. Throws SalaryApiError: 409 for duplicate snapshots, 422
+// for employees that cannot be paid.
+export async function downloadBIFASTFile(month: string, employeeIDs: number[]): Promise<void> {
+    const res = await fetch(`/api/salary/snapshots/bifast.txt`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ month, employeeIDs }),
+    })
+    if (!res.ok) {
+        throw await toSalaryApiError(res)
+    }
+
+    await saveResponseAsFile(res, `OCBC_BIFAST_GAJI_${month}.txt`)
+}
+
+// A bank on OCBC's BI-FAST participant list. The name is exactly OCBC's.
+export interface BIFASTParticipant {
+    bic: string
+    name: string
+}
+
+// Lists the banks salaries can be transferred to, ordered by name. Throws
+// SalaryApiError.
+export async function getBIFASTParticipants(): Promise<BIFASTParticipant[]> {
+    const res = await fetch(`/api/salary/bifast/participants`)
+    if (!res.ok) {
+        throw await toSalaryApiError(res)
+    }
+
+    return await res.json()
+}
+
+export interface BankAccount {
+    employeeID: number
+    bankBIC: string
+    // Empty when the BIC is no longer on the participant list.
+    bankName: string
+    accountNumber: string
+    accountName: string
+}
+
+export interface BankAccountInput {
+    bankBIC: string
+    accountNumber: string
+    accountName: string
+}
+
+// Gets an employee's bank account, or null when there is none: from HRIS
+// when session is given (server components), else through /api. Throws
+// SalaryApiError.
+export async function getBankAccount(
+    employeeID: number,
+    session?: Session | null,
+): Promise<BankAccount | null> {
+    const baseUrl = getBaseUrl({ forHRIS: true, session })
+    const res = await fetch(`${baseUrl}/salary/bank-accounts/${employeeID}`, {
+        cache: "no-store",
+        headers: { "X-Email": session?.user?.email ?? "" },
+    })
+    if (res.status === 404) {
+        return null
+    }
+    if (!res.ok) {
+        throw await toSalaryApiError(res)
+    }
+
+    return await res.json()
+}
+
+// Sets an employee's bank account. Throws SalaryApiError, with HRIS's message
+// on 400.
+export async function putBankAccount(employeeID: number, account: BankAccountInput): Promise<BankAccount> {
+    const res = await fetch(`/api/salary/bank-accounts/${employeeID}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(account),
+    })
+    if (!res.ok) {
+        throw await toSalaryApiError(res)
+    }
+
+    return await res.json()
+}
+
+// Removes an employee's bank account; it is fine when there is none. Throws
+// SalaryApiError.
+export async function deleteBankAccount(employeeID: number): Promise<void> {
+    const res = await fetch(`/api/salary/bank-accounts/${employeeID}`, { method: "DELETE" })
+    if (!res.ok && res.status !== 404) {
+        throw await toSalaryApiError(res)
+    }
 }

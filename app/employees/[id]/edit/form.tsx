@@ -18,7 +18,15 @@ import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { RupiahInput } from "@/components/rupiah-input"
 import { Employee, updateEmployee } from "@/lib/api/employee"
+import { BankAccount, SalaryApiError } from "@/lib/api/salary"
 import { toast } from "sonner"
+import {
+    BankAccountFields,
+    bankAccountDefaults,
+    bankAccountFields,
+    refineBankAccount,
+    saveBankAccount,
+} from "../../bank-account-fields"
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -29,13 +37,16 @@ const formSchema = z.object({
     }),
     showInAttendances: z.boolean(),
     isActive: z.boolean(),
-})
+    ...bankAccountFields,
+}).superRefine(refineBankAccount)
 
 interface EditEmployeeFormProps {
     employee: Employee
+    // The employee's bank account for salary transfers, null when none.
+    bankAccount: BankAccount | null
 }
 
-export function EditEmployeeForm({ employee }: EditEmployeeFormProps) {
+export function EditEmployeeForm({ employee, bankAccount }: EditEmployeeFormProps) {
     const router = useRouter()
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -44,6 +55,7 @@ export function EditEmployeeForm({ employee }: EditEmployeeFormProps) {
             shiftFee: employee.shiftFee,
             showInAttendances: employee.showInAttendances,
             isActive: employee.isActive,
+            ...bankAccountDefaults(bankAccount),
         },
     })
 
@@ -56,13 +68,25 @@ export function EditEmployeeForm({ employee }: EditEmployeeFormProps) {
                 values.showInAttendances,
                 values.isActive,
             )
-            toast.success("Data karyawan berhasil diperbarui")
-            router.push("/employees")
-            router.refresh()
         } catch (error) {
             toast.error("Gagal memperbarui data karyawan")
             console.error(error)
+            return
         }
+
+        try {
+            await saveBankAccount(employee.id, values, bankAccount !== null)
+        } catch (error) {
+            console.error(error)
+            toast.error("Data karyawan tersimpan, tapi rekening bank gagal disimpan", {
+                description: error instanceof SalaryApiError ? error.message : "Server tidak dapat dihubungi. Silakan coba lagi.",
+            })
+            return
+        }
+
+        toast.success("Data karyawan berhasil diperbarui")
+        router.push("/employees")
+        router.refresh()
     }
 
     return (
@@ -145,8 +169,9 @@ export function EditEmployeeForm({ employee }: EditEmployeeFormProps) {
                         </FormItem>
                     )}
                 />
+                <BankAccountFields />
                 <div className="flex gap-4">
-                    <Button type="submit">Simpan Perubahan</Button>
+                    <Button type="submit" disabled={form.formState.isSubmitting}>Simpan Perubahan</Button>
                     <Button
                         type="button"
                         variant="outline"

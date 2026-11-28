@@ -539,6 +539,93 @@ function salarySlipsZip(_m, _body, params) {
     return raw(200, attachment("application/zip", `${month} - Slip Gaji.zip`), storedZip(snapshots.map(salarySlipFile)))
 }
 
+// OCBC BI-FAST salary transfer file. A few participants (names exactly as
+// OCBC spells them), and made-up bank accounts: Andi and Citra have one, Budi
+// has none.
+const bifastParticipants = [
+    { bic: "CENAIDJA", name: "BANK CENTRAL ASIA" },
+    { bic: "BMRIIDJA", name: "BANK MANDIRI TBK" },
+    { bic: "PDJBIDJA", name: "BANK PEMBANGUNAN DAERAH JAWA BARAT & BANTEN" },
+    { bic: "BSMDIDJA", name: "BANK SYARIAH INDONESIA" },
+]
+
+const bankAccounts = new Map([
+    [1, { bankBIC: "BSMDIDJA", accountNumber: "1111111111", accountName: "ANDI CONTOH" }],
+    [3, { bankBIC: "PDJBIDJA", accountNumber: "2222222222", accountName: "CITRA CONTOH" }],
+])
+
+function bankAccountView(employeeID) {
+    const account = bankAccounts.get(employeeID)
+    if (!account) return null
+    const name = bifastParticipants.find((p) => p.bic === account.bankBIC)?.name ?? ""
+    return { employeeID, ...account, bankName: name, createdAt: iso(daysAgo(10)), updatedAt: iso(daysAgo(1)) }
+}
+
+function getBankAccountRoute(m) {
+    return bankAccountView(Number(m[1])) ?? raw(404, {}, { message: "bank account or employee not found" })
+}
+
+function putBankAccountRoute(m, body) {
+    const bankBIC = String(body?.bankBIC ?? "").toUpperCase()
+    const accountNumber = String(body?.accountNumber ?? "").trim()
+    const accountName = String(body?.accountName ?? "").trim()
+    if (!bifastParticipants.some((p) => p.bic === bankBIC)) return raw(400, {}, { message: "bank tidak ada di daftar BI-FAST OCBC" })
+    if (!/^[0-9]{1,19}$/.test(accountNumber)) return raw(400, {}, { message: "nomor rekening harus 1 sampai 19 angka" })
+    if (!accountName) return raw(400, {}, { message: "nama pemilik rekening wajib diisi" })
+    bankAccounts.set(Number(m[1]), { bankBIC, accountNumber, accountName })
+    return bankAccountView(Number(m[1]))
+}
+
+function deleteBankAccountRoute(m) {
+    if (!bankAccounts.delete(Number(m[1]))) return raw(404, {}, { message: "bank account or employee not found" })
+    return { message: "successfully deleted the bank account" }
+}
+
+function bifastRows(month, employeeID) {
+    return salarySnapshots
+        .filter((s) => s.month === month && (!employeeID || s.employeeID === Number(employeeID)))
+        .map((s) => {
+            const account = bankAccountView(s.employeeID)
+            const eligible = account !== null && account.bankName !== "" && Number(s.salary.total) > 0
+            return {
+                employeeID: s.employeeID,
+                snapshotID: s.id,
+                employeeName: employees.find((e) => e.id === s.employeeID)?.name ?? `Karyawan #${s.employeeID}`,
+                amount: s.salary.total,
+                bankBIC: account?.bankBIC ?? "",
+                bankName: account?.bankName ?? "",
+                accountNumber: account?.accountNumber ?? "",
+                accountName: account?.accountName ?? "",
+                eligible,
+                reason: eligible ? null : account === null ? "missing_bank_account" : "non_positive_total",
+            }
+        })
+        .sort((a, b) => a.employeeName.localeCompare(b.employeeName))
+}
+
+function bifastPreview(_m, _body, params) {
+    const month = params.get("month")
+    if (!/^\d{4}-\d{2}$/.test(month ?? "")) return raw(400, {}, { message: "parse month: invalid month" })
+    const rows = bifastRows(month, params.get("employeeID"))
+    if (rows.length === 0) return raw(404, {}, { message: "no salary snapshots for this month" })
+    return { month, valueDate: ymd(now), debitAccountNo: "000000000000", duplicates: [], rows }
+}
+
+// Not OCBC's layout: one padded stub line per transfer, just to download.
+function bifastFile(_m, body) {
+    const month = body?.month
+    const ids = body?.employeeIDs ?? []
+    if (!/^\d{4}-\d{2}$/.test(month ?? "") || ids.length === 0) return raw(400, {}, { message: "month and employeeIDs are required" })
+    const rows = bifastRows(month).filter((r) => ids.includes(r.employeeID))
+    const bad = ids.filter((id) => !rows.some((r) => r.employeeID === id && r.eligible))
+    if (bad.length > 0) {
+        return raw(422, {}, { message: "karyawan tidak dapat ditransfer", employees: bad.map((id) => ({ employeeID: id, reason: "missing_bank_account" })) })
+    }
+    const content = rows.map((r) => `STUB GJ${month.replace("-", "")}-${r.employeeID} ${r.amount}`.padEnd(7709, " ") + "\r\n").join("")
+    const filename = `OCBC_BIFAST_GAJI_${month}_${ymd(now).replaceAll("-", "")}.txt`
+    return raw(200, attachment("text/plain; charset=us-ascii", filename), Buffer.from(content, "ascii"))
+}
+
 // A ZIP of uncompressed ("stored") files.
 function storedZip(files) {
     const locals = []
@@ -691,6 +778,13 @@ const hris = [
     ["POST", /^\/v1\/salary\/snapshots\/(\d+)\/journal$/, postSnapshotJournal],
     ["DELETE", /^\/v1\/salary\/snapshots\/(\d+)$/, deleteSnapshot],
     ["GET", /^\/v1\/salary\/snapshots\/slips\.zip$/, salarySlipsZip],
+    ["GET", /^\/v1\/salary\/snapshots\/bifast\/preview$/, bifastPreview],
+    ["POST", /^\/v1\/salary\/snapshots\/bifast\.txt$/, bifastFile],
+    ["GET", /^\/v1\/salary\/bank-accounts$/, () => [...bankAccounts.keys()].map(bankAccountView)],
+    ["GET", /^\/v1\/salary\/bank-accounts\/(\d+)$/, getBankAccountRoute],
+    ["PUT", /^\/v1\/salary\/bank-accounts\/(\d+)$/, putBankAccountRoute],
+    ["DELETE", /^\/v1\/salary\/bank-accounts\/(\d+)$/, deleteBankAccountRoute],
+    ["GET", /^\/v1\/salary\/bifast\/participants$/, () => bifastParticipants],
     ["GET", /^\/v1\/salary\/snapshots\/(\d+)\/pdf$/, salarySlipPdf],
     ["GET", /^\/v1\/salary\/snapshots\/(\d+)$/, (m) => withJournalStatus(salarySnapshots.find((s) => s.id === Number(m[1])) ?? salarySnapshots[0])],
     ["GET", /^\/v1\/salary\/(\d+)\/static-components$/, (m) => salaryComponents.map((c, i) => ({ id: i + 1, employeeID: Number(m[1]), ...c }))],

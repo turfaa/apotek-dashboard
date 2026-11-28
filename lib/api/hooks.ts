@@ -22,6 +22,9 @@ import {
     getSalaryExtraInfos,
     getSalarySnapshots,
     getSalarySnapshotJournal,
+    getBIFASTPreview,
+    getBIFASTParticipants,
+    getBankAccount,
     getSalaryStaticComponents,
 } from "@/lib/api/salary"
 import {
@@ -600,6 +603,40 @@ export function useSalarySnapshotJournal(snapshotID: number | undefined) {
         {
             ...salarySWRConfig,
             onError: (error) => console.error("Failed to load snapshot journal:", error),
+        },
+    )
+}
+
+// The OCBC transfer file preview of a month, of one employee when employeeID
+// is set. Pass month undefined to not fetch (e.g. while the dialog is closed).
+export function useBIFASTPreview(month: string | undefined, employeeID: number | undefined) {
+    return useSWR(
+        month !== undefined ? ["salary-bifast-preview", month, employeeID] : null,
+        ([, month, employeeID]) => getBIFASTPreview(month, employeeID),
+        {
+            ...salarySWRConfig,
+            onError: (error) => console.error("Failed to load BI-FAST preview:", error),
+        },
+    )
+}
+
+// OCBC's BI-FAST participant banks. They change rarely.
+export function useBIFASTParticipants() {
+    return useSWR("salary-bifast-participants", () => getBIFASTParticipants(), {
+        ...salarySWRConfig,
+        revalidateIfStale: false,
+        onError: (error) => console.error("Failed to load BI-FAST participants:", error),
+    })
+}
+
+// An employee's bank account, null when there is none.
+export function useBankAccount(employeeID: number | undefined) {
+    return useSWR(
+        employeeID !== undefined ? ["salary-bank-account", employeeID] : null,
+        ([, employeeID]) => getBankAccount(employeeID),
+        {
+            ...salarySWRConfig,
+            onError: (error) => console.error("Failed to load bank account:", error),
         },
     )
 }

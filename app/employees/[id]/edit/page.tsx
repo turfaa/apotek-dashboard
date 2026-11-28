@@ -1,6 +1,7 @@
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { getEmployee } from "@/lib/api/employee"
+import { getBankAccount } from "@/lib/api/salary"
 import { Role } from "@/lib/api/auth"
 import { requireRole } from "@/lib/require-role"
 import { EditEmployeeForm } from "./form"
@@ -24,7 +25,10 @@ export default async function EditEmployeePage({
         notFound()
     }
 
-    const employee = await getEmployee(employeeID, session)
+    const [employee, bankAccount] = await Promise.all([
+        getEmployee(employeeID, session),
+        getBankAccount(employeeID, session),
+    ])
 
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
@@ -33,11 +37,11 @@ export default async function EditEmployeePage({
                     Edit Karyawan
                 </h2>
                 <p className="text-muted-foreground">
-                    Ubah data karyawan dan gaji per shift mereka.
+                    Ubah data karyawan, gaji per shift dan rekening bank mereka.
                 </p>
             </div>
             <div className="max-w-2xl">
-                <EditEmployeeForm employee={employee} />
+                <EditEmployeeForm employee={employee} bankAccount={bankAccount} />
             </div>
         </main>
     )

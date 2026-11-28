@@ -31,6 +31,7 @@ import { RupiahFormatProvider, useRupiahFormat } from "@/lib/rupiah-format-conte
 import { RupiahFormatToggle } from "@/components/rupiah-format-toggle"
 import { usePrintMode } from "@/lib/print-mode"
 import { SlipPdfButton, SlipsZipButton } from "./slip-download"
+import { BIFASTDownloadButton } from "./bifast-download"
 import { JournalStatusBadge } from "./journal"
 import { PostJournalDialog } from "./post-journal-dialog"
 
@@ -130,6 +131,13 @@ function SnapshotsPageClientContent({
                             <RupiahFormatToggle />
                             {!isPrintMode && (
                                 <SlipsZipButton
+                                    month={searchParams.month}
+                                    employeeID={employeeID}
+                                    disabled={loading || snapshots.length === 0}
+                                />
+                            )}
+                            {!isPrintMode && (
+                                <BIFASTDownloadButton
                                     month={searchParams.month}
                                     employeeID={employeeID}
                                     disabled={loading || snapshots.length === 0}

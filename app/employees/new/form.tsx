@@ -16,7 +16,15 @@ import {
 import { Input } from "@/components/ui/input"
 import { RupiahInput } from "@/components/rupiah-input"
 import { createEmployee } from "@/lib/api/employee"
+import { SalaryApiError } from "@/lib/api/salary"
 import { toast } from "sonner"
+import {
+    BankAccountFields,
+    bankAccountDefaults,
+    bankAccountFields,
+    refineBankAccount,
+    saveBankAccount,
+} from "../bank-account-fields"
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -25,7 +33,8 @@ const formSchema = z.object({
     shiftFee: z.number().positive({
         message: "Gaji per shift harus berupa angka positif.",
     }),
-})
+    ...bankAccountFields,
+}).superRefine(refineBankAccount)
 
 export function EmployeeForm() {
     const router = useRouter()
@@ -34,19 +43,35 @@ export function EmployeeForm() {
         defaultValues: {
             name: "",
             shiftFee: 0,
+            ...bankAccountDefaults(null),
         },
     })
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        let employeeID: number
         try {
-            await createEmployee(values.name, values.shiftFee)
-            toast.success("Karyawan berhasil ditambahkan")
-            router.push("/employees")
-            router.refresh()
+            const employee = await createEmployee(values.name, values.shiftFee)
+            employeeID = employee.id
         } catch (error) {
             toast.error("Gagal menambahkan karyawan")
             console.error(error)
+            return
         }
+
+        try {
+            await saveBankAccount(employeeID, values, false)
+            toast.success("Karyawan berhasil ditambahkan")
+        } catch (error) {
+            console.error(error)
+            toast.error("Karyawan ditambahkan, tapi rekening bank gagal disimpan", {
+                description: `${error instanceof SalaryApiError ? error.message : "Server tidak dapat dihubungi."} Isi lagi di halaman edit karyawan.`,
+            })
+            router.push(`/employees/${employeeID}/edit`)
+            return
+        }
+
+        router.push("/employees")
+        router.refresh()
     }
 
     return (
@@ -82,8 +107,9 @@ export function EmployeeForm() {
                         </FormItem>
                     )}
                 />
+                <BankAccountFields />
                 <div className="flex gap-4">
-                    <Button type="submit">Tambah Karyawan</Button>
+                    <Button type="submit" disabled={form.formState.isSubmitting}>Tambah Karyawan</Button>
                     <Button
                         type="button"
                         variant="outline"
