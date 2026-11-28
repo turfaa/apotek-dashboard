@@ -33,6 +33,28 @@ A modern, full-featured pharmacy management dashboard with integrated HR capabil
 - **Dark Mode**: Theme switching support
 - **Currency Formatting**: Toggle between Indonesian (Rp 1.000.000,00) and US (Rp 1,000,000.00) formats
 
+## Screenshots
+
+What an **ADMIN** sees. The data is fake: it comes from the stub API (`npm run stub-api`).
+
+### Pharmacy
+
+| Sales summary (`/`) | Sold drugs (`/sold-drugs`) |
+| --- | --- |
+| ![Sales summary](docs/screenshots/home.png) | ![Sold drugs](docs/screenshots/sold-drugs.png) |
+| **Purchases by supplier** (`/procurements/by-supplier`) | **Stock opname report** (`/stock-opnames`) |
+| ![Purchases by supplier](docs/screenshots/procurements-by-supplier.png) | ![Stock opname report](docs/screenshots/stock-opnames.png) |
+
+### Human Resources
+
+| Employees (`/employees`) | Attendance (`/attendances`) |
+| --- | --- |
+| ![Employees](docs/screenshots/employees.png) | ![Attendance](docs/screenshots/attendances.png) |
+| **Salary calculator** (`/salary/calculator`) | **Salary snapshots** (`/salary/snapshots`) |
+| ![Salary calculator](docs/screenshots/salary-calculator.png) | ![Salary snapshots](docs/screenshots/salary-snapshots.png) |
+| **Work logs** (`/works/logs`) | |
+| ![Work logs](docs/screenshots/work-logs.png) | |
+
 ## Tech Stack
 
 ### Core Framework

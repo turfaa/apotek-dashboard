@@ -283,10 +283,33 @@ const rejectedDrugForm = (d) => ({
     fields: [{ id: "drugName", label: "Nama obat", type: "TEXT", value: d?.drugName, required: true }],
 })
 
+// Today's cumulative sales, pulled hourly from 07:00 to 17:00 (opening hours).
+// The chart plots the change between pulls, so the hourly amounts vary to give
+// it a realistic shape: a morning rush, a lunch dip and an afternoon peak.
+const hourlySales = [
+    // [hour, sales in the hour (Rp), number of sales in the hour]
+    [7, 185000, 4],
+    [8, 420000, 9],
+    [9, 610000, 13],
+    [10, 680000, 14],
+    [11, 530000, 11],
+    [12, 390000, 8],
+    [13, 450000, 10],
+    [14, 560000, 12],
+    [15, 720000, 15],
+    [16, 640000, 13],
+    [17, 470000, 10],
+]
+
 const salesStatistics = () => {
     const history = []
-    for (let h = 8; h >= 0; h--) {
-        history.push({ pulledAt: iso(new Date(now.getTime() - h * 3600_000)), totalSales: 250000 * (9 - h), numberOfSales: 5 * (9 - h) })
+    let totalSales = 0
+    let numberOfSales = 0
+    for (const [hour, sales, count] of hourlySales) {
+        totalSales += sales
+        numberOfSales += count
+        const pulledAt = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour)
+        history.push({ pulledAt: iso(pulledAt), totalSales, numberOfSales })
     }
     return { history, dailyHistory: history }
 }
